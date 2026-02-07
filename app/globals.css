@@ -1,26 +1,153 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #F0E7D6;
+  --orange: #FE7F2D;
+  --teal: #2D9CDB;
+  --red: #E63946;
+  --border: black;
+  --font-main: "Courier New", monospace;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  background: var(--bg);
+  font-family: var(--font-main);
+}
+
+
+.page {
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1300px;
+  margin: auto;
+  padding: 0 40px;
+}
+
+
+
+
+
+.hero {
+  display: flex;
+  gap: 60px;
+}
+
+
+
+.hero-big {
+  height: 320px;
+}
+
+.hero-wide {
+  height: 200px;
+}
+
+.hero-text {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gallery {
+  background: #d9d9d9;
+  margin-top: 120px;
+  padding: 80px 0;
+}
+
+
+
+.cta {
+  background: var(--orange);
+  padding: 120px 0;
+}
+
+
+.cta-circle {
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: var(--teal);
+  border: 2px solid black;
+  box-shadow: 6px 6px 0 black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.footer {
+  background: #1c1b1b;
+  height: 200px;
+}
+
+
+
+.btn-rect {
+  background: var(--orange);
+  border: 2px solid black;
+  box-shadow: 4px 4px 0 black;
+  padding: 12px 28px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: .2s;
+}
+
+.btn-rect:hover {
+  transform: translateY(-2px);
+}
+
+.btn-rect:active {
+ transform: translateY(3px) scale(0.95);
+  box-shadow: 1px 2px 0px black;
+}
+
+.btn-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid black;
+  box-shadow: 4px 4px 0 black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.btn-circle:hover {
+  transform: translateY(-2px);
+}
+
+.btn-circle:active {
+ 
+  transform: translateY(3px) scale(0.95);
+  box-shadow: 1px 2px 0px black;
+}
+
+
+
+.card {
+  background: white;
+  border: 2px solid black;
+  box-shadow: 4px 4px 0 black;
+  padding: 20px;
+  border-radius: 14px;
+}
+
+.image-card {
+  border: 2px solid black;
+  box-shadow: 4px 4px 0 black;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
