@@ -1,7 +1,7 @@
-export default function Auth(){
+export default function Login(){
     return(
         <div>
-            
+
         </div>
     )
 }
