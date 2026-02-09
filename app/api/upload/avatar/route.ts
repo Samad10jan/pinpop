@@ -17,7 +17,7 @@ export const POST = async (req: Request) => {
     const uploadResult: any = await new Promise((resolve, reject) => {
       cloudinary.uploader.upload_stream(
         {
-          folder: "avatars",
+          folder: "fixel/avatars",
           resource_type: "image"
         },
         (err, res) => {

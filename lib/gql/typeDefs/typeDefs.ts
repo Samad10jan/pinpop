@@ -1,46 +1,65 @@
 import { gql } from "graphql-request";
 
-export const typeDefs = gql`
+const typeDefs = gql`
+
+scalar DateTime
+
+enum FileType {
+  PHOTO
+  GIF
+}
+
 type User {
   id: ID!
   name: String!
   email: String!
   avatar: String
+  uploadCount: Int!
+  createdAt: DateTime!
 }
-enum FileType {
-  IMAGE
-  VIDEO
-  OTHER
-}
+
 type Pin {
   id: ID!
-  title: String
+  title: String!
   description: String
   mediaUrl: String!
   fileType: FileType!
-  createdAt: String!
+  tagIds: [ID!]!
+  uploadIndex: Int!
+  createdAt: DateTime!
+  user: User!
 }
 
 type AuthPayload {
-  user:User!
+  user: User!
 }
-
 
 type ProfileResponse {
   user: User!
-  savedPins: [Pin!]!
   followersCount: Int!
   followingCount: Int!
+  lastSavedPins: [Pin]
 }
 
+# Queries and Mutations
+
 type Query {
-  user:User,
-  getProfile: ProfileResponse!
+  user: User
+  getProfile: ProfileResponse
 }
 
 type Mutation {
-  signup(name:String!,email:String!,password:String!,avatar:String):AuthPayload
-  login(email:String!,password:String!):AuthPayload
+  signup(
+    name: String!
+    email: String!
+    password: String!
+    avatar: String
+  ): AuthPayload!
+
+  login(
+    email: String!
+    password: String!
+  ): AuthPayload!
 }
 `;
 export default typeDefs;

@@ -22,15 +22,16 @@ export default function Auth() {
               />
 
             </div>
-            </div>
+          </div>
 
-          <Link href={"/signup"} className="btn-circle bg-[#3eea00ac] ">
-            Join
+          <Link href={"/signin"} className="btn-circle bg-[#3eea00ac] ">
+            Login
           </Link>
         </div>
 
-        <button className="btn-circle bg-[#ea0090] p-8 ">Login</button>
-
+        <Link href={"/signup"} className="btn-circle bg-[#3eea00ac] p-8">
+          Join
+        </Link>
       </header>
 
       <h1 className="text-center text-[96px] font-extrabold ">FIXEL</h1>

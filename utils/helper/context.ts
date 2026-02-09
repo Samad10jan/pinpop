@@ -18,10 +18,21 @@ export async function context() {
     } catch (err: any) {
       console.log("Error:", err.message);
 
-      
+
       user = null;
     }
   }
 
-  return { user };
+  return {
+    user
+      : {
+      id: user?.id,
+      name: user?.name,
+      email: user?.email,
+      avatar: user?.avatar,
+      uploadCount: user?.uploadCount,
+      createdAt: user?.createdAt
+
+    }
+  };
 }

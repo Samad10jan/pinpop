@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState } from "react";
 
-const UserContext = createContext<any>(null);
+export const UserContext = createContext<any>(null);
 
 export function UserProvider({
   children,

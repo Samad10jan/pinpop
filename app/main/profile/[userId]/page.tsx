@@ -1,34 +1,51 @@
 "use client";
 
+import { UserContext } from "@/components/contexts/UserContext";
 import { PROFILE_QUERY } from "@/lib/gql/queries/queries";
+import gqlClient from "@/lib/services/graphql";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { useContext, useEffect, useState } from "react";
 
 export default function UserPage() {
+    const params = useParams();
+    const userId = params.userId;
     const [profile, setProfile] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const { currentUser } = useContext(UserContext)
+    // console.log("here user:",currentUser,userId);
+
+    if (!currentUser || currentUser.id !== userId) return <p className="p-10">Unauthorized</p>;
 
     useEffect(() => {
-        fetch("/api/graphql", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                PROFILE_QUERY
-            })
-        })
-            .then(r => r.json())
-            .then(d => setProfile(d?.data?.getProfile || null))
-            .finally(() => setLoading(false));
+        async function getData() {
+
+
+            try {
+                const data = await gqlClient.request(PROFILE_QUERY);
+                setProfile(data?.getProfile || null);
+            } catch (err) {
+                console.error("GraphQL error:", err);
+                setProfile(null);
+            } finally {
+                setLoading(false);
+            }
+        }
+        getData()
     }, []);
 
     if (loading) return <p className="p-10">Loading...</p>;
 
     const user = profile?.user || {};
+    // console.log(user);
+
 
     const name = user?.name || "Anonymous";
     const email = user?.email || "No email";
     const avatar = user?.avatar || "/as";
+    // console.log(user);
+
 
     const followers = profile?.followersCount || 0;
     const following = profile?.followingCount || 0;
@@ -44,7 +61,7 @@ export default function UserPage() {
                         <div className=" absolute w-full h-full">
 
                             <Image
-                                src="https://tse1.mm.bing.net/th/id/OIP.2ZC6eH3utWfNn6yZaCEstgHaFf?w=5263&h=3903&rs=1&pid=ImgDetMain&o=7&rm=3"
+                                src={avatar || "https://tse1.mm.bing.net/th/id/OIP.2ZC6eH3utWfNn6yZaCEstgHaFf?w=5263&h=3903&rs=1&pid=ImgDetMain&o=7&rm=3"}
                                 alt="avatar"
                                 fill
                                 className="w-full h-full object-cover"
@@ -87,7 +104,7 @@ export default function UserPage() {
                             <div className="font-bold">
                                 Saved Pins
                             </div>
-                           <Link href={`/main/saved`} className="btn-rect ">
+                            <Link href={`/main/saved`} className="btn-rect ">
                                 More
                             </Link >
                         </div>

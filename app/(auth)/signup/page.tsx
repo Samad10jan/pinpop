@@ -14,17 +14,7 @@ export default function SignupPage() {
     const [avatar, setAvatar] = useState<File | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-    //     const query = gql`
-    // mutation Mutation($name: String!, $email: String!, $password: String!, $avatar: String) {
-    //   signup(name: $name, email: $email, password: $password, avatar: $avatar) {
-    //     user {
-    //       email
-    //       id
-    //       name
-    //       avatar
-    //     }
-    //   }
-    // }`
+
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
 
@@ -36,7 +26,7 @@ export default function SignupPage() {
             if (password.length < 8) throw new Error("Password must be 8+ chars");
             if (!name.trim()) throw new Error("Name required");
 
-            let avatarUrl = "";
+            let avatarUrl = null;
 
             if (avatar) {
                 const form = new FormData();
@@ -48,7 +38,7 @@ export default function SignupPage() {
                 });
 
                 const uploaded = await upload.json();
-                avatarUrl = uploaded?.url || "";
+                avatarUrl = uploaded?.url || null;
             }
 
             const res = await fetch("/api/graphql", {
@@ -124,7 +114,7 @@ export default function SignupPage() {
                         type="file"
                         className="btn-rect !bg-amber-200"
                         onChange={e => setAvatar(e.target.files?.[0] || null)}
-                        
+
                     />
 
                     <button

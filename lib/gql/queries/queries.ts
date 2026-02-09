@@ -2,17 +2,28 @@ import { gql } from "graphql-request";
 
 export const PROFILE_QUERY =gql `
 query{
-  getProfile{
-    user{
-      name
+  getProfile {
+    user {
       avatar
-    }
-    savedPins{
+      name
+      uploadCount
+      email
       id
-      mediaUrl
+      createdAt
     }
     followersCount
     followingCount
+    lastSavedPins {
+      id
+      title
+      # description
+      mediaUrl
+      fileType
+      # tagIds
+      # uploadIndex
+      createdAt
+      
+    }
   }
 }
 `;

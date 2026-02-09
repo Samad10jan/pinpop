@@ -3,139 +3,97 @@ import { hashPassword, verifyPassword, signAccess, signRefresh } from "@/utils/h
 import { cookies } from "next/headers";
 import { ApiError } from "@/utils/ApiError";
 
-export const resolvers = {
-    Query: {
-        user: (_: any, __: any, { user }: any) => user,
+export const signup = async (_: any, args: any) => {
+    return await prisma.$transaction(async (tn) => {
 
-        getProfile: async (_: any, __: any, { user }: any) => {
+        if (!args.name || !args.email || !args.password)
+            throw new ApiError(400, "All fields required");
 
-            if (!user) throw new ApiError(401, "Unauthorized");
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-            const [savedPins, followersCount, followingCount] = await Promise.all([
+        if (!emailRegex.test(args.email))
+            throw new ApiError(400, "Invalid email format");
 
-                prisma.save.findMany({
-                    where: { userId: user.id },
-                    orderBy: { createdAt: "desc" },
-                    take: 5,
-                    include: {
-                        pin: true
-                    }
-                }),
+        if (args.password.length < 8)
+            throw new ApiError(400, "Password must be at least 8 characters");
 
-                prisma.follow.count({
-                    where: { followingId: user.id }
-                }),
+        const exists = await tn.user.findUnique({
+            where: { email: args.email }
+        });
 
-                prisma.follow.count({
-                    where: { followerId: user.id }
-                })
-            ]);
+        if (exists) throw new ApiError(400, "Email already exists");
 
-            return {
-                user,
-                savedPins: savedPins.map(s => s.pin),
-                followersCount,
-                followingCount
-            };
-        }
+        const hashed = await hashPassword(args.password);
 
-    },
+        const user = await tn.user.create({
+            data: {
+                name: args.name,
+                email: args.email,
+                passwordHash: hashed,
+                avatar: args.avatar
+            }
+        });
 
-    Mutation: {
-        signup: async (_: any, args: any) => {
-            return await prisma.$transaction(async (tn) => {
+        const access = signAccess(user.id);
+        const refresh = signRefresh(user.id);
 
-                if (!args.name || !args.email || !args.password)
-                    throw new ApiError(400, "All fields required");
+        await tn.user.update({
+            where: { id: user.id },
+            data: { refreshToken: refresh }
+        });
 
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const cookieStore = await cookies();
 
-                if (!emailRegex.test(args.email))
-                    throw new ApiError(400, "Invalid email format");
+        cookieStore.set("access", access, {
+            httpOnly: true,
+            sameSite: "lax"
+        });
 
-                if (args.password.length < 8)
-                    throw new ApiError(400, "Password must be at least 8 characters");
+        cookieStore.set("refresh", refresh, {
+            httpOnly: true,
+            sameSite: "lax"
+        });
 
-                const exists = await tn.user.findUnique({
-                    where: { email: args.email }
-                });
+        return { user };
+    });
+}
+export const login = async (_: any, args: any) => {
 
-                if (exists) throw new ApiError(400, "Email already exists");
+    return await prisma.$transaction(async (tn) => {
 
-                const hashed = await hashPassword(args.password);
+        const user = await tn.user.findUnique({
 
-                const user = await tn.user.create({
-                    data: {
-                        name: args.name,
-                        email: args.email,
-                        passwordHash: hashed,
-                        avatar: args.avatar
-                    }
-                });
+            where: { email: args.email }
+        });
 
-                const access = signAccess(user.id);
-                const refresh = signRefresh(user.id);
+        if (!user) throw new ApiError(400, "Invalid credentials");
 
-                await tn.user.update({
-                    where: { id: user.id },
-                    data: { refreshToken: refresh }
-                });
+        const ok = await verifyPassword(args.password, user.passwordHash);
+        if (!ok) throw new ApiError(400, "Invalid credentials");
 
-                const cookieStore = await cookies();
+        const access = signAccess(user.id);
+        const refresh = signRefresh(user.id);
 
-                cookieStore.set("access", access, {
-                    httpOnly: true,
-                    sameSite: "lax"
-                });
+        await tn.user.update({
+            where: { id: user.id },
+            data: { refreshToken: refresh }
+        });
 
-                cookieStore.set("refresh", refresh, {
-                    httpOnly: true,
-                    sameSite: "lax"
-                });
+        const cookieStore = await cookies();
 
-                return { user };
-            });
-        }
-        ,
+        cookieStore.set("access", access, {
+            httpOnly: true,
+            sameSite: "lax"
+        });
 
-        login: async (_: any, args: any) => {
+        cookieStore.set("refresh", refresh, {
+            httpOnly: true,
+            sameSite: "lax"
+        });
 
-            return await prisma.$transaction(async (tn) => {
+        return { user };
+    });
+}
 
-                const user = await tn.user.findUnique({
 
-                    where: { email: args.email }
-                });
 
-                if (!user) throw new ApiError(400, "Invalid credentials");
-
-                const ok = await verifyPassword(args.password, user.passwordHash);
-                if (!ok) throw new ApiError(400, "Invalid credentials");
-
-                const access = signAccess(user.id);
-                const refresh = signRefresh(user.id);
-
-                await tn.user.update({
-                    where: { id: user.id },
-                    data: { refreshToken: refresh }
-                });
-
-                const cookieStore = await cookies();
-
-                cookieStore.set("access", access, {
-                    httpOnly: true,
-                    sameSite: "lax"
-                });
-
-                cookieStore.set("refresh", refresh, {
-                    httpOnly: true,
-                    sameSite: "lax"
-                });
-
-                return { user };
-            });
-        }
-    }
-};
-
-export default resolvers;
