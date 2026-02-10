@@ -25,7 +25,6 @@ type Pin {
   mediaUrl: String!
   fileType: FileType!
   tagIds: [ID!]!
-  uploadIndex: Int!
   createdAt: DateTime!
   user: User!
 }
@@ -42,12 +41,20 @@ type ProfileResponse {
   lastLikedPins: [Pin]
   totalLikes: Int!
 }
-
+type Tag {
+  id: ID!
+  name: String! 
+}
+type GetTagsAndUplaodCountResponse {
+  tags: [Tag!]!
+  uploadCount: Boolean!
+}
 # Queries and Mutations
 
 type Query {
   user: User
-  getProfile: ProfileResponse
+  getProfile: ProfileResponse,
+  getTags: GetTagsAndUplaodCountResponse
 }
 
 type Mutation {
@@ -62,6 +69,14 @@ type Mutation {
     email: String!
     password: String!
   ): AuthPayload!
+
+  createPin(
+    title: String!
+    description: String
+    mediaUrl: String!
+    fileType: FileType!
+    tagIds: [String!]!
+  ): Pin!
 }
 `;
 export default typeDefs;

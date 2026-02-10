@@ -23,4 +23,15 @@ type ContextType = {
   refetch: () => void;
 };
 
-export type { UserType, ProfileType, ContextType };
+type FeedPinType = {
+  id: string;
+  title: string;
+  // description: string | null;
+  mediaUrl: string;
+  fileType: string;
+  tagIds: string[];
+  createdAt: Date;
+  // user: UserType;
+}
+
+export type { UserType, ProfileType, ContextType, FeedPinType };

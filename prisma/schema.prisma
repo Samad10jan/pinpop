@@ -42,7 +42,6 @@ model Pin {
   mediaUrl    String
   fileType    FileType
   tagIds      String[] @db.ObjectId
-  uploadIndex Int
   createdAt   DateTime @default(now())
 
   userId String @db.ObjectId

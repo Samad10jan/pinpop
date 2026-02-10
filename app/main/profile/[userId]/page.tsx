@@ -14,14 +14,18 @@ export default function UserPage() {
     const [profile, setProfile] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const { currentUser } = useContext(UserContext);
+    // console.log("a",profile);
+    
 
     useEffect(() => {
         async function getData() {
             try {
-                const data = await gqlClient.request(PROFILE_QUERY);
-                setProfile(data?.getProfile || null);
-            } catch (err) {
-                console.error("GraphQL error:", err);
+                const {getProfile} = await gqlClient.request(PROFILE_QUERY);
+                setProfile(getProfile || null);
+                // console.log("asasasasa",data);
+                
+            } catch (err:any) {
+                console.error("GraphQL error:", err.message);
                 setProfile(null);
             } finally {
                 setLoading(false);
@@ -48,7 +52,6 @@ export default function UserPage() {
             <main className="page">
                 <div className="container">
                     <div className="card max-w-md mx-auto mt-20 text-center bg-cyan-600 text-white">
-                        <div className="text-4xl mb-4">⏳</div>
                         <p className="text-xl font-bold">Loading your dashboard...</p>
                     </div>
                 </div>
@@ -126,10 +129,7 @@ export default function UserPage() {
                                 </div>
                             </div>
 
-                            <div className="card bg-orange-500 text-white text-center">
-                                <div className="text-sm font-bold">Account Status</div>
-                                <div className="text-xs mt-1">✓ Active & Verified</div>
-                            </div>
+                            
                         </div>
                     </div>
 
@@ -137,12 +137,12 @@ export default function UserPage() {
 
                         <div className="grid md:grid-cols-2 gap-4 mb-6">
 
-                            <div className="card text-center bg-orange-500 text-white">
+                            <div className="card text-center btn-rect bg-orange-500! text-white">
                                 <div className="text-3xl font-bold">{totalPins}</div>
                                 <div className="text-sm mt-1">Total Pins</div>
                             </div>
 
-                            <div className="card text-center bg-purple-600 text-white">
+                            <div className="card text-center btn-rect bg-purple-600! text-white">
                                 <div className="text-3xl font-bold">{likes}</div>
                                 <div className="text-sm mt-1">Likes</div>
                             </div>
@@ -152,10 +152,10 @@ export default function UserPage() {
                         <div className="card mb-6 bg-white">
                             <h3 className="text-xl font-bold mb-4">Actions</h3>
                             <div className="grid md:grid-cols-2 gap-3">
-                                <button className="btn-rect text-center py-6">
+                                <Link href={"/main/pin"} className="btn-rect text-center py-6">
                                     <div className="text-2xl mb-2">➕</div>
                                     <div className="text-sm">Create Pin</div>
-                                </button>
+                                </Link>
                                 <Link href={"/main"} className="btn-rect text-center py-6 bg-purple-600 text-white">
                                     <div className="text-2xl mb-2">🔍</div>
                                     <div className="text-sm">Explore</div>
@@ -164,7 +164,7 @@ export default function UserPage() {
                         </div>
 
 
-                        <div className="grid md:grid-cols-2 gap-6 mb-6">
+                        <div className="grid md:grid-cols-1 gap-6 mb-6">
 
 
                             <div className="card bg-white">
@@ -174,7 +174,7 @@ export default function UserPage() {
                                         <p className="text-sm opacity-70 mt-1">Your collection</p>
                                     </div>
                                     <div className="w-16 h-16 rounded-full flex items-center justify-center font-bold text-xl bg-orange-500 border-2 border-black shadow-[3px_3px_0_black] text-white">
-                                        {totalPins}
+                                        {savedFivePins.length}
                                     </div>
                                 </div>
 
@@ -194,14 +194,14 @@ export default function UserPage() {
                             </div>
 
 
-                            <div className="card bg-white">
+                            {/* <div className="card bg-white">
                                 <div className="flex items-center justify-between mb-4">
                                     <div>
-                                        <h3 className="text-xl font-bold">Liked Pins</h3>
+                                        <h3 className="text-xl font-bold">Created Pins</h3>
                                         <p className="text-sm opacity-70 mt-1">Your favorites</p>
                                     </div>
                                     <div className="w-16 h-16 rounded-full flex items-center justify-center font-bold text-xl bg-red-500 border-2 border-black shadow-[3px_3px_0_black] text-white">
-                                        {Math.floor(totalPins * 0.7)}
+                                        {totalPins}
                                     </div>
                                 </div>
 
@@ -218,7 +218,7 @@ export default function UserPage() {
                                 <Link href="/main/liked" className="btn-rect w-full text-center block">
                                     View All Liked
                                 </Link>
-                            </div>
+                            </div> */}
                         </div>
 
 

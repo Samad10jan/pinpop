@@ -5,6 +5,8 @@ import { context } from "@/utils/helper/context";
 import { login, signup } from "@/lib/gql/resolvers/auth";
 import { getFollowingCount, getFollwersCount, getProfile, getTotalLikes, user } from "@/lib/gql/resolvers/user.resolver";
 import { get } from "https";
+import { createPin, getTags } from "@/lib/gql/resolvers/pin.resolver";
+import { create } from "domain";
 
 // import resolvers from "@/lib/gql/resolvers/auth";
 
@@ -37,7 +39,7 @@ export const resolvers = {
 
     getProfile: getProfile,
 
-
+    getTags: getTags
 
   },
   ProfileResponse: {
@@ -49,7 +51,8 @@ export const resolvers = {
   Mutation: {
     signup: signup,
 
-    login: login
+    login: login,
+    createPin: createPin
   }
 
 };
