@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { gql } from "graphql-request";
 import { SIGN_UP } from "@/lib/gql/mutations/mutations";
+import gqlClient from "@/lib/services/graphql";
 
 export default function SignupPage() {
     const router = useRouter();
@@ -41,23 +42,17 @@ export default function SignupPage() {
                 avatarUrl = uploaded?.url || null;
             }
 
-            const res = await fetch("/api/graphql", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    query: SIGN_UP,
-                    variables: {
-                        name,
-                        email,
-                        password,
-                        avatar: avatarUrl
-                    }
-                })
-            });
+            const res = await gqlClient.request(SIGN_UP,
+                {
 
-            const json = await res.json();
+                    name,
+                    email,
+                    password,
+                    avatar: avatarUrl
 
-            if (json.errors) throw new Error(json.errors[0].message);
+                }
+            )
+           
 
             router.push("/main");
 

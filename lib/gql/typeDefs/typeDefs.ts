@@ -39,6 +39,8 @@ type ProfileResponse {
   followersCount: Int!
   followingCount: Int!
   lastSavedPins: [Pin]
+  lastLikedPins: [Pin]
+  totalLikes: Int!
 }
 
 # Queries and Mutations

@@ -3,7 +3,7 @@ import { startServerAndCreateNextHandler } from "@as-integrations/next";
 import typeDefs from "@/lib/gql/typeDefs/typeDefs";
 import { context } from "@/utils/helper/context";
 import { login, signup } from "@/lib/gql/resolvers/auth";
-import { getFollowingCount, getFollwersCount, getProfile, user } from "@/lib/gql/resolvers/user.resolver";
+import { getFollowingCount, getFollwersCount, getProfile, getTotalLikes, user } from "@/lib/gql/resolvers/user.resolver";
 import { get } from "https";
 
 // import resolvers from "@/lib/gql/resolvers/auth";
@@ -42,7 +42,8 @@ export const resolvers = {
   },
   ProfileResponse: {
     followersCount: getFollwersCount,
-    followingCount: getFollowingCount
+    followingCount: getFollowingCount,
+    totalLikes: getTotalLikes,
   },
 
   Mutation: {

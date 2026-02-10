@@ -13,6 +13,7 @@ query{
     }
     followersCount
     followingCount
+    totalLikes
     lastSavedPins {
       id
       title
@@ -23,6 +24,15 @@ query{
       # uploadIndex
       createdAt
       
+    }
+    lastLikedPins {
+      title
+      createdAt
+      # description
+      fileType
+      id
+      mediaUrl
+      # tagIds
     }
   }
 }

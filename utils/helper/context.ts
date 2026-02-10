@@ -16,9 +16,7 @@ export async function context() {
       });
 
     } catch (err: any) {
-      console.log("Error:", err.message);
-
-
+      // console.log("Error:", err.message);
       user = null;
     }
   }

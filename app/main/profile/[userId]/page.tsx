@@ -13,15 +13,10 @@ export default function UserPage() {
     const userId = params.userId;
     const [profile, setProfile] = useState<any>(null);
     const [loading, setLoading] = useState(true);
-    const { currentUser } = useContext(UserContext)
-    // console.log("here user:",currentUser,userId);
-
-    if (!currentUser || currentUser.id !== userId) return <p className="p-10">Unauthorized</p>;
+    const { currentUser } = useContext(UserContext);
 
     useEffect(() => {
         async function getData() {
-
-
             try {
                 const data = await gqlClient.request(PROFILE_QUERY);
                 setProfile(data?.getProfile || null);
@@ -32,99 +27,204 @@ export default function UserPage() {
                 setLoading(false);
             }
         }
-        getData()
+        getData();
     }, []);
 
-    if (loading) return <p className="p-10">Loading...</p>;
+    if (!currentUser || currentUser.id !== userId) {
+        return (
+            <main className="page">
+                <div className="container">
+                    <div className="card max-w-md mx-auto mt-20 text-center bg-red-500 text-white">
+                        <h2 className="text-2xl font-bold mb-2">Unauthorized</h2>
+                        <p>You don't have permission to view this page.</p>
+                    </div>
+                </div>
+            </main>
+        );
+    }
+
+    if (loading) {
+        return (
+            <main className="page">
+                <div className="container">
+                    <div className="card max-w-md mx-auto mt-20 text-center bg-cyan-600 text-white">
+                        <div className="text-4xl mb-4">⏳</div>
+                        <p className="text-xl font-bold">Loading your dashboard...</p>
+                    </div>
+                </div>
+            </main>
+        );
+    }
 
     const user = profile?.user || {};
-    // console.log(user);
-
-
     const name = user?.name || "Anonymous";
     const email = user?.email || "No email";
-    const avatar = user?.avatar || "/as";
-    // console.log(user);
-
-
+    const avatar = user?.avatar || "https://tse1.mm.bing.net/th/id/OIP.2ZC6eH3utWfNn6yZaCEstgHaFf?w=5263&h=3903&rs=1&pid=ImgDetMain&o=7&rm=3";
     const followers = profile?.followersCount || 0;
     const following = profile?.followingCount || 0;
+    const totalPins = profile?.user?.uploadCount || 0;
+
+    const likes = profile?.user?.totalLikes || 0
+    // console.log("lieks:", likes);
+
+    const savedFivePins = profile?.lastSavedPins || []
+    const likedFivePins = profile?.lastLikedPins || []
+    // console.log("a",profile?.lastLikedPins );
+
 
     return (
         <main className="page">
-            <div className="container mt-10">
-
-                <div className="card flex items-center gap-6 max-w-xl mx-auto my-10">
+            <div className="container py-8">
 
 
-                    <div className=" relative w-22.5 h-22.5 rounded-full border-2 border-black shadow-[4px_4px_0_black] overflow-hidden bg-gray-200 shrink-0">
-                        <div className=" absolute w-full h-full">
-
-                            <Image
-                                src={avatar || "https://tse1.mm.bing.net/th/id/OIP.2ZC6eH3utWfNn6yZaCEstgHaFf?w=5263&h=3903&rs=1&pid=ImgDetMain&o=7&rm=3"}
-                                alt="avatar"
-                                fill
-                                className="w-full h-full object-cover"
-                            />
-
-                        </div>
-                    </div>
-
-
-                    <div className="flex-1">
-
-                        <h2 className="text-xl font-bold">
-                            {name}
-                        </h2>
-
-                        <p className="text-sm opacity-70">
-                            {email}
-                        </p>
-
-
-                        <div className="flex gap-6 mt-3 text-sm font-bold justify-end">
-
-                            <div>
-                                {followers}
-                                <span className="ml-1 font-normal">Followers</span>
-                            </div>
-
-                            <div>
-                                {following}
-                                <span className="ml-1 font-normal">Following</span>
-                            </div>
-
-                        </div>
-                    </div>
-
-                </div>
-                <div className="card max-h-screen">
-                    <div className="card my-5 px-8">
-                        <div className="flex justify-between items-center">
-                            <div className="font-bold">
-                                Saved Pins
-                            </div>
-                            <Link href={`/main/saved`} className="btn-rect ">
-                                More
-                            </Link >
-                        </div>
-
-                    </div>
-
-                    <div className="card my-5 p-8">
-                        <div className="flex justify-between items-center">
-                            <div className="font-bold">
-                                Liked Pins
-                            </div>
-                            {/* <Link href={`/main/liked`} className="btn-rect ">
-                                More
-                            </Link > */}
-                        </div>
-
-                    </div>
-
+                <div className="mb-8">
+                    <h1 className="text-4xl md:text-5xl font-bold mb-2">Dashboard</h1>
+                    <p className="text-lg opacity-70">Welcome back, {name.split(' ')[0]}!</p>
                 </div>
 
+
+                <div className="grid lg:grid-cols-12 gap-6">
+
+
+                    <div className="lg:col-span-4">
+                        <div className="card sticky top-8 bg-white">
+
+
+                            <div className="flex justify-center mb-6 ">
+                                <div className=" relative w-32! h-32! btn-circle overflow-hidden! ">
+                                    <div className=" absolute w-full h-full ">
+
+                                        <Image
+                                            src={avatar}
+                                            alt={`${name}'s avatar`}
+                                            fill
+                                            className="w-full h-full object-cover"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="text-center mb-6">
+                                <h2 className="text-2xl font-bold mb-1">{name}</h2>
+                                <p className="text-sm opacity-70 mb-4">{email}</p>
+
+                                <button className="btn-rect w-full mb-3">
+                                    Edit Profile
+                                </button>
+
+                            </div>
+
+
+                            <div className="grid grid-cols-2 gap-3 p-4 rounded-lg mb-4 bg-[#F0E7D6] border-2 border-black">
+                                <div className="text-center">
+                                    <div className="text-2xl font-bold">{followers}</div>
+                                    <div className="text-xs opacity-70">Followers</div>
+                                </div>
+                                <div className="text-center">
+                                    <div className="text-2xl font-bold">{following}</div>
+                                    <div className="text-xs opacity-70">Following</div>
+                                </div>
+                            </div>
+
+                            <div className="card bg-orange-500 text-white text-center">
+                                <div className="text-sm font-bold">Account Status</div>
+                                <div className="text-xs mt-1">✓ Active & Verified</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="lg:col-span-8">
+
+                        <div className="grid md:grid-cols-2 gap-4 mb-6">
+
+                            <div className="card text-center bg-orange-500 text-white">
+                                <div className="text-3xl font-bold">{totalPins}</div>
+                                <div className="text-sm mt-1">Total Pins</div>
+                            </div>
+
+                            <div className="card text-center bg-purple-600 text-white">
+                                <div className="text-3xl font-bold">{likes}</div>
+                                <div className="text-sm mt-1">Likes</div>
+                            </div>
+                        </div>
+
+
+                        <div className="card mb-6 bg-white">
+                            <h3 className="text-xl font-bold mb-4">Actions</h3>
+                            <div className="grid md:grid-cols-2 gap-3">
+                                <button className="btn-rect text-center py-6">
+                                    <div className="text-2xl mb-2">➕</div>
+                                    <div className="text-sm">Create Pin</div>
+                                </button>
+                                <Link href={"/main"} className="btn-rect text-center py-6 bg-purple-600 text-white">
+                                    <div className="text-2xl mb-2">🔍</div>
+                                    <div className="text-sm">Explore</div>
+                                </Link>
+                            </div>
+                        </div>
+
+
+                        <div className="grid md:grid-cols-2 gap-6 mb-6">
+
+
+                            <div className="card bg-white">
+                                <div className="flex items-center justify-between mb-4">
+                                    <div>
+                                        <h3 className="text-xl font-bold">Saved Pins</h3>
+                                        <p className="text-sm opacity-70 mt-1">Your collection</p>
+                                    </div>
+                                    <div className="w-16 h-16 rounded-full flex items-center justify-center font-bold text-xl bg-orange-500 border-2 border-black shadow-[3px_3px_0_black] text-white">
+                                        {totalPins}
+                                    </div>
+                                </div>
+
+
+                                <div className="grid grid-cols-3 gap-2 mb-4">
+                                    {savedFivePins.map((s: any) => (
+                                        <div
+                                            key={s.id}
+                                            className="aspect-square rounded-lg bg-linear-to-br from-orange-500 to-cyan-600 border-2 border-black"
+                                        />
+                                    ))}
+                                </div>
+
+                                <Link href="/main/saved" className="btn-rect w-full text-center block">
+                                    View All Saved
+                                </Link>
+                            </div>
+
+
+                            <div className="card bg-white">
+                                <div className="flex items-center justify-between mb-4">
+                                    <div>
+                                        <h3 className="text-xl font-bold">Liked Pins</h3>
+                                        <p className="text-sm opacity-70 mt-1">Your favorites</p>
+                                    </div>
+                                    <div className="w-16 h-16 rounded-full flex items-center justify-center font-bold text-xl bg-red-500 border-2 border-black shadow-[3px_3px_0_black] text-white">
+                                        {Math.floor(totalPins * 0.7)}
+                                    </div>
+                                </div>
+
+
+                                <div className="grid grid-cols-3 gap-2 mb-4">
+                                    {likedFivePins.map((l: any) => (
+                                        <div
+                                            key={l.id}
+                                            className="aspect-square rounded-lg bg-linear-to-br from-red-500 to-orange-500 border-2 border-black"
+                                        />
+                                    ))}
+                                </div>
+
+                                <Link href="/main/liked" className="btn-rect w-full text-center block">
+                                    View All Liked
+                                </Link>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
             </div>
         </main>
     );

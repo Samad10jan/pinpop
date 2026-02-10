@@ -9,7 +9,7 @@ export default async function RootLayout({
     children: React.ReactNode;
 }) {
     const { user } = await context()
-    console.log(user);
+    // console.log(user);
     if (!user?.id) {
         redirect(("/"))
     }

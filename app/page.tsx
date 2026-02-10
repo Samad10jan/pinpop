@@ -105,7 +105,7 @@ export default function Auth() {
               Image at left and some quote and say to join
             </div>
 
-            <button className="btn-rect bg-[#3eea00ac]">JOIN</button>
+            <Link href={"/signup"} className="btn-rect mt-2 bg-[#3eea00ac]">JOIN</Link>
 
           </div>
 

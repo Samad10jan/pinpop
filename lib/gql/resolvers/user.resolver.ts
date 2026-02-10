@@ -7,14 +7,20 @@ export const getProfile = async (_: any, __: any, { user }: any) => {
 
     if (!user) throw new ApiError(401, "Unauthorized");
 
-    const savedPins = await prisma.save.findMany({
-        where: { userId: user.id },
-        orderBy: { createdAt: "desc" },
-        take: 5,
-        include: {
-            pin: true
-        }
-    })
+    const [savedPins, likedPins] = await Promise.all([
+        prisma.save.findMany({
+            where: { userId: user.id },
+            orderBy: { createdAt: "desc" },
+            take: 5,
+            include: { pin: true }
+        }),
+        prisma.like.findMany({
+            where: { userId: user.id },
+            orderBy: { createdAt: "desc" },
+            take: 5,
+            include: { pin: true }
+        })
+    ]);
 
     // if(!savedPins) {
     //     return {
@@ -24,11 +30,12 @@ export const getProfile = async (_: any, __: any, { user }: any) => {
 
     // };
     // }
-console.log("mera user:",user);
+    console.log("mera user:", user);
 
     return {
         user,
         lastSavedPins: savedPins.map(s => s.pin),
+        lastLikedPins: likedPins.map(l => l.pin)
 
     };
 }
@@ -45,4 +52,13 @@ export const getFollowingCount = async (parent: any, _: any, context: any) => {
     return await prisma.follow.count({
         where: { followerId: userId }
     });
+}
+
+export const getTotalLikes = async (parent: any, _: any, context: any) => {
+    const userId = parent.user.id;
+    const likes = await prisma.like.count({
+        where: { userId }
+    });
+    return likes;
+
 }

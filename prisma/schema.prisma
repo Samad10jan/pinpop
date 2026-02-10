@@ -33,7 +33,8 @@ model User {
   following  Follow[]      @relation("following")
   activities ActivityLog[]
 }
-
+// Reccomending Feeds user->groupby tagid likes,save-> [Liketags,save] -> find pins with those tags -> order by likes count
+ 
 model Pin {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   title       String
