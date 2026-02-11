@@ -17,6 +17,15 @@ export async function context() {
 
     } catch (err: any) {
       // console.log("Error:", err.message);
+      // If the error is related to token expiration, you might want to handle it differently
+      // For example, you could check if the error is a TokenExpiredError and attempt to refresh the token
+
+      // if (err.name === "TokenExpiredError") {
+      //   // Handle token refresh logic here
+      
+      //   Make Api call to refresh token endpoint and update cookies
+      //   
+      // }
       user = null;
     }
   }

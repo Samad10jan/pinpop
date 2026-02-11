@@ -15,16 +15,16 @@ export default function UserPage() {
     const [loading, setLoading] = useState(true);
     const { currentUser } = useContext(UserContext);
     // console.log("a",profile);
-    
+
 
     useEffect(() => {
         async function getData() {
             try {
-                const {getProfile} = await gqlClient.request(PROFILE_QUERY);
+                const { getProfile } = await gqlClient.request(PROFILE_QUERY);
                 setProfile(getProfile || null);
                 // console.log("asasasasa",data);
-                
-            } catch (err:any) {
+
+            } catch (err: any) {
                 console.error("GraphQL error:", err.message);
                 setProfile(null);
             } finally {
@@ -66,12 +66,13 @@ export default function UserPage() {
     const followers = profile?.followersCount || 0;
     const following = profile?.followingCount || 0;
     const totalPins = profile?.user?.uploadCount || 0;
-
+    
+    // peope liked user pins
     const likes = profile?.user?.totalLikes || 0
     // console.log("lieks:", likes);
 
     const savedFivePins = profile?.lastSavedPins || []
-    const likedFivePins = profile?.lastLikedPins || []
+
     // console.log("a",profile?.lastLikedPins );
 
 
@@ -129,7 +130,7 @@ export default function UserPage() {
                                 </div>
                             </div>
 
-                            
+
                         </div>
                     </div>
 

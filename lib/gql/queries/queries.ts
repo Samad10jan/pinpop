@@ -25,15 +25,6 @@ query{
       createdAt
       
     }
-    lastLikedPins {
-      title
-      createdAt
-      # description
-      fileType
-      id
-      mediaUrl
-      # tagIds
-    }
   }
 }
 `;
@@ -58,6 +49,23 @@ mutation($title: String!, $description: String, $mediaUrl: String!, $fileType: F
     fileType
     mediaUrl
     tagIds
+    title
+  }
+}`
+
+
+export const SUGG_QUERY = gql`
+query($search: String!) {
+  getSugg(search: $search)
+}`
+
+export const SEARCH_PAGE_PINS_QUERY = gql`
+query($search: String!) {
+  getSearchPagePins(search: $search) {
+    fileType
+    id
+    createdAt
+    mediaUrl
     title
   }
 }`

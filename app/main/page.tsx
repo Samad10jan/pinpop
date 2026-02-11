@@ -1,39 +1,78 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import PinCard from "@/components/cards/PinCard";
-import { context } from "@/utils/helper/context";
-import Image from "next/image";
-import Link from "next/link";
+import gqlClient from "@/lib/services/graphql";
+import Loading from "@/components/commons/Loading";
 
-export default async function Home() {
-  const { user } = await context()
+const FEED_QUERY = `
+query ($limit: Int, $page: Int) {
+  getUserFeed(limit: $limit, page: $page) {
+    id
+    mediaUrl
+    fileType
+    tagIds
+    title
+    createdAt
+    user {
+      id
+      name
+      avatar
+    }
+  }
+}
+`;
+
+export default function Home() {
+  const [pins, setPins] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function getFeed() {
+      try {
+        const res = await gqlClient.request(FEED_QUERY, {
+          limit: 10,
+          page: 1,
+        });
+
+        setPins(res?.getUserFeed || []);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    getFeed();
+  }, []);
+
+  if (loading) {
+    return (
+      <main className="page px-5 py-8">
+        <Loading />
+      </main>
+    );
+  }
+
   return (
-    <main className="page px-5">
+    <main className="page px-5 py-8">
 
-      Feed
-      <Link href={`http://localhost:3000/main/profile/${user?.id}`}>
-        <div className="relative w-22 h-22 overflow-hidden btn-circle bg-teal-500">
-
-          <div className="absolute w-full h-full overflow-hidden">
-            <Image src={user?.avatar || "a"} fill alt="user" />
-
-          </div>
-
-        </div>
-
-        <PinCard data={{
-          id: "1",
-          title: "Modern Bedroom Interior Design",
-          mediaUrl:
-            "https://res.cloudinary.com/dd7cvhpar/image/upload/v1770738311/fixel/pin/upyjepotmoqy9rhptw4t.png",
-          fileType: "image",
-          tagIds: ["interior", "bedroom", "design"],
-          createdAt: new Date(),
-        }} />
-      </Link>
+      {!pins.length && (
+        <p className="text-center opacity-60 mt-20">
+          No pins yet
+        </p>
+      )}
 
 
-      
+      <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-4 space-y-4">
 
+        {pins.map((pin) => (
 
+          <PinCard data={pin} key={pin.id} />
+
+        ))}
+
+      </div>
     </main>
   );
 }

@@ -27,6 +27,9 @@ type Pin {
   tagIds: [ID!]!
   createdAt: DateTime!
   user: User!
+  # likesCount: Int!
+  # savesCount: Int!
+  # commentsCount: Int!
 }
 
 type AuthPayload {
@@ -38,23 +41,35 @@ type ProfileResponse {
   followersCount: Int!
   followingCount: Int!
   lastSavedPins: [Pin]
-  lastLikedPins: [Pin]
   totalLikes: Int!
 }
+
 type Tag {
   id: ID!
   name: String! 
 }
-type GetTagsAndUplaodCountResponse {
+
+type GetTagsAndUploadCountResponse {
   tags: [Tag!]!
   uploadCount: Boolean!
 }
+
+type FeedResponse {
+  pins: [Pin!]!
+  hasMore: Boolean!
+  page: Int!
+}
+
 # Queries and Mutations
 
 type Query {
   user: User
-  getProfile: ProfileResponse,
-  getTags: GetTagsAndUplaodCountResponse
+  getProfile: ProfileResponse
+  getTags: GetTagsAndUploadCountResponse,
+  getUserFeed(limit: Int, page: Int): [Pin!]!,
+  getSugg(search: String!): [String]
+  getSearchPagePins(search: String!,limit: Int, page: Int): [Pin]
+  
 }
 
 type Mutation {
@@ -79,4 +94,5 @@ type Mutation {
   ): Pin!
 }
 `;
+
 export default typeDefs;

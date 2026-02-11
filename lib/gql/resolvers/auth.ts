@@ -69,7 +69,7 @@ export const login = async (_: any, args: any) => {
         if (!user) throw new ApiError(400, "Invalid credentials");
 
         const ok = await verifyPassword(args.password, user.passwordHash);
-        if (!ok) throw new ApiError(400, "Invalid credentials");
+        if (!ok) throw new ApiError(400,"Invalid credentials");
 
         const access = signAccess(user.id);
         const refresh = signRefresh(user.id);

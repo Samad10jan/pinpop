@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { gql } from "graphql-request";
 import { SIGN_UP } from "@/lib/gql/mutations/mutations";
 import gqlClient from "@/lib/services/graphql";
+import { getGraphQLError } from "@/utils/ApiError";
 
 export default function SignupPage() {
     const router = useRouter();
@@ -57,7 +58,7 @@ export default function SignupPage() {
             router.push("/main");
 
         } catch (e: any) {
-            setError(e.message);
+            setError(getGraphQLError(e));
         } finally {
             setLoading(false);
         }

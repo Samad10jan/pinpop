@@ -22,5 +22,7 @@ class ApiError extends Error {
     }
   }
 }
+export const getGraphQLError = (e: any) =>
+  e?.response?.errors?.[0]?.message || "Something went wrong";
 
 export { ApiError };

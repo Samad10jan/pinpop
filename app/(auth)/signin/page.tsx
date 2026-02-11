@@ -2,6 +2,7 @@
 
 import { LOGIN } from "@/lib/gql/mutations/mutations";
 import gqlClient from "@/lib/services/graphql";
+import { getGraphQLError } from "@/utils/ApiError";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -25,17 +26,19 @@ export default function LoginPage() {
             if (password.length < 8) throw new Error("Password must be 8+ chars");
             // if (!name.trim()) throw new Error("Name required");
 
-            const res = await gqlClient.request( LOGIN,
-                    {
-                        email,
-                        password,
+            const res = await gqlClient.request(LOGIN,
+                {
+                    email,
+                    password,
 
-                    })
+                })
 
             router.push("/main");
 
         } catch (e: any) {
-            setError(e.message);
+
+
+            setError(getGraphQLError(e));
         } finally {
             setLoading(false);
         }
