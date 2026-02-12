@@ -17,6 +17,12 @@ type User {
   uploadCount: Int!
   createdAt: DateTime!
 }
+type Comment {
+  id: ID!
+  content: String!
+  createdAt: DateTime!
+  user: User!
+}
 
 type Pin {
   id: ID!
@@ -27,10 +33,11 @@ type Pin {
   tagIds: [ID!]!
   createdAt: DateTime!
   user: User!
-  # likesCount: Int!
-  # savesCount: Int!
-  # commentsCount: Int!
+  likesCount: Int!
+  savesCount: Int!
+  # comments: [Comment!]!
 }
+
 
 type AuthPayload {
   user: User!
@@ -60,6 +67,11 @@ type FeedResponse {
   page: Int!
 }
 
+type PinPageResponse {
+  pin: Pin!
+  relatedPins: [Pin!]!
+  followersCount: Int
+}
 # Queries and Mutations
 
 type Query {
@@ -69,6 +81,7 @@ type Query {
   getUserFeed(limit: Int, page: Int): [Pin!]!,
   getSugg(search: String!): [String]
   getSearchPagePins(search: String!,limit: Int, page: Int): [Pin]
+  getPinResponse(id: ID!): PinPageResponse
   
 }
 

@@ -49,10 +49,10 @@ export const signup = async (_: any, args: any) => {
             sameSite: "lax"
         });
 
-        cookieStore.set("refresh", refresh, {
-            httpOnly: true,
-            sameSite: "lax"
-        });
+        // cookieStore.set("refresh", refresh, {
+        //     httpOnly: true,
+        //     sameSite: "lax"
+        // });
 
         return { user };
     });
@@ -86,14 +86,16 @@ export const login = async (_: any, args: any) => {
             sameSite: "lax"
         });
 
-        cookieStore.set("refresh", refresh, {
-            httpOnly: true,
-            sameSite: "lax"
-        });
+        // cookieStore.set("refresh", refresh, {
+        //     httpOnly: true,
+        //     sameSite: "lax"
+        // });
 
         return { user };
     });
 }
 
-
+// editUser details resolver
+// userLikePin resolver
+// userSavePin resolver
 

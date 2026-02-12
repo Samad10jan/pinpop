@@ -1,3 +1,4 @@
+import Footer from "@/components/commons/Footer";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -113,7 +114,7 @@ export default function Auth() {
 
       </section>
 
-      <footer className="footer" />
+     <Footer/>
 
     </main>
   );

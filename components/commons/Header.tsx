@@ -2,6 +2,7 @@
 
 import { SUGG_QUERY } from "@/lib/gql/queries/queries";
 import gqlClient from "@/lib/services/graphql";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Header() {
@@ -9,6 +10,8 @@ export default function Header() {
     const [q, setQ] = useState("");
     const [loading, setLoading] = useState(false);
     const [focus, setFocus] = useState(false);
+
+    const router = useRouter()
 
     useEffect(() => {
         if (!q.trim()) {
@@ -34,6 +37,8 @@ export default function Header() {
     const handleSuggestionClick = (s: string) => {
         setQ(s);
         setSugg([]);
+        router.replace(`/main/search?q=${s}`)
+
     };
 
 
@@ -52,19 +57,19 @@ export default function Header() {
                     onChange={(e) => setQ(e.target.value)}
                     onFocus={() => setFocus(true)}
                     onBlur={() => setTimeout(() => setFocus(false), 150)}
-                    
+
                 />
 
                 <button
                     type="submit"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 px-3 py-1 bg-red-500 text-white rounded-full text-sm font-bold transition-all! duration-300"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 px-3! py-1! btn-rect bg-red-600! text-white rounded-full! text-sm! font-semibold! transition-all! duration-300!"
                 >
                     Search
                 </button>
 
                 {loading && (
                     <span className="absolute right-20 top-1/2 -translate-y-1/2 text-xs transition-all! duration-300">
-                        
+
                     </span>
                 )}
             </form>

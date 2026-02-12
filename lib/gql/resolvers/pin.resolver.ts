@@ -219,3 +219,81 @@ export async function getSearchPagePins(_: any, { search, limit = 10, page = 1 }
     return pins
 
 }
+
+export async function getPinResponse(_: any, { id }: any, { user }: any) {
+    if (!user) throw new ApiError(401, "Unauthorized");
+    if (!id) throw new ApiError(400, "Pin ID is required");
+
+    const pin = await prisma.pin.findUnique({
+        where: { id },
+
+        include: {
+            user: {
+                include: {
+                    _count: {
+                        select: {
+                            followers: true,
+                        },
+                    },
+                },
+            },
+            // comments: {
+            //     orderBy: {
+            //         createdAt: "desc",
+            //     },
+            //     include: {
+            //         user: true,
+            //     },
+            // },
+
+            _count: {
+                select: {
+                    likes: true,
+                    saves: true,
+                },
+            },
+        }
+    });
+
+    if (!pin) throw new ApiError(404, "Pin not found");
+
+    const tagIds = pin.tagIds.map(String);
+
+    const relatedPins = await prisma.pin.findMany({
+        where: {
+            tagIds: {
+                hasSome: tagIds,
+            },
+
+            // exclude current pin
+            id: {
+                not: pin.id,
+            },
+
+            // exclude current logged in user pins
+            userId: {
+                not: user.id,
+            },
+        },
+
+        take: 10,
+
+        orderBy: {
+            createdAt: "desc",
+        },
+    });
+
+    return {
+        pin: {
+            ...pin,
+            likesCount: pin._count.likes,
+            savesCount: pin._count.saves,
+
+
+        },
+        followersCount: pin.user._count.followers ?? 0,
+        relatedPins,
+    };
+}
+
+// getCommnets with pagination for pin page

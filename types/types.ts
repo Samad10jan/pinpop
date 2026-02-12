@@ -34,4 +34,14 @@ type FeedPinType = {
   // user: UserType;
 }
 
-export type { UserType, ProfileType, ContextType, FeedPinType };
+type CommentType = {
+  id: string;
+  content: string;
+  createdAt: string;
+  user: {
+    name: string;
+    avatar: string;
+  };
+};
+
+export type { UserType, ProfileType, ContextType, FeedPinType,CommentType };

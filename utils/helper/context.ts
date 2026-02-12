@@ -4,43 +4,57 @@ import { cookies } from "next/headers";
 
 export async function context() {
   let user = null;
+  const cookieStore = await cookies();
 
-  const token = (await cookies()).get("access")?.value;
+  const access = cookieStore.get("access")?.value;
 
-  if (token) {
-    try {
-      const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
+  if (!access) return { user: null };
 
-      user = await prisma.user.findUnique({
-        where: { id: decoded.id }
+  try {
+
+    const decoded: any = jwt.verify(access, process.env.JWT_SECRET!);
+
+    user = await prisma.user.findUnique({
+      where: { id: decoded.id },
+    });
+
+  } catch (err: any) {
+
+    if (err.name === "TokenExpiredError") {
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_HOST_URL}/api/refreshToken`, {
+        method: "POST",
+        headers: {
+          cookie: cookieStore.toString(),
+        },
+        cache: "no-store",
       });
+      if (!res.ok) return { user: null };
 
-    } catch (err: any) {
-      // console.log("Error:", err.message);
-      // If the error is related to token expiration, you might want to handle it differently
-      // For example, you could check if the error is a TokenExpiredError and attempt to refresh the token
+      const data = await res.json();
 
-      // if (err.name === "TokenExpiredError") {
-      //   // Handle token refresh logic here
-      
-      //   Make Api call to refresh token endpoint and update cookies
-      //   
-      // }
-      user = null;
+      // got access token and refresh token is valid
+      if (data?.access) {
+        const decoded: any = jwt.verify(data.access, process.env.JWT_SECRET!);
+
+        user = await prisma.user.findUnique({
+          where: { id: decoded.id },
+        });
+      }
     }
   }
 
-  return {
-    user
-      : {
-      id: user?.id,
-      name: user?.name,
-      email: user?.email,
-      avatar: user?.avatar,
-      uploadCount: user?.uploadCount,
-      createdAt: user?.createdAt
+  // if access token is invalid and refresh token is also invalid/expired, user will be null
+  if (!user) return { user: null };
 
-    }
+  return {
+    user: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      avatar: user.avatar,
+      uploadCount: user.uploadCount,
+      createdAt: user.createdAt,
+    },
   };
 }
-// use Api method

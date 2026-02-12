@@ -69,3 +69,45 @@ query($search: String!) {
     title
   }
 }`
+
+export const PIN_PAGE_QUERY = gql`
+
+query($getPinResponseId: ID!) {
+  getPinResponse(id: $getPinResponseId) {
+    followersCount
+    pin {
+      mediaUrl
+      tagIds
+      description
+      createdAt
+      fileType
+      id
+      title
+      user {
+        avatar
+        email
+        name
+        id
+      }
+      likesCount
+      savesCount
+      # comments {
+      #   createdAt
+      #   id
+      #   user {
+      #     avatar
+      #     name
+      #   }
+      #   content
+      # }
+    }
+    relatedPins {
+      createdAt
+      mediaUrl
+      title
+      id
+      fileType
+    }
+  }
+}
+`
