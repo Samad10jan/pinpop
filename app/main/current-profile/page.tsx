@@ -1,30 +1,22 @@
 "use client";
 
-import FollowBtn from "@/components/buttons/FollowBtn";
-import { PROFILE_QUERY } from "@/lib/gql/queries/queries";
+import { UserContext } from "@/components/contexts/UserContext";
+import { CURRENT_PROFILE_QUERY } from "@/lib/gql/queries/queries";
 import gqlClient from "@/lib/services/graphql";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 export default function UserPage() {
-  const params = useParams();
-  const userId = params?.userId as string;
-
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const { currentUser } = useContext(UserContext);
 
   useEffect(() => {
-    if (!userId) return;
-
     async function getData() {
       try {
-        const data = await gqlClient.request(PROFILE_QUERY, {
-          userId,
-        });
-
-        setProfile(data?.getProfile || null);
+        const data = await gqlClient.request(CURRENT_PROFILE_QUERY);
+        setProfile(data?.getCurrentProfile || null);
       } catch (err: any) {
         console.error("GraphQL error:", err.message);
         setProfile(null);
@@ -33,27 +25,29 @@ export default function UserPage() {
       }
     }
 
-    getData();
-  }, [userId]);
+    if (currentUser) getData();
+  }, [currentUser]);
 
-  if (loading) {
+  // not logged in
+  if (!currentUser && !loading) {
     return (
       <main className="page">
         <div className="container">
-          <div className="card max-w-md mx-auto mt-20 text-center bg-cyan-600 text-white">
-            <p className="text-xl font-bold">Loading profile...</p>
+          <div className="card max-w-md mx-auto mt-20 text-center bg-red-500 text-white">
+            <h2 className="text-2xl font-bold mb-2">Unauthorized</h2>
+            <p>You don't have permission to view this page.</p>
           </div>
         </div>
       </main>
     );
   }
 
-  if (!profile) {
+  if (loading) {
     return (
       <main className="page">
         <div className="container">
-          <div className="card max-w-md mx-auto mt-20 text-center bg-red-500 text-white">
-            <h2 className="text-2xl font-bold mb-2">User not found</h2>
+          <div className="card max-w-md mx-auto mt-20 text-center bg-cyan-600 text-white">
+            <p className="text-xl font-bold">Loading your dashboard...</p>
           </div>
         </div>
       </main>
@@ -71,9 +65,10 @@ export default function UserPage() {
   const following = profile?.followingCount || 0;
   const totalPins = user?.uploadCount || 0;
   const likes = profile?.totalLikes || 0;
+  const savedFivePins = profile?.lastSavedPins || [];
 
   return (
-      <main className="page">
+       <main className="page">
             <div className="container py-8">
 
 
@@ -108,7 +103,9 @@ export default function UserPage() {
                                 <h2 className="text-2xl font-bold mb-1">{name}</h2>
                                 <p className="text-sm opacity-70 mb-4">{email}</p>
 
-                              <FollowBtn/>
+                                <button className="btn-rect w-full mb-3">
+                                    Edit Profile
+                                </button>
 
                             </div>
 
@@ -159,7 +156,38 @@ export default function UserPage() {
                         </div>
 
 
-                        
+                        <div className="grid md:grid-cols-1 gap-6 mb-6">
+
+
+                            <div className="card bg-white">
+                                <div className="flex items-center justify-between mb-4">
+                                    <div>
+                                        <h3 className="text-xl font-bold">Saved Pins</h3>
+                                        <p className="text-sm opacity-70 mt-1">Your collection</p>
+                                    </div>
+                                    <div className="w-16 h-16 rounded-full flex items-center justify-center font-bold text-xl bg-orange-500 border-2 border-black shadow-[3px_3px_0_black] text-white">
+                                        {savedFivePins.length}
+                                    </div>
+                                </div>
+
+
+                                <div className="grid grid-cols-3 gap-2 mb-4">
+                                    {savedFivePins.map((s: any) => (
+                                        <div
+                                            key={s.id}
+                                            className="aspect-square rounded-lg bg-linear-to-br from-orange-500 to-cyan-600 border-2 border-black"
+                                        />
+                                    ))}
+                                </div>
+
+                                <Link href="/main/saved" className="btn-rect w-full text-center block">
+                                    View All Saved
+                                </Link>
+                            </div>
+
+
+                            
+                        </div>
 
 
 

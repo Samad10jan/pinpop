@@ -1,8 +1,8 @@
 import { gql } from "graphql-request";
 
-export const PROFILE_QUERY = gql`
+export const CURRENT_PROFILE_QUERY = gql`
 query{
-  getProfile {
+  getCurrentProfile {
     user {
       avatar
       name
@@ -17,17 +17,32 @@ query{
     lastSavedPins {
       id
       title
-      # description
       mediaUrl
       fileType
-      # tagIds
-      # uploadIndex
       createdAt
       
     }
   }
 }
 `;
+export const PROFILE_QUERY = gql`
+
+query GetProfile($userId: ID!) {
+  getProfile(userId: $userId) {
+    followersCount
+    followingCount
+    totalLikes
+    user {
+      id
+      name
+      email
+      avatar
+      uploadCount
+      createdAt
+    }
+  }
+}
+`
 
 export const GET_TAGS_QUERY = gql`
 query {

@@ -69,6 +69,7 @@ export default function CommentArea({ pinId }: { pinId: string }) {
             setLoading(false);
         }
     }
+// console.log(error);
 
     return (
         <div className="mt-6">

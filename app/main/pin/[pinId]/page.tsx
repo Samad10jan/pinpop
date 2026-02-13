@@ -14,6 +14,7 @@ import SaveBtn from "@/components/buttons/SaveBtn";
 import PinCard from "@/components/cards/PinCard";
 import CommentArea from "@/components/commons/CommentsArea";
 import { FeedPinType } from "@/types/types";
+import Link from "next/link";
 
 export default function PinPage() {
     const { pinId } = useParams();
@@ -119,17 +120,21 @@ export default function PinPage() {
 
 
                         <div className="mb-10 pb-8 border-b">
-                            <div className="flex justify-between items-center">
+                            <div className="flex justify-between items-center p-3 rounded-2xl ">
 
-                                <div className="flex gap-4 items-center">
-                                    <Image
-                                        src={pin.user.avatar}
-                                        alt={pin.user.name}
-                                        width={56}
-                                        height={56}
-                                        className="rounded-full"
-                                    />
+                                <div className="flex gap-4 items-center ">
 
+                                    <Link href={`/main/profile/${pin.user.id}`} className="group relative overflow-hidden rounded-full hover:ring-2 p-2 hover:ring-amber-500 transition-all duration-300">
+                                        <Image
+                                            src={pin.user.avatar}
+                                            alt={pin.user.name}
+                                            width={56}
+                                            height={56}
+                                            className="rounded-full"
+                                        />
+                                        <div className="absolute inset-0 w-2 h-full  bg-amber-300 blur-xs transform -translate-x-30 group-hover:translate-x-30 skew-x-12 transition-transform duration-1500" />
+
+                                    </Link>
                                     <div>
                                         <h3 className="font-semibold">{pin.user.name}</h3>
                                         <p className="text-sm text-gray-500">
@@ -158,7 +163,7 @@ export default function PinPage() {
                 ))}
             </div>
 
-        </div>
+        </div >
 
 
     );

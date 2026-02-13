@@ -3,7 +3,7 @@ import { ApiError } from "@/utils/ApiError";
 
 export const user = async (_: any, __: any, { user }: any) => user;
 
-export const getProfile = async (_: any, __: any, { user }: any) => {
+export const getCurrentProfile = async (_: any, __: any, { user }: any) => {
 
     if (!user) throw new ApiError(401, "Unauthorized");
 
@@ -14,14 +14,6 @@ export const getProfile = async (_: any, __: any, { user }: any) => {
         include: { pin: true }
     })
 
-    // if(!savedPins) {
-    //     return {
-    //     user,
-    //     savedPins: []
-
-
-    // };
-    // }
     console.log("mera user:", user);
 
     return {
@@ -59,4 +51,23 @@ export const getTotalLikes = async (parent: any, _: any, context: any) => {
     });
 
     return likes;
+}
+
+
+export const getProfile = async (_: any, { userId }: any,) => {
+
+    if (!userId) throw new ApiError(400, "User ID is required");
+
+    const user = await prisma.user.findUnique({
+        where: { id: userId }
+    })
+
+    if (!user) throw new ApiError(404, "User not found");
+
+
+    return {
+        user
+    };
+
+
 }

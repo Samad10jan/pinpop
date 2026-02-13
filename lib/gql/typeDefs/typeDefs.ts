@@ -78,13 +78,14 @@ type PinPageResponse {
 
 type Query {
   user: User
-  getProfile: ProfileResponse
+  getCurrentProfile: ProfileResponse
   getTags: GetTagsAndUploadCountResponse,
   getUserFeed(limit: Int, page: Int): [Pin!]!,
   getSugg(search: String!): [String]
   getSearchPagePins(search: String!,limit: Int, page: Int): [Pin]
   getPinResponse(id: ID!): PinPageResponse
   getPinComments(pinId: ID!, page: Int): [Comment]
+  getProfile(userId: ID!): ProfileResponse
   
 }
 
