@@ -111,3 +111,18 @@ query($getPinResponseId: ID!) {
   }
 }
 `
+
+export const GET_PIN_COMMENTS_QUERY=gql`
+query($pinId: ID!, $page: Int) {
+  getPinComments(pinId: $pinId, page: $page) {
+    content
+    id
+    createdAt
+    user {
+      id
+      avatar
+      name
+    }
+  }
+}
+`

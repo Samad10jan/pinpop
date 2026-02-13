@@ -8,7 +8,12 @@ import { PIN_PAGE_QUERY } from "@/lib/gql/queries/queries";
 import gqlClient from "@/lib/services/graphql";
 import { getGraphQLError } from "@/utils/ApiError";
 
+import FollowBtn from "@/components/buttons/FollowBtn";
+import LikeBtn from "@/components/buttons/LikeBtn";
+import SaveBtn from "@/components/buttons/SaveBtn";
 import PinCard from "@/components/cards/PinCard";
+import CommentArea from "@/components/commons/CommentsArea";
+import { FeedPinType } from "@/types/types";
 
 export default function PinPage() {
     const { pinId } = useParams();
@@ -58,65 +63,58 @@ export default function PinPage() {
     const { pin, relatedPins } = data;
 
     return (
-        <div className="min-h-screen ">
-            <div className="max-w-300 px-6 lg:px-8 py-8 mx-auto">
-                <div className="flex flex-col lg:flex-row gap-10">
-
-                    
-                    <div className="lg:w-1/2 lg:sticky lg:top-24 self-start">
-                        <div className="rounded-3xl overflow-hidden">
-
-                            <div className="relative w-full max-h-[80vh] aspect-3/4">
-                                <Image
-                                    src={pin.mediaUrl}
-                                    alt={pin.title}
-                                    fill
-                                    sizes="(max-width: 768px) 100vw, 50vw"
-                                    priority
-                                    className="object-contain transition-transform duration-500 hover:scale-[1.02]"
-                                />
-                            </div>
- <div className="flex justify-end-safe mb-8 scale-85 gap-3">
-
-                            <button className="btn-rect  px-6! py-3! rounded-full! text-sm! font-semibold!">
-                                Save
-                            </button>
 
 
-                            <a
-                                href={pin.mediaUrl}
-                                download
-                                target="_blank"
-                                title={pin.title}
-                                className="btn-rect  px-6! py-3! rounded-full! text-sm! font-semibold!"
-                            >
-                                Download
-                            </a>
 
-                            <button className="btn-rect  px-6! py-3! rounded-full! text-sm! font-semibold!">
-                                Share
-                            </button>
+        <div className="flex gap-4 space-y-4 m-5 flex-wrap">
+            <div className=" m-5">
 
-                        </div>
+                <div className="max-w-130 mx-auto">
+                    <Image
+                        src={pin.mediaUrl}
+                        alt={pin.title}
+                        width={700}
+                        height={1000}
+                        // sizes="(max-width: 700px) 90vw, 700px"
+                        className=" rounded-2xl shadow"
+                        priority
+                    />
+                </div>
 
-                        </div>
-                        
-                    </div>
-
-                  
-                    <div className="lg:w-1/2 flex flex-col">
+                <div className="">
+                    <div className=" p-3 w-full">
+                        <div className="flex *:flex-1">
+                            <div className="">
 
 
-                       
-
-                        <div className="mb-8 ">
-                            <h1 className="text-4xl font-bold mb-4">{pin.title}</h1>
-
-                            {pin.description && (
-                                <p className="text-gray-600 text-lg leading-relaxed">
+                                <p className="font-semibold text-xl line-clamp-2">
+                                    {pin.title}
+                                </p>
+                                <p className="font-semibold text-sm text-gray-500  line-clamp-2">
                                     {pin.description}
                                 </p>
-                            )}
+
+                            </div>
+
+
+                            <div className="flex justify-self-end mb-8 gap-3">
+
+                                <SaveBtn />
+
+                                <LikeBtn />
+                                <a
+                                    href={pin.mediaUrl}
+                                    download
+                                    target="_blank"
+                                    title={pin.title}
+                                    className="btn-rect bg-red-600! text-white  px-6! py-3! rounded-full! text-sm! font-semibold!"
+                                >
+                                    Download
+                                </a>
+                            </div>
+
+
+
                         </div>
 
 
@@ -140,35 +138,30 @@ export default function PinPage() {
                                     </div>
                                 </div>
 
-                                <button className="btn-rect bg-red-600! text-white px-6! py-3! rounded-full! text-sm! font-semibold!">
-                                    Follow
-                                </button>
+                                <FollowBtn />
                             </div>
                         </div>
-
-                        <div>
-                            Comments Area
-                        </div>
-
+                        <CommentArea pinId={pin.id} />
                     </div>
+
+
                 </div>
+
+            </div>
+            <div className="columns-2 gap-4 w-[40%] space-y-4 m-5">
+
+
+                {relatedPins.map((pin: FeedPinType) => (
+
+                    <PinCard data={pin} key={pin.id} />
+
+                ))}
             </div>
 
-            {relatedPins?.length > 0 && (
-                <div className="max-w-400 mx-auto px-6 py-16  mt-12">
-
-                    <h2 className="text-3xl font-bold mb-8">More like this</h2>
-
-                    <div className="columns-2 sm:columns-3 md:columns-4 lg:columns-5 xl:columns-6 gap-4">
-                        {relatedPins.map((p: any) => (
-                            <div key={p.id} className="mb-4 break-inside-avoid">
-                                <PinCard data={p} />
-                            </div>
-                        ))}
-                    </div>
-
-                </div>
-            )}
         </div>
+
+
     );
 }
+
+

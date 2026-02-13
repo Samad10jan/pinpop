@@ -22,7 +22,17 @@ class ApiError extends Error {
     }
   }
 }
-export const getGraphQLError = (e: any) =>
-  e?.response?.errors?.[0]?.message || "Something went wrong";
+
+export const getGraphQLError = (e: any) => {
+  const raw =
+    e?.response?.errors?.[0]?.message ||
+    e?.message ||
+    "Something went wrong";
+
+// get last line of error message
+  const lines = raw.split("\n").map((l:any) => l.trim()).filter(Boolean);
+
+  return lines[lines.length - 1];
+};
 
 export { ApiError };

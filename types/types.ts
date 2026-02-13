@@ -32,6 +32,7 @@ type FeedPinType = {
   tagIds: string[];
   createdAt: Date;
   // user: UserType;
+  
 }
 
 type CommentType = {

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { FeedPinType } from "@/types/types";
 import Link from "next/link";
+import SaveBtn from "../buttons/SaveBtn";
 
 export default function PinCard({ data }: { data: FeedPinType }) {
     return (
@@ -14,6 +15,7 @@ export default function PinCard({ data }: { data: FeedPinType }) {
                     width={500}
                     height={800}
                     className="w-full h-auto object-cover"
+                    loading="lazy"
                 />
 
 
@@ -28,9 +30,9 @@ export default function PinCard({ data }: { data: FeedPinType }) {
                 </Link>
 
 
-                <button className="absolute top-3! right-3! opacity-0! group-hover:opacity-100! transition! btn-rect bg-red-600! text-white px-4! py-1! rounded-full! text-sm! font-semibold!">
-                    Save
-                </button>
+                <div className="absolute top-3! right-3! *:py-2! *:scale-85 opacity-0! group-hover:opacity-100! transition! text-white  rounded-full! text-sm! font-semibold!">
+                   <SaveBtn/>
+                </div>
 
             </div>
 

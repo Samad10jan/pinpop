@@ -12,7 +12,7 @@ export default function CommentCard({
             <div className="shrink-0">
                 <div className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-transparent group-hover:ring-gray-200 transition-all duration-200">
                     <Image
-                        src={commentData.user.avatar}
+                        src={commentData?.user?.avatar||"https://tse1.mm.bing.net/th/id/OIP.2ZC6eH3utWfNn6yZaCEstgHaFf?w=5263&h=3903&rs=1&pid=ImgDetMain&o=7&rm=3"}
                         alt={commentData.user.name}
                         fill
                         className="object-cover"
@@ -27,7 +27,8 @@ export default function CommentCard({
                         {commentData.user.name}
                     </p>
                     <span className="text-xs text-gray-400">
-                        {commentData.createdAt}
+                        {new Date(commentData.createdAt).toLocaleDateString()
+                        }
                     </span>
                 </div>
                 

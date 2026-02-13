@@ -72,6 +72,8 @@ type PinPageResponse {
   relatedPins: [Pin!]!
   followersCount: Int
 }
+
+
 # Queries and Mutations
 
 type Query {
@@ -82,6 +84,7 @@ type Query {
   getSugg(search: String!): [String]
   getSearchPagePins(search: String!,limit: Int, page: Int): [Pin]
   getPinResponse(id: ID!): PinPageResponse
+  getPinComments(pinId: ID!, page: Int): [Comment]
   
 }
 
@@ -105,7 +108,14 @@ type Mutation {
     fileType: FileType!
     tagIds: [String!]!
   ): Pin!
+
+  sendComment(
+  pinId: ID!
+  content: String!
+): Comment!
 }
+
+
 `;
 
 export default typeDefs;

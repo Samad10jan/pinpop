@@ -178,122 +178,190 @@ export async function getUserFeed(_: any, { limit = 10, page = 1 }: any, { user 
 }
 
 export async function getSugg(_: any, { search }: any) {
-    if (!search.trim()) {
-        return [];
+    try {
+        if (!search.trim()) {
+            return [];
+        }
+        const pins = await prisma.pin.findMany({
+            where: {
+                title: {
+                    contains: search,
+                    mode: "insensitive"
+                }
+            },
+            take: 5
+        });
+
+        return pins.map(p => p.title)
+    } catch (error) {
+        throw error;
     }
-    const pins = await prisma.pin.findMany({
-        where: {
-            title: {
-                contains: search,
-                mode: "insensitive"
-            }
-        },
-        take: 5
-    });
-
-    return pins.map(p => p.title)
-
 }
 
 
 export async function getSearchPagePins(_: any, { search, limit = 10, page = 1 }: any) {
-    if (!search.trim()) {
-        return [];
-    }
-    const skip = (page - 1) * limit;
-    const pins = await prisma.pin.findMany({
-        where: {
-            title: {
-                contains: search,
-                mode: "insensitive"
-            }
-        },
-        skip,
-        take: limit,
-        orderBy: {
-            createdAt: "desc"
+    try {
+        if (!search.trim()) {
+            return [];
         }
+        const skip = (page - 1) * limit;
+        const pins = await prisma.pin.findMany({
+            where: {
+                title: {
+                    contains: search,
+                    mode: "insensitive"
+                }
+            },
+            skip,
+            take: limit,
+            orderBy: {
+                createdAt: "desc"
+            }
 
-    });
+        });
 
-    return pins
-
+        return pins
+    } catch (error) {
+        throw error;
+    }
 }
 
 export async function getPinResponse(_: any, { id }: any, { user }: any) {
-    if (!user) throw new ApiError(401, "Unauthorized");
-    if (!id) throw new ApiError(400, "Pin ID is required");
+    try {
+        if (!user) throw new ApiError(401, "Unauthorized");
+        if (!id) throw new ApiError(400, "Pin ID is required");
 
-    const pin = await prisma.pin.findUnique({
-        where: { id },
+        const pin = await prisma.pin.findUnique({
+            where: { id },
 
-        include: {
-            user: {
-                include: {
-                    _count: {
-                        select: {
-                            followers: true,
+            include: {
+                user: {
+                    include: {
+                        _count: {
+                            select: {
+                                followers: true,
+                            },
                         },
                     },
                 },
-            },
-            // comments: {
-            //     orderBy: {
-            //         createdAt: "desc",
-            //     },
-            //     include: {
-            //         user: true,
-            //     },
-            // },
+                // comments: {
+                //     orderBy: {
+                //         createdAt: "desc",
+                //     },
+                //     include: {
+                //         user: true,
+                //     },
+                // },
 
-            _count: {
-                select: {
-                    likes: true,
-                    saves: true,
+                _count: {
+                    select: {
+                        likes: true,
+                        saves: true,
+                    },
+                },
+            }
+        });
+
+        if (!pin) throw new ApiError(404, "Pin not found");
+
+        const tagIds = pin.tagIds.map(String);
+
+        const relatedPins = await prisma.pin.findMany({
+            where: {
+                tagIds: {
+                    hasSome: tagIds,
+                },
+
+                // exclude current pin
+                id: {
+                    not: pin.id,
+                },
+
+                // exclude current logged in user pins
+                userId: {
+                    not: user.id,
                 },
             },
-        }
-    });
 
-    if (!pin) throw new ApiError(404, "Pin not found");
+            take: 10,
 
-    const tagIds = pin.tagIds.map(String);
-
-    const relatedPins = await prisma.pin.findMany({
-        where: {
-            tagIds: {
-                hasSome: tagIds,
+            orderBy: {
+                createdAt: "desc",
             },
+        });
 
-            // exclude current pin
-            id: {
-                not: pin.id,
+        return {
+            pin: {
+                ...pin,
+                likesCount: pin._count.likes,
+                savesCount: pin._count.saves,
             },
-
-            // exclude current logged in user pins
-            userId: {
-                not: user.id,
-            },
-        },
-
-        take: 10,
-
-        orderBy: {
-            createdAt: "desc",
-        },
-    });
-
-    return {
-        pin: {
-            ...pin,
-            likesCount: pin._count.likes,
-            savesCount: pin._count.saves,
-
-
-        },
-        followersCount: pin.user._count.followers ?? 0,
-        relatedPins,
-    };
+            followersCount: pin.user._count.followers ?? 0,
+            relatedPins,
+        };
+    } catch (error) {
+        throw error;
+    }
 }
 
-// getCommnets with pagination for pin page
+// COMMENTS
+
+export async function getPinComments(_: any, { pinId, page = 1 }: any) {
+    try {
+        if (!pinId) throw new ApiError(400, "Pin ID is required");
+
+        const skip = (page - 1) * 5;
+
+        const comments = await prisma.comment.findMany({
+            where: { pinId },
+            skip,
+            take: 5,
+            orderBy: {
+                createdAt: "desc",
+            },
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        name: true,
+                        avatar: true,
+                    },
+                },
+            },
+        });
+        if (!comments) throw new ApiError(404, "Comments not found");
+        return comments;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function sendComment(_: any, { pinId, content }: any, { user }: any) {
+    try {
+        if (!user) throw new ApiError(401, "Unauthorized");
+        if (!pinId) throw new ApiError(400, "Pin ID is required");
+        if (!content.trim()) throw new ApiError(400, "Comment content cannot be empty");
+
+        const comment = await prisma.comment.create({
+            data: {
+                content,
+                pinId,
+                userId: user.id,
+            },
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        name: true,
+                        avatar: true,
+                    },
+                },
+            },
+        });
+
+        if (!comment) throw new ApiError(500, "Failed to post comment");
+        return comment;
+    } catch (error) {
+        throw error;
+    }
+}

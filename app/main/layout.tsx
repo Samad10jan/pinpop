@@ -1,9 +1,8 @@
-import { context } from "@/utils/helper/context";
-import "../globals.css";
-import { UserType } from "@/types/types";
-import { redirect } from "next/navigation";
-import { UserProvider } from "@/components/contexts/UserContext";
 import Header from "@/components/commons/Header";
+import { UserProvider } from "@/components/contexts/UserContext";
+import { context } from "@/utils/helper/context";
+import { redirect } from "next/navigation";
+import "../globals.css";
 export default async function RootLayout({
     children,
 }: {

@@ -25,3 +25,18 @@ mutation Mutation($email: String!, $password: String!) {
     }
   }
 }`
+
+export const CREATE_COMMENT = gql`
+mutation Mutation($pinId: ID!, $content: String!) {
+  sendComment(pinId: $pinId, content: $content) {
+    content
+    id
+    createdAt
+    user {
+      avatar
+      id
+      name
+    }
+  }
+}
+`
