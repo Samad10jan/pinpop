@@ -1,16 +1,17 @@
 import prisma from "@/lib/services/prisma";
+import { UserType } from "@/types/types";
 import { ApiError } from "@/utils/ApiError";
 
-export const user = async (_: any, __: any, { user }: any) => user;
+export const user = async (_: any, __: any,  { user }: {user:UserType}) => user;
 
-export const getCurrentProfile = async (_: any, __: any, { user }: any) => {
+export const getCurrentProfile = async (_: any, __: any,  { user }: {user:UserType}) => {
 
     if (!user) throw new ApiError(401, "Unauthorized");
 
     const savedPins = await prisma.save.findMany({
         where: { userId: user.id },
         orderBy: { createdAt: "desc" },
-        take: 5,
+        take: 3,
         include: { pin: true }
     })
 
@@ -24,21 +25,21 @@ export const getCurrentProfile = async (_: any, __: any, { user }: any) => {
     };
 }
 
-export const getFollwersCount = async (parent: any, _: any, context: any) => {
+export const getFollwersCount = async (parent: any, _: any) => {
     const userId = parent.user.id;
     return await prisma.follow.count({
         where: { followingId: userId }
     });
 };
 
-export const getFollowingCount = async (parent: any, _: any, context: any) => {
+export const getFollowingCount = async (parent: any, _: any) => {
     const userId = parent.user.id;
     return await prisma.follow.count({
         where: { followerId: userId }
     });
 }
 
-export const getTotalLikes = async (parent: any, _: any, context: any) => {
+export const getTotalLikes = async (parent: any, _: any) => {
     const userId = parent.user.id;
 
     // Count all likes ON pins Created by this user
@@ -72,4 +73,3 @@ export const getProfile = async (_: any, { userId }: any,) => {
 
 }
 
-// Follow & Save & Like

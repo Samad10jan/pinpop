@@ -72,9 +72,9 @@ type PinPageResponse {
   pin: Pin!
   relatedPins: [Pin!]!
   followersCount: Int
-   likesCount: Int!
+  likesCount: Int!
   savesCount: Int!
-  # Tags:[String!] to add
+  tags:[Tag!] 
 }
 type ToggleSaveResponse {
   saved: Boolean!
@@ -89,7 +89,7 @@ type ToggleLikeResponse {
 type Query {
   user: User
   getCurrentProfile: ProfileResponse
-  getTags: GetTagsAndUploadCountResponse,
+  getAllTags: GetTagsAndUploadCountResponse,
   getUserFeed(limit: Int, page: Int): [Pin!]!,
   getSugg(search: String!): [String]
   getSearchPagePins(search: String!,limit: Int, page: Int): [Pin]

@@ -3,6 +3,7 @@
 import FollowBtn from "@/components/buttons/FollowBtn";
 import { PROFILE_QUERY } from "@/lib/gql/queries/queries";
 import gqlClient from "@/lib/services/graphql";
+import { ProfileType } from "@/types/types";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -12,7 +13,7 @@ export default function UserPage() {
   const params = useParams();
   const userId = params?.userId as string;
 
-  const [profile, setProfile] = useState<any>(null);
+  const [profile, setProfile] = useState<ProfileType|null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -61,15 +62,14 @@ export default function UserPage() {
   }
 
   const user = profile?.user || {};
-  const name = user?.name || "Anonymous";
-  const email = user?.email || "No email";
-  const avatar =
-    user?.avatar ||
+  const name = profile.user?.name || "Anonymous";
+  const email = profile.user?.email || "No email";
+  const avatar = profile?.user?.avatar ||
     "https://tse1.mm.bing.net/th/id/OIP.2ZC6eH3utWfNn6yZaCEstgHaFf?w=5263&h=3903&rs=1&pid=ImgDetMain&o=7&rm=3";
 
   const followers = profile?.followersCount || 0;
   const following = profile?.followingCount || 0;
-  const totalPins = user?.uploadCount || 0;
+  const totalPins = profile?.user?.uploadCount || 0;
   const likes = profile?.totalLikes || 0;
 
   return (

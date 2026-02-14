@@ -89,7 +89,7 @@ export default function CreatePin() {
 
     useEffect(() => {
         gqlClient.request(GET_TAGS_QUERY)
-            .then(data => setAvailableTags(data.getTags.tags))
+            .then(data => setAvailableTags(data.getAllTags.tags))
             .catch(err => {
                 console.error("Failed to fetch tags:", err);
                 setError("Failed to load tags. Please refresh the page.");

@@ -1,50 +1,120 @@
-type UserType = {
+type FileType = "PHOTO" | "GIF";
 
-    id: string;
-    email: string;
-    name: string;
-    passwordHash: string;
-    avatar: string | null;
-    refreshToken: string | null;
-    uploadCount: number;
-    createdAt: Date;
- 
-}|null;
+
+type UserType = {
+  id: string;
+  email: string;
+  name: string;
+  avatar: string | null;
+  uploadCount: number;
+  createdAt: Date;
+} | null;
+
 
 type ProfileType = {
-  user?: UserType;
+  user: UserType;
   followersCount?: number;
   followingCount?: number;
+  totalLikes?: number;
+  lastSavedPins?: FeedPinType[];
 };
 
-type ContextType = {
-  profile: ProfileType | null;
-  loading: boolean;
-  refetch: () => void;
-};
+
+
+
 
 type FeedPinType = {
   id: string;
   title: string;
-  // description: string | null;
+  description:string,
   mediaUrl: string;
-  fileType: string;
+  fileType: FileType;
   tagIds: string[];
-  createdAt: Date;
-  // user: UserType;
-  isSaved:boolean
-  
-}
+  createdAt: string;
+
+  user: {
+    id: string;
+    name: string;
+    avatar: string | null;
+  };
+
+  isSaved: boolean;
+  isLiked: boolean;
+};
+
 
 type CommentType = {
   id: string;
   content: string;
   createdAt: string;
   user: {
-    id:string;
+    id: string;
     name: string;
-    avatar: string;
+    avatar: string | null;
   };
 };
 
-export type { UserType, ProfileType, ContextType, FeedPinType,CommentType };
+
+type FeedResponseType = {
+  items: FeedPinType[];
+};
+
+
+
+type PinPageResponseType = {
+  pin: FeedPinType;
+  relatedPins: FeedPinType[];
+  followersCount?: number;
+  likesCount: number;
+  savesCount: number;
+  tags:TagType
+};
+
+
+
+type TagType = {
+  id: string;
+  name: string;
+};
+
+type GetTagsResponseType = {
+  tags: TagType[];
+  uploadCount: boolean;
+};
+
+
+
+type ToggleSaveResponseType = {
+  saved: boolean;
+};
+
+type ToggleLikeResponseType = {
+  like: boolean;
+};
+
+
+
+type AuthPayloadType = {
+  user: UserType;
+};
+
+
+
+type SuggestionType = string;
+
+
+export type {
+  UserType,
+  ProfileType,
+  FeedPinType,
+  CommentType,
+
+  FeedResponseType,
+  PinPageResponseType,
+  TagType,
+  GetTagsResponseType,
+  ToggleSaveResponseType,
+  ToggleLikeResponseType,
+  AuthPayloadType,
+  SuggestionType
+};

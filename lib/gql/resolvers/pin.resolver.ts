@@ -1,11 +1,15 @@
+import { FileType } from "@/generated/prisma/enums";
 import prisma from "@/lib/services/prisma";
+import { PinPageResponseType, UserType } from "@/types/types";
 import { ApiError } from "@/utils/ApiError";
 import ApiResponse from "@/utils/ApiResponse";
 
-export const getTags = async (_: any, __: any, { user }: any) => {
+export const getAllTags = async (_: any, __: any, { user }: { user: UserType }) => {
     const tags = await prisma.tag.findMany({
         orderBy: { name: "asc" }
     })
+    if (!user) throw new ApiError(401, "Unauthorized");
+
     const uploadCount = await prisma.user.findUnique({
         where: { id: user.id },
         select: { uploadCount: true }
@@ -18,7 +22,7 @@ export const getTags = async (_: any, __: any, { user }: any) => {
 
 }
 
-export const createPin = async (_: any, { title, description, mediaUrl, fileType, tagIds }: any, { user }: any) => {
+export const createPin = async (_: any, { title, description, mediaUrl, fileType, tagIds }: { title: string, description: string, mediaUrl: string, fileType: FileType, tagIds: string[] }, { user }: { user: UserType }) => {
 
     if (!user) throw new ApiError(401, "Unauthorized");
 
@@ -62,7 +66,7 @@ export const createPin = async (_: any, { title, description, mediaUrl, fileType
 
 //
 
-export async function getUserFeed(_: any, { limit = 10, page = 1 }: any, { user }: any) {
+export async function getUserFeed(_: any, { limit = 10, page = 1 }: any, { user }: { user: UserType }) {
     try {
         const userId = user?.id;
         const skip = (page - 1) * limit;
@@ -137,7 +141,7 @@ export async function getUserFeed(_: any, { limit = 10, page = 1 }: any, { user 
                 },
             });
 
-           
+
             return pins.map(p => ({
                 ...p,
                 isSaved: p.saves.length > 0
@@ -230,7 +234,7 @@ export async function getSearchPagePins(_: any, { search, limit = 10, page = 1 }
     }
 }
 
-export async function getPinPageResponse(_: any, { id }: any, { user }: any) {
+export async function getPinPageResponse(_: any, { id }: { id: string }, { user }: { user: UserType }) {
     try {
         if (!user) throw new ApiError(401, "Unauthorized");
         if (!id) throw new ApiError(400, "Pin ID is required");
@@ -288,6 +292,8 @@ export async function getPinPageResponse(_: any, { id }: any, { user }: any) {
         })
 
 
+
+
         return {
             pin: {
                 ...pin,
@@ -309,6 +315,17 @@ export async function getPinPageResponse(_: any, { id }: any, { user }: any) {
     }
 }
 
+export async function getTagsForPin(parent: PinPageResponseType,) {
+    const tagIds = parent.pin.tagIds
+    const tags = await prisma.tag.findMany({
+        where: {
+            id: { in: tagIds },
+        }
+    })
+    console.log(tags);
+
+    return tags
+}
 
 // COMMENTS
 
@@ -342,7 +359,7 @@ export async function getPinComments(_: any, { pinId, page = 1 }: any) {
     }
 }
 
-export async function sendComment(_: any, { pinId, content }: any, { user }: any) {
+export async function sendComment(_: any, { pinId, content }: any, { user }: { user: UserType }) {
     try {
         if (!user) throw new ApiError(401, "Unauthorized");
         if (!pinId) throw new ApiError(400, "Pin ID is required");
@@ -376,7 +393,7 @@ export async function sendComment(_: any, { pinId, content }: any, { user }: any
 
 
 // Save and Like
-export async function getSavedPins(_: any, __: any, { user }: any) {
+export async function getSavedPins(_: any, __: any, { user }: { user: UserType }) {
     if (!user) return [];
 
     const saves = await prisma.save.findMany({
@@ -402,7 +419,7 @@ export async function getSavedPins(_: any, __: any, { user }: any) {
 }
 
 
-export async function toggleSave(_: any, { pinId }: any, { user }: any) {
+export async function toggleSave(_: any, { pinId }: any, { user }: { user: UserType }) {
     if (!user) throw new ApiError(401, "Unauthorized");
     if (!pinId) throw new ApiError(400, "Pin ID is required");
 
@@ -445,7 +462,7 @@ export async function toggleSave(_: any, { pinId }: any, { user }: any) {
 }
 
 
-export async function toggleLike(_: any, { pinId }: any, { user }: any) {
+export async function toggleLike(_: any, { pinId }: any, { user }: { user: UserType }) {
     if (!user) throw new ApiError(401, "Unauthorized");
     if (!pinId) throw new ApiError(400, "Pin ID is required");
 

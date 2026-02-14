@@ -46,15 +46,20 @@ export const signup = async (_: any, args: any) => {
 
         cookieStore.set("access", access, {
             httpOnly: true,
-            sameSite: "lax"
         });
 
-        // cookieStore.set("refresh", refresh, {
-        //     httpOnly: true,
-        //     sameSite: "lax"
-        // });
+        return {
+            user: {
 
-        return { user };
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                avatar: user.avatar,
+                uploadCount: user.uploadCount,
+                createdAt: user.createdAt,
+
+            }
+        };
     });
 }
 export const login = async (_: any, args: any) => {
@@ -69,7 +74,7 @@ export const login = async (_: any, args: any) => {
         if (!user) throw new ApiError(400, "Invalid credentials");
 
         const ok = await verifyPassword(args.password, user.passwordHash);
-        if (!ok) throw new ApiError(400,"Invalid credentials");
+        if (!ok) throw new ApiError(400, "Invalid credentials");
 
         const access = signAccess(user.id);
         const refresh = signRefresh(user.id);
@@ -83,15 +88,21 @@ export const login = async (_: any, args: any) => {
 
         cookieStore.set("access", access, {
             httpOnly: true,
-            sameSite: "lax"
         });
 
-        // cookieStore.set("refresh", refresh, {
-        //     httpOnly: true,
-        //     sameSite: "lax"
-        // });
 
-        return { user };
+        return {
+            user: {
+
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                avatar: user.avatar,
+                uploadCount: user.uploadCount,
+                createdAt: user.createdAt,
+
+            }
+        };
     });
 }
 

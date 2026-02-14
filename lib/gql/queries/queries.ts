@@ -46,7 +46,7 @@ query GetProfile($userId: ID!) {
 
 export const GET_TAGS_QUERY = gql`
 query {
-  getTags {
+  getAllTags {
     tags {
       id
       name
@@ -110,6 +110,10 @@ query($getPinPageResponseId: ID!) {
         name
         id
       }
+    }
+    tags {
+      id
+      name
     }
 
     relatedPins {

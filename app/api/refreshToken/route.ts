@@ -11,7 +11,7 @@ export async function POST() {
   if (!access) return NextResponse.json(null);
 
   // decode expired access
-  const decoded: any = jwt.decode(access);
+  const decoded = jwt.decode(access) as {id:string,iat:string} | null;
 
   if (!decoded?.id) return NextResponse.json(null);
 

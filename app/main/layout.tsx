@@ -3,6 +3,7 @@ import { UserProvider } from "@/components/contexts/UserContext";
 import { context } from "@/utils/helper/context";
 import { redirect } from "next/navigation";
 import "../globals.css";
+import { UserType } from "@/types/types";
 export default async function RootLayout({
     children,
 }: {

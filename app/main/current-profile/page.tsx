@@ -3,12 +3,13 @@
 import { UserContext } from "@/components/contexts/UserContext";
 import { CURRENT_PROFILE_QUERY } from "@/lib/gql/queries/queries";
 import gqlClient from "@/lib/services/graphql";
+import { ProfileType } from "@/types/types";
 import Image from "next/image";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 
 export default function UserPage() {
-    const [profile, setProfile] = useState<any>(null);
+    const [profile, setProfile] = useState<ProfileType | null>(null);
     const [loading, setLoading] = useState(true);
     const { currentUser } = useContext(UserContext);
 
@@ -55,20 +56,20 @@ export default function UserPage() {
     }
 
     const user = profile?.user || {};
-    const name = user?.name || "Anonymous";
-    const email = user?.email || "No email";
+    const name = profile?.user?.name || "Anonymous";
+    const email = profile?.user?.email || "No email";
     const avatar =
-        user?.avatar ||
+        profile?.user?.avatar ||
         "https://tse1.mm.bing.net/th/id/OIP.2ZC6eH3utWfNn6yZaCEstgHaFf?w=5263&h=3903&rs=1&pid=ImgDetMain&o=7&rm=3";
 
     const followers = profile?.followersCount || 0;
     const following = profile?.followingCount || 0;
-    const totalPins = user?.uploadCount || 0;
+    const totalPins = profile?.user?.uploadCount || 0;
     const likes = profile?.totalLikes || 0;
-    const savedFivePins = profile?.lastSavedPins || [];
+    const lastSavedPins = profile?.lastSavedPins || [];
 
     return (
-        <main className="page">
+        <main className="page pt-8">
             <div className="container py-8">
 
 
@@ -136,7 +137,7 @@ export default function UserPage() {
 
                             <div className="card text-center btn-rect bg-purple-600! text-white">
                                 <div className="text-3xl font-bold">{likes}</div>
-                                <div className="text-sm mt-1">Likes</div>
+                                <div className="text-sm mt-1">Pins Liked</div>
                             </div>
                         </div>
 
@@ -165,18 +166,45 @@ export default function UserPage() {
                                         <h3 className="text-xl font-bold">Saved Pins</h3>
                                         <p className="text-sm opacity-70 mt-1">Your collection</p>
                                     </div>
-                                    <div className="w-16 h-16 rounded-full flex items-center justify-center font-bold text-xl bg-orange-500 border-2 border-black shadow-[3px_3px_0_black] text-white">
-                                        {savedFivePins.length}
+                                    <div className="btn-circle bg-orange-400">
+                                        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" color="white" xmlns="http://www.w3.org/2000/svg"><path d="M3.5 2C3.22386 2 3 2.22386 3 2.5V13.5C3 13.6818 3.09864 13.8492 3.25762 13.9373C3.41659 14.0254 3.61087 14.0203 3.765 13.924L7.5 11.5896L11.235 13.924C11.3891 14.0203 11.5834 14.0254 11.7424 13.9373C11.9014 13.8492 12 13.6818 12 13.5V2.5C12 2.22386 11.7761 2 11.5 2H3.5Z" fill="currentColor" fillRule="evenodd" clipRule
+="evenodd"></path></svg>
+
                                     </div>
                                 </div>
 
 
                                 <div className="grid grid-cols-3 gap-2 mb-4">
-                                    {savedFivePins.map((s: any) => (
-                                        <div
-                                            key={s.id}
-                                            className="aspect-square rounded-lg bg-linear-to-br from-orange-500 to-cyan-600 border-2 border-black"
-                                        />
+                                    {lastSavedPins.map((s: any) => (
+                                        <div key={s.id} className="relative w-62 h-40 mb-4 group rounded-2xl overflow-hidden hover:shadow-xl transition-all">
+
+                                            <div className=" absolute w-full h-full">
+
+                                                <Image
+                                                    src={s.mediaUrl}
+                                                    alt={s.title}
+                                                    fill
+                                                    className="w-full h-auto object-cover"
+                                                    loading="lazy"
+                                                />
+
+
+                                                <Link href={`/main/pin/${s.id}`}>
+                                                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-black/40">
+                                                        <div className="absolute bottom-0 p-3 w-full">
+                                                            <p className="font-semibold text-sm text-white line-clamp-2">
+                                                                {s.title}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </Link>
+
+
+
+
+                                            </div>
+
+                                        </div>
                                     ))}
                                 </div>
 
