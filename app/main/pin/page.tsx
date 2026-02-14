@@ -29,7 +29,7 @@ export default function CreatePin() {
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         // get file
         const selectedFile = e.target.files?.[0] || null;
-        
+
         setFile(selectedFile);
 
         if (selectedFile) {
@@ -53,7 +53,7 @@ export default function CreatePin() {
             if (!file) throw new Error("Image required");
             if (!selectedTags.length) throw new Error("Select at least one tag");
 
-            // Check file size BEFORE uploading
+            // Check file size
             if (file.size > MAX_SIZE) {
                 throw new Error("File size exceeds 10MB limit");
             }
@@ -87,7 +87,6 @@ export default function CreatePin() {
         }
     };
 
-    // Fetch tags with error handling
     useEffect(() => {
         gqlClient.request(GET_TAGS_QUERY)
             .then(data => setAvailableTags(data.getTags.tags))
@@ -100,13 +99,16 @@ export default function CreatePin() {
     // Handle redirect after success
     useEffect(() => {
         if (success) {
+
             const timer = setTimeout(() => {
+
                 setTitle("");
                 setDescription("");
                 setFile(null);
                 setPreviewUrl(null);
                 setSelectedTags([]);
                 router.push("/");
+
             }, 2000);
 
             return () => clearTimeout(timer);

@@ -4,24 +4,8 @@ import { useEffect, useState } from "react";
 import PinCard from "@/components/cards/PinCard";
 import gqlClient from "@/lib/services/graphql";
 import Loading from "@/components/commons/Loading";
+import { FEED_QUERY } from "@/lib/gql/queries/queries";
 
-const FEED_QUERY = `
-query ($limit: Int, $page: Int) {
-  getUserFeed(limit: $limit, page: $page) {
-    id
-    mediaUrl
-    fileType
-    tagIds
-    title
-    createdAt
-    user {
-      id
-      name
-      avatar
-    }
-  }
-}
-`;
 
 export default function Home() {
   const [pins, setPins] = useState<any[]>([]);

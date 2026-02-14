@@ -73,99 +73,99 @@ export default function UserPage() {
   const likes = profile?.totalLikes || 0;
 
   return (
-      <main className="page">
-            <div className="container py-8">
+    <main className="page">
+      <div className="container py-8">
 
 
-                <div className="mb-8">
-                    <h1 className="text-4xl md:text-5xl font-bold mb-2">Dashboard</h1>
-                    <p className="text-lg opacity-70">Welcome back, {name.split(' ')[0]}!</p>
+        <div className="mb-8">
+          <h1 className="text-4xl md:text-5xl font-bold mb-2">Dashboard</h1>
+          <p className="text-lg opacity-70">Welcome back, {name.split(' ')[0]}!</p>
+        </div>
+
+
+        <div className="grid lg:grid-cols-12 gap-6">
+
+
+          <div className="lg:col-span-4">
+            <div className="card sticky top-8 bg-white">
+
+
+              <div className="flex justify-center mb-6 ">
+                <div className=" relative w-32! h-32! btn-circle overflow-hidden! ">
+                  <div className=" absolute w-full h-full ">
+
+                    <Image
+                      src={avatar}
+                      alt={`${name}'s avatar`}
+                      fill
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
                 </div>
+              </div>
+
+              <div className="text-center mb-6">
+                <h2 className="text-2xl font-bold mb-1">{name}</h2>
+                <p className="text-sm opacity-70 mb-4">{email}</p>
+
+                <FollowBtn />
+
+              </div>
 
 
-                <div className="grid lg:grid-cols-12 gap-6">
-
-
-                    <div className="lg:col-span-4">
-                        <div className="card sticky top-8 bg-white">
-
-
-                            <div className="flex justify-center mb-6 ">
-                                <div className=" relative w-32! h-32! btn-circle overflow-hidden! ">
-                                    <div className=" absolute w-full h-full ">
-
-                                        <Image
-                                            src={avatar}
-                                            alt={`${name}'s avatar`}
-                                            fill
-                                            className="w-full h-full object-cover"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="text-center mb-6">
-                                <h2 className="text-2xl font-bold mb-1">{name}</h2>
-                                <p className="text-sm opacity-70 mb-4">{email}</p>
-
-                              <FollowBtn/>
-
-                            </div>
-
-
-                            <div className="grid grid-cols-2 gap-3 p-4 rounded-lg mb-4 bg-[#F0E7D6] border-2 border-black">
-                                <div className="text-center">
-                                    <div className="text-2xl font-bold">{followers}</div>
-                                    <div className="text-xs opacity-70">Followers</div>
-                                </div>
-                                <div className="text-center">
-                                    <div className="text-2xl font-bold">{following}</div>
-                                    <div className="text-xs opacity-70">Following</div>
-                                </div>
-                            </div>
-
-
-                        </div>
-                    </div>
-
-                    <div className="lg:col-span-8">
-
-                        <div className="grid md:grid-cols-2 gap-4 mb-6">
-
-                            <div className="card text-center btn-rect bg-orange-500! text-white">
-                                <div className="text-3xl font-bold">{totalPins}</div>
-                                <div className="text-sm mt-1">Total Pins</div>
-                            </div>
-
-                            <div className="card text-center btn-rect bg-purple-600! text-white">
-                                <div className="text-3xl font-bold">{likes}</div>
-                                <div className="text-sm mt-1">Likes</div>
-                            </div>
-                        </div>
-
-
-                        <div className="card mb-6 bg-white">
-                            <h3 className="text-xl font-bold mb-4">Actions</h3>
-                            <div className="grid md:grid-cols-2 gap-3">
-                                <Link href={"/main/pin"} className="btn-rect text-center py-6">
-                                    <div className="text-2xl mb-2">➕</div>
-                                    <div className="text-sm">Create Pin</div>
-                                </Link>
-                                <Link href={"/main"} className="btn-rect text-center py-6 bg-purple-600 text-white">
-                                    <div className="text-2xl mb-2">🔍</div>
-                                    <div className="text-sm">Explore</div>
-                                </Link>
-                            </div>
-                        </div>
-
-
-                        
-
-
-
-                    </div>
+              <div className="grid grid-cols-2 gap-3 p-4 rounded-lg mb-4 bg-[#F0E7D6] border-2 border-black">
+                <div className="text-center">
+                  <div className="text-2xl font-bold">{followers}</div>
+                  <div className="text-xs opacity-70">Followers</div>
                 </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold">{following}</div>
+                  <div className="text-xs opacity-70">Following</div>
+                </div>
+              </div>
+
+
             </div>
-        </main>
+          </div>
+
+          <div className="lg:col-span-8">
+
+            <div className="grid md:grid-cols-2 gap-4 mb-6">
+
+              <div className="card text-center btn-rect bg-orange-500! text-white">
+                <div className="text-3xl font-bold">{totalPins}</div>
+                <div className="text-sm mt-1">Total Pins</div>
+              </div>
+
+              <div className="card text-center btn-rect bg-purple-600! text-white">
+                <div className="text-3xl font-bold">{likes}</div>
+                <div className="text-sm mt-1">Likes</div>
+              </div>
+            </div>
+
+
+            <div className="card mb-6 bg-white">
+              <h3 className="text-xl font-bold mb-4">Actions</h3>
+              <div className="grid md:grid-cols-2 gap-3">
+                <Link href={"/main/pin"} className="btn-rect text-center py-6">
+                  <div className="text-2xl mb-2">➕</div>
+                  <div className="text-sm">Create Pin</div>
+                </Link>
+                <Link href={"/main"} className="btn-rect text-center py-6 bg-purple-600 text-white">
+                  <div className="text-2xl mb-2">🔍</div>
+                  <div className="text-sm">Explore</div>
+                </Link>
+              </div>
+            </div>
+
+
+
+
+
+
+          </div>
+        </div>
+      </div>
+    </main>
   );
 }

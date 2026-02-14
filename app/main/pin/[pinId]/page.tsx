@@ -29,12 +29,16 @@ export default function PinPage() {
         async function fetchPin() {
             try {
                 const res = await gqlClient.request(PIN_PAGE_QUERY, {
-                    getPinResponseId: pinId,
+                    getPinPageResponseId: pinId,
                 });
+                console.log(res);
+                
 
-                setData(res.getPinResponse);
+                setData(res.getPinPageResponse);
             } catch (e) {
                 setError(getGraphQLError(e));
+                console.log(e);
+                
             } finally {
                 setLoading(false);
             }
@@ -45,9 +49,13 @@ export default function PinPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
-                <p className="text-gray-600 font-medium">Loading pin...</p>
-            </div>
+              <main className="page">
+        <div className="container">
+          <div className="card max-w-md mx-auto mt-20 text-center bg-cyan-600 text-white">
+            <p className="text-xl font-bold">Loading pin...</p>
+          </div>
+        </div>
+      </main>
         );
     }
 
@@ -61,7 +69,11 @@ export default function PinPage() {
 
     if (!data) return null;
 
-    const { pin, relatedPins } = data;
+   const { pin, relatedPins, likesCount, savesCount,followersCount } = data;
+
+//    console.log(pin);
+   
+
 
     return (
 
@@ -76,7 +88,6 @@ export default function PinPage() {
                         alt={pin.title}
                         width={700}
                         height={1000}
-                        // sizes="(max-width: 700px) 90vw, 700px"
                         className=" rounded-2xl shadow"
                         priority
                     />
@@ -100,9 +111,10 @@ export default function PinPage() {
 
                             <div className="flex justify-self-end mb-8 gap-3">
 
-                                <SaveBtn />
+                               <SaveBtn pinId={pin.id} isSaved={pin.isSaved} />
 
-                                <LikeBtn />
+
+                                <LikeBtn pinId={pin.id} isLiked={pin.isLiked}  />
                                 <a
                                     href={pin.mediaUrl}
                                     download
@@ -138,11 +150,10 @@ export default function PinPage() {
                                     <div>
                                         <h3 className="font-semibold">{pin.user.name}</h3>
                                         <p className="text-sm text-gray-500">
-                                            {pin.followersCount || 0} followers
+                                            {followersCount||0} followers
                                         </p>
                                     </div>
                                 </div>
-
                                 <FollowBtn />
                             </div>
                         </div>

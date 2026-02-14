@@ -8,67 +8,67 @@ import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 
 export default function UserPage() {
-  const [profile, setProfile] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const { currentUser } = useContext(UserContext);
+    const [profile, setProfile] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+    const { currentUser } = useContext(UserContext);
 
-  useEffect(() => {
-    async function getData() {
-      try {
-        const data = await gqlClient.request(CURRENT_PROFILE_QUERY);
-        setProfile(data?.getCurrentProfile || null);
-      } catch (err: any) {
-        console.error("GraphQL error:", err.message);
-        setProfile(null);
-      } finally {
-        setLoading(false);
-      }
+    useEffect(() => {
+        async function getData() {
+            try {
+                const data = await gqlClient.request(CURRENT_PROFILE_QUERY);
+                setProfile(data?.getCurrentProfile || null);
+            } catch (err: any) {
+                console.error("GraphQL error:", err.message);
+                setProfile(null);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        if (currentUser) getData();
+    }, [currentUser]);
+
+    // not logged in
+    if (!currentUser && !loading) {
+        return (
+            <main className="page">
+                <div className="container">
+                    <div className="card max-w-md mx-auto mt-20 text-center bg-red-500 text-white">
+                        <h2 className="text-2xl font-bold mb-2">Unauthorized</h2>
+                        <p>You don't have permission to view this page.</p>
+                    </div>
+                </div>
+            </main>
+        );
     }
 
-    if (currentUser) getData();
-  }, [currentUser]);
+    if (loading) {
+        return (
+            <main className="page">
+                <div className="container">
+                    <div className="card max-w-md mx-auto mt-20 text-center bg-cyan-600 text-white">
+                        <p className="text-xl font-bold">Loading your dashboard...</p>
+                    </div>
+                </div>
+            </main>
+        );
+    }
 
-  // not logged in
-  if (!currentUser && !loading) {
+    const user = profile?.user || {};
+    const name = user?.name || "Anonymous";
+    const email = user?.email || "No email";
+    const avatar =
+        user?.avatar ||
+        "https://tse1.mm.bing.net/th/id/OIP.2ZC6eH3utWfNn6yZaCEstgHaFf?w=5263&h=3903&rs=1&pid=ImgDetMain&o=7&rm=3";
+
+    const followers = profile?.followersCount || 0;
+    const following = profile?.followingCount || 0;
+    const totalPins = user?.uploadCount || 0;
+    const likes = profile?.totalLikes || 0;
+    const savedFivePins = profile?.lastSavedPins || [];
+
     return (
-      <main className="page">
-        <div className="container">
-          <div className="card max-w-md mx-auto mt-20 text-center bg-red-500 text-white">
-            <h2 className="text-2xl font-bold mb-2">Unauthorized</h2>
-            <p>You don't have permission to view this page.</p>
-          </div>
-        </div>
-      </main>
-    );
-  }
-
-  if (loading) {
-    return (
-      <main className="page">
-        <div className="container">
-          <div className="card max-w-md mx-auto mt-20 text-center bg-cyan-600 text-white">
-            <p className="text-xl font-bold">Loading your dashboard...</p>
-          </div>
-        </div>
-      </main>
-    );
-  }
-
-  const user = profile?.user || {};
-  const name = user?.name || "Anonymous";
-  const email = user?.email || "No email";
-  const avatar =
-    user?.avatar ||
-    "https://tse1.mm.bing.net/th/id/OIP.2ZC6eH3utWfNn6yZaCEstgHaFf?w=5263&h=3903&rs=1&pid=ImgDetMain&o=7&rm=3";
-
-  const followers = profile?.followersCount || 0;
-  const following = profile?.followingCount || 0;
-  const totalPins = user?.uploadCount || 0;
-  const likes = profile?.totalLikes || 0;
-  const savedFivePins = profile?.lastSavedPins || [];
-
-  return (
-       <main className="page">
+        <main className="page">
             <div className="container py-8">
 
 
@@ -186,7 +186,7 @@ export default function UserPage() {
                             </div>
 
 
-                            
+
                         </div>
 
 
@@ -195,5 +195,5 @@ export default function UserPage() {
                 </div>
             </div>
         </main>
-  );
+    );
 }

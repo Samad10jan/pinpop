@@ -41,7 +41,7 @@ export const getFollowingCount = async (parent: any, _: any, context: any) => {
 export const getTotalLikes = async (parent: any, _: any, context: any) => {
     const userId = parent.user.id;
 
-    // Count all likes on pins created by this user
+    // Count all likes ON pins Created by this user
     const likes = await prisma.like.count({
         where: {
             pin: {
@@ -71,3 +71,5 @@ export const getProfile = async (_: any, { userId }: any,) => {
 
 
 }
+
+// Follow & Save & Like

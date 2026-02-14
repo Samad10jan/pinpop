@@ -87,10 +87,16 @@ query($search: String!) {
 
 export const PIN_PAGE_QUERY = gql`
 
-query($getPinResponseId: ID!) {
-  getPinResponse(id: $getPinResponseId) {
+query($getPinPageResponseId: ID!) {
+  getPinPageResponse(id: $getPinPageResponseId) {
+
     followersCount
+    likesCount
+    savesCount
+
     pin {
+      isSaved
+       isLiked
       mediaUrl
       tagIds
       description
@@ -104,19 +110,10 @@ query($getPinResponseId: ID!) {
         name
         id
       }
-      likesCount
-      savesCount
-      # comments {
-      #   createdAt
-      #   id
-      #   user {
-      #     avatar
-      #     name
-      #   }
-      #   content
-      # }
     }
+
     relatedPins {
+      isSaved
       createdAt
       mediaUrl
       title
@@ -125,9 +122,29 @@ query($getPinResponseId: ID!) {
     }
   }
 }
+
 `
 
-export const GET_PIN_COMMENTS_QUERY=gql`
+export const FEED_QUERY = gql`
+query ($limit: Int, $page: Int) {
+  getUserFeed(limit: $limit, page: $page) {
+    isSaved
+    id
+    mediaUrl
+    fileType
+    tagIds
+    title
+    createdAt
+    user {
+      id
+      name
+      avatar
+    }
+  }
+}
+`;
+
+export const GET_PIN_COMMENTS_QUERY = gql`
 query($pinId: ID!, $page: Int) {
   getPinComments(pinId: $pinId, page: $page) {
     content

@@ -33,9 +33,10 @@ type Pin {
   tagIds: [ID!]!
   createdAt: DateTime!
   user: User!
-  likesCount: Int!
-  savesCount: Int!
+ 
   # comments: [Comment!]!
+  isSaved: Boolean!
+  isLiked:Boolean!
 }
 
 
@@ -71,6 +72,15 @@ type PinPageResponse {
   pin: Pin!
   relatedPins: [Pin!]!
   followersCount: Int
+   likesCount: Int!
+  savesCount: Int!
+  # Tags:[String!] to add
+}
+type ToggleSaveResponse {
+  saved: Boolean!
+}
+type ToggleLikeResponse {
+  like: Boolean!
 }
 
 
@@ -83,10 +93,11 @@ type Query {
   getUserFeed(limit: Int, page: Int): [Pin!]!,
   getSugg(search: String!): [String]
   getSearchPagePins(search: String!,limit: Int, page: Int): [Pin]
-  getPinResponse(id: ID!): PinPageResponse
+  getPinPageResponse(id: ID!): PinPageResponse
   getPinComments(pinId: ID!, page: Int): [Comment]
   getProfile(userId: ID!): ProfileResponse
-  
+  getSavedPins: [Pin!]!
+
 }
 
 type Mutation {
@@ -114,6 +125,13 @@ type Mutation {
   pinId: ID!
   content: String!
 ): Comment!
+
+
+toggleSave(pinId: ID!): ToggleSaveResponse!
+
+toggleLike(pinId:ID!): ToggleLikeResponse
+
+
 }
 
 

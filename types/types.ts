@@ -32,6 +32,7 @@ type FeedPinType = {
   tagIds: string[];
   createdAt: Date;
   // user: UserType;
+  isSaved:boolean
   
 }
 
@@ -40,6 +41,7 @@ type CommentType = {
   content: string;
   createdAt: string;
   user: {
+    id:string;
     name: string;
     avatar: string;
   };

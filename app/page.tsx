@@ -114,7 +114,7 @@ export default function Auth() {
 
       </section>
 
-     <Footer/>
+      <Footer />
 
     </main>
   );

@@ -67,7 +67,6 @@ export async function getUserFeed(_: any, { limit = 10, page = 1 }: any, { user 
         const userId = user?.id;
         const skip = (page - 1) * limit;
 
-        // console.log("userId:", userId);
 
         // New user or guest - return null
         if (!userId) {
@@ -89,10 +88,10 @@ export async function getUserFeed(_: any, { limit = 10, page = 1 }: any, { user 
         // Extract unique tag IDs
         const likedTagIds = [...new Set(likedPins.flatMap(like => like.pin.tagIds))];
 
-        // console.log("likedTagIds:", likedTagIds);
+
 
         // Get IDs of pins user already liked (to exclude)
-        const likedPinIds = likedPins.map(like => like.pin.id);
+        // const likedPinIds = likedPins.map(like => like.pin.id);
 
         // Get user's own pins (to exclude)
         const userPins = await prisma.pin.findMany({
@@ -101,16 +100,14 @@ export async function getUserFeed(_: any, { limit = 10, page = 1 }: any, { user 
         });
         const userPinIds = userPins.map(p => p.id);
 
-        // console.log("userPinIds:", userPinIds);
 
-        // Combine all pins to exclude
-        const excludeIds = [...likedPinIds, ...userPinIds];
 
-        // console.log("excludeIds:", excludeIds);
+        const excludeIds = [...userPinIds];
+
+
 
         // If user has liked pins with tags, get pins with those tags
         if (likedTagIds.length > 0) {
-            // console.log("Fetching pins with matching tags");
 
             const whereClause: any = {
                 tagIds: { hasSome: likedTagIds }
@@ -130,19 +127,23 @@ export async function getUserFeed(_: any, { limit = 10, page = 1 }: any, { user 
                     user: {
                         select: { id: true, name: true, avatar: true },
                     },
+                    saves: {
+                        where: { userId },
+                        select: { id: true }
+                    },
                     _count: {
                         select: { likes: true, saves: true, comments: true },
                     },
                 },
             });
 
-            // console.log("Pins with tags found:", pins.length);
-            return pins;
-        }
+           
+            return pins.map(p => ({
+                ...p,
+                isSaved: p.saves.length > 0
+            }));
+        };
 
-        // console.log("No liked tags, fetching popular pins");
-
-        // User hasn't liked anything - return popular pins (excluding own)
         const whereClause: any = {};
 
         // Only add notIn if there are user pins to exclude
@@ -155,21 +156,24 @@ export async function getUserFeed(_: any, { limit = 10, page = 1 }: any, { user 
             skip,
             take: limit,
             orderBy: {
-                createdAt: "desc"   // ✅ Mongo supported
+                createdAt: "desc"
             },
             include: {
                 user: {
                     select: { id: true, name: true, avatar: true },
-                }
+                },
+                saves: {
+                    where: { userId },
+                    select: { id: true }
+                },
+
             },
         });
 
-
-        // Add this temporarily at the start of your function
-        const totalPins = await prisma.pin.count();
-        // console.log("Total pins in database:", totalPins);
-        // console.log("Popular pins found:", pins.length);
-        return pins;
+        return pins.map(p => ({
+            ...p,
+            isSaved: p.saves.length > 0
+        }));
 
     } catch (error) {
         console.error("Error fetching feed:", error);
@@ -226,32 +230,31 @@ export async function getSearchPagePins(_: any, { search, limit = 10, page = 1 }
     }
 }
 
-export async function getPinResponse(_: any, { id }: any, { user }: any) {
+export async function getPinPageResponse(_: any, { id }: any, { user }: any) {
     try {
         if (!user) throw new ApiError(401, "Unauthorized");
         if (!id) throw new ApiError(400, "Pin ID is required");
 
+        // First get pin
         const pin = await prisma.pin.findUnique({
             where: { id },
-
             include: {
                 user: {
                     include: {
                         _count: {
-                            select: {
-                                followers: true,
-                            },
+                            select: { followers: true },
                         },
                     },
                 },
-                // comments: {
-                //     orderBy: {
-                //         createdAt: "desc",
-                //     },
-                //     include: {
-                //         user: true,
-                //     },
-                // },
+
+                saves: {
+                    where: { userId: user.id },
+                    select: { id: true },
+                },
+                likes: {
+                    where: { userId: user.id },
+                    select: { id: true },
+                },
 
                 _count: {
                     select: {
@@ -259,7 +262,7 @@ export async function getPinResponse(_: any, { id }: any, { user }: any) {
                         saves: true,
                     },
                 },
-            }
+            },
         });
 
         if (!pin) throw new ApiError(404, "Pin not found");
@@ -268,41 +271,44 @@ export async function getPinResponse(_: any, { id }: any, { user }: any) {
 
         const relatedPins = await prisma.pin.findMany({
             where: {
-                tagIds: {
-                    hasSome: tagIds,
-                },
+                tagIds: { hasSome: tagIds },
+                id: { not: pin.id },
+                userId: { not: user.id },
+            },
 
-                // exclude current pin
-                id: {
-                    not: pin.id,
-                },
-
-                // exclude current logged in user pins
-                userId: {
-                    not: user.id,
+            include: {
+                saves: {
+                    where: { userId: user.id },
+                    select: { id: true },
                 },
             },
 
             take: 10,
+            orderBy: { createdAt: "desc" },
+        })
 
-            orderBy: {
-                createdAt: "desc",
-            },
-        });
 
         return {
             pin: {
                 ...pin,
-                likesCount: pin._count.likes,
-                savesCount: pin._count.saves,
+                isSaved: pin.saves.length > 0,
+                isLiked: pin.likes.length > 0,
             },
+
+            likesCount: pin._count.likes,
+            savesCount: pin._count.saves,
             followersCount: pin.user._count.followers ?? 0,
-            relatedPins,
+
+            relatedPins: relatedPins.map(p => ({
+                ...p,
+                isSaved: p.saves.length > 0,
+            })),
         };
     } catch (error) {
         throw error;
     }
 }
+
 
 // COMMENTS
 
@@ -364,4 +370,119 @@ export async function sendComment(_: any, { pinId, content }: any, { user }: any
     } catch (error) {
         throw error;
     }
+}
+
+// delete comment
+
+
+// Save and Like
+export async function getSavedPins(_: any, __: any, { user }: any) {
+    if (!user) return [];
+
+    const saves = await prisma.save.findMany({
+        where: { userId: user.id },
+        include: {
+            pin: {
+                include: {
+                    user: true,
+                    _count: {
+                        select: { likes: true, saves: true }
+                    }
+                }
+            }
+        }
+    });
+
+    return saves.map(s => ({
+        ...s.pin,
+        likesCount: s.pin._count.likes,
+        savesCount: s.pin._count.saves,
+        isSaved: true
+    }));
+}
+
+
+export async function toggleSave(_: any, { pinId }: any, { user }: any) {
+    if (!user) throw new ApiError(401, "Unauthorized");
+    if (!pinId) throw new ApiError(400, "Pin ID is required");
+
+    const existingSave = await prisma.save.findUnique({
+        where: {
+            userId_pinId: {
+                userId: user.id,
+                pinId,
+            },
+        },
+    });
+
+    // If saved
+    if (existingSave) {
+        await prisma.save.delete({
+            where: {
+                userId_pinId: {
+                    userId: user.id,
+                    pinId,
+                },
+            },
+        });
+
+        return {
+            saved: false,
+        };
+    }
+
+    // if not saved
+    await prisma.save.create({
+        data: {
+            pinId,
+            userId: user.id,
+        },
+    });
+
+    return {
+        saved: true,
+    };
+}
+
+
+export async function toggleLike(_: any, { pinId }: any, { user }: any) {
+    if (!user) throw new ApiError(401, "Unauthorized");
+    if (!pinId) throw new ApiError(400, "Pin ID is required");
+
+    const existingLike = await prisma.like.findUnique({
+        where: {
+            userId_pinId: {
+                userId: user.id,
+                pinId,
+            },
+        },
+    });
+
+    // If liked
+    if (existingLike) {
+        await prisma.like.delete({
+            where: {
+                userId_pinId: {
+                    userId: user.id,
+                    pinId,
+                },
+            },
+        });
+
+        return {
+            like: false,
+        };
+    }
+
+    // if not liked
+    await prisma.like.create({
+        data: {
+            pinId,
+            userId: user.id,
+        },
+    });
+
+    return {
+        like: true,
+    };
 }

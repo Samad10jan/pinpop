@@ -25,7 +25,7 @@ export default async function RootLayout({
 }>) {
   // const user = await context()
   // console.log(user);
-   
+
   return (
     <html lang="en">
       <body

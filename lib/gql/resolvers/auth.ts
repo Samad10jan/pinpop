@@ -96,6 +96,4 @@ export const login = async (_: any, args: any) => {
 }
 
 // editUser details resolver
-// userLikePin resolver
-// userSavePin resolver
 

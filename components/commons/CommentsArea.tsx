@@ -58,7 +58,7 @@ export default function CommentArea({ pinId }: { pinId: string }) {
                 content: postComment,
             });
 
-            // Optimistic UI: add new comment on top
+            // add new comment on top
             setComments((prev) => [res.sendComment, ...prev]);
 
             setPostComment("");
@@ -98,7 +98,7 @@ export default function CommentArea({ pinId }: { pinId: string }) {
             {!showComments && (
                 <button
                     onClick={() => loadComments(1)}
-                    className="text-sm underline"
+                    className="text-sm border-b hover:scale-105 active:scale-90 transtion-all duration-300" 
                 >
                     See more comments
                 </button>
