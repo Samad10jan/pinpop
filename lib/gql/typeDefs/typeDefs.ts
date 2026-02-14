@@ -131,6 +131,8 @@ toggleSave(pinId: ID!): ToggleSaveResponse!
 
 toggleLike(pinId:ID!): ToggleLikeResponse
 
+# addTags:Boolean!
+
 
 }
 

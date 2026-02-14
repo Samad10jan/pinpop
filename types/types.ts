@@ -67,7 +67,7 @@ type PinPageResponseType = {
   followersCount?: number;
   likesCount: number;
   savesCount: number;
-  tags:TagType
+  tags:TagType[]
 };
 
 

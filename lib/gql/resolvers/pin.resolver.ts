@@ -36,6 +36,9 @@ export const createPin = async (_: any, { title, description, mediaUrl, fileType
     if (uploadCount > 15) {
         throw new ApiError(403, "Upload limit reached. Please try again later.");
     }
+    if(tagIds.length>3){
+        throw new ApiError(403, "Only 3 tags Max Allowed");
+    }
 
     const pin = await prisma.pin.create({
         data: {

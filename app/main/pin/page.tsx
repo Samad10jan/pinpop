@@ -52,6 +52,8 @@ export default function CreatePin() {
             if (!title.trim()) throw new Error("Title required");
             if (!file) throw new Error("Image required");
             if (!selectedTags.length) throw new Error("Select at least one tag");
+            if (selectedTags.length > 3) throw new Error("At Max only 3 tags Allowed");
+
 
             // Check file size
             if (file.size > MAX_SIZE) {
@@ -170,20 +172,42 @@ export default function CreatePin() {
 
                             <label className="block">
                                 <span className="text-sm font-semibold text-gray-700 mb-2 block">Description</span>
-                                <textarea placeholder="Tell everyone what your pin is about" className={`${inputClass} resize-none h-32`} value={description} onChange={e => setDescription(e.target.value)} />
+                                <textarea placeholder="Tell everyone what your pin is about" className={`${inputClass} resize-none h-22`} value={description} maxLength={50} onChange={e => setDescription(e.target.value)} />
                             </label>
 
                             <div>
-                                <label className="text-sm font-semibold text-gray-700 mb-3 block">Tags * ({selectedTags.length} selected)</label>
+                                <label className="text-sm font-semibold text-gray-700 mb-3 block">Tags * ({selectedTags.length} selected)  <span className="flex justify-end">* Select Only 3</span></label>
+
                                 <div className="flex flex-wrap gap-2 max-h-40 overflow-y-auto p-3 bg-gray-50 rounded-xl">
-                                    {availableTags.map(t => (
-                                        <button key={t.id} type="button" onClick={() => toggleTag(t.id)}
-                                            className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${selectedTags.includes(t.id) ? "bg-linear-to-r from-amber-400 to-orange-500 text-white shadow-md transform scale-105" : "bg-white text-gray-700 border border-gray-300 hover:border-amber-400 hover:bg-amber-50"
-                                                }`}>
-                                            {t.name}
-                                        </button>
-                                    ))}
+
+                                    {availableTags.map((t) => {
+
+                                        const isSelected = selectedTags.includes(t.id);
+                                        const isMaxReached = selectedTags.length === 3;
+
+                                        return (
+                                            <button
+                                                key={t.id}
+                                                type="button"
+                                                onClick={() => toggleTag(t.id)}
+                                                disabled={!isSelected && isMaxReached}
+                                                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 
+                                                    ${isSelected
+                                                        ? "bg-linear-to-r from-amber-400 to-orange-500 text-white shadow-md scale-105"
+                                                        : "bg-white text-gray-700 border border-gray-300 hover:border-amber-400 hover:bg-amber-50"
+                                                    } 
+                                                    ${!isSelected && isMaxReached
+                                                        ? "opacity-50 cursor-not-allowed"
+                                                        : ""
+                                                    } `}  >
+
+                                                {t.name}
+                                            </button>
+                                        );
+                                    })}
                                 </div>
+
+
                             </div>
                         </div>
                     </div>

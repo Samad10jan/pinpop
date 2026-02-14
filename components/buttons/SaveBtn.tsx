@@ -51,6 +51,7 @@ export default function SaveBtn({
             className={`btn-circle
         ${isSaved ? "bg-red-600! text-white! " : "bg-white!"}
         disabled:opacity-50`}
+        title="save"
         >
             {
                 isSaved

@@ -73,7 +73,8 @@ export const resolvers = {
     createPin: createPin,
     sendComment: sendComment,
     toggleSave: toggleSave,
-    toggleLike: toggleLike
+    toggleLike: toggleLike,
+    // addTags:addTags
   }
 
 };
