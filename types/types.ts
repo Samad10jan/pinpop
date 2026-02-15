@@ -11,12 +11,20 @@ type UserType = {
 } | null;
 
 
-type ProfileType = {
+type CurrentProfileType = {
   user: UserType;
   followersCount?: number;
   followingCount?: number;
   totalLikes?: number;
   lastSavedPins?: FeedPinType[];
+};
+
+type ProfileType = {
+  user: UserType;
+  followersCount: number;
+  followingCount: number;
+  totalLikes: number;
+  lastUploadedPins: FeedPinType[];
 };
 
 
@@ -26,7 +34,7 @@ type ProfileType = {
 type FeedPinType = {
   id: string;
   title: string;
-  description:string,
+  description: string,
   mediaUrl: string;
   fileType: FileType;
   tagIds: string[];
@@ -67,7 +75,7 @@ type PinPageResponseType = {
   followersCount?: number;
   likesCount: number;
   savesCount: number;
-  tags:TagType[]
+  tags: TagType[]
 };
 
 
@@ -106,6 +114,7 @@ type SuggestionType = string;
 export type {
   UserType,
   ProfileType,
+  CurrentProfileType,
   FeedPinType,
   CommentType,
 

@@ -32,6 +32,13 @@ query GetProfile($userId: ID!) {
     followersCount
     followingCount
     totalLikes
+    lastUploadedPins{
+      id
+      title
+      mediaUrl
+      fileType
+      createdAt
+    }
     user {
       id
       name

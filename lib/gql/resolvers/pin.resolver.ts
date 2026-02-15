@@ -36,7 +36,7 @@ export const createPin = async (_: any, { title, description, mediaUrl, fileType
     if (uploadCount > 15) {
         throw new ApiError(403, "Upload limit reached. Please try again later.");
     }
-    if(tagIds.length>3){
+    if (tagIds.length > 3) {
         throw new ApiError(403, "Only 3 tags Max Allowed");
     }
 
@@ -367,6 +367,8 @@ export async function sendComment(_: any, { pinId, content }: any, { user }: { u
         if (!user) throw new ApiError(401, "Unauthorized");
         if (!pinId) throw new ApiError(400, "Pin ID is required");
         if (!content.trim()) throw new ApiError(400, "Comment content cannot be empty");
+        if (content.legth>30) throw new ApiError(400, "Comment content cannot be more than 30 characters");
+
 
         const comment = await prisma.comment.create({
             data: {
@@ -393,9 +395,35 @@ export async function sendComment(_: any, { pinId, content }: any, { user }: { u
 }
 
 // delete comment
+export async function deleteComment(_: any, { commentId }: any, { user }: { user: UserType }) {
+
+    try {
+        if (!user) throw new ApiError(401, "Unauthorized");
+        if (!commentId) throw new ApiError(400, "Comment ID is required");
+
+        // Check if comment exists and belongs to user
+        const existingComment = await prisma.comment.findUnique({
+            where: { id: commentId },
+        });
+        if (!existingComment) throw new ApiError(404, "Comment not found");
+        if (existingComment.userId !== user.id) throw new ApiError(403, "Forbidden: You can only delete your own comments");
+
+        await prisma.comment.delete({
+            where: { id: commentId },
+        });
+
+        return { success: true };
 
 
-// Save and Like
+
+    } catch (error: any) {
+        throw new ApiError(500, "Failed to delete comment");
+
+
+    }
+}
+
+// Save and Like and Follow
 export async function getSavedPins(_: any, __: any, { user }: { user: UserType }) {
     if (!user) return [];
 
@@ -506,3 +534,4 @@ export async function toggleLike(_: any, { pinId }: any, { user }: { user: UserT
         like: true,
     };
 }
+

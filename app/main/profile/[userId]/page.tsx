@@ -13,7 +13,7 @@ export default function UserPage() {
   const params = useParams();
   const userId = params?.userId as string;
 
-  const [profile, setProfile] = useState<ProfileType|null>(null);
+  const [profile, setProfile] = useState<ProfileType | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -72,14 +72,15 @@ export default function UserPage() {
   const totalPins = profile?.user?.uploadCount || 0;
   const likes = profile?.totalLikes || 0;
 
+  const lastUploadedPins = profile.lastUploadedPins || []
+
   return (
     <main className="page">
       <div className="container py-8">
 
 
-        <div className="mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold mb-2">Dashboard</h1>
-          <p className="text-lg opacity-70">Welcome back, {name.split(' ')[0]}!</p>
+        <div className="my-8">
+          <h1 className="text-4xl md:text-5xl font-bold mb-2">Profile View</h1>
         </div>
 
 
@@ -145,17 +146,46 @@ export default function UserPage() {
 
 
             <div className="card mb-6 bg-white">
-              <h3 className="text-xl font-bold mb-4">Actions</h3>
-              <div className="grid md:grid-cols-2 gap-3">
-                <Link href={"/main/pin"} className="btn-rect text-center py-6">
-                  <div className="text-2xl mb-2">➕</div>
-                  <div className="text-sm">Create Pin</div>
-                </Link>
-                <Link href={"/main"} className="btn-rect text-center py-6 bg-purple-600 text-white">
-                  <div className="text-2xl mb-2">🔍</div>
-                  <div className="text-sm">Explore</div>
-                </Link>
+              <h3 className="text-xl font-bold mb-4">{name}'s Pins</h3>
+              <div className="grid grid-cols-3 gap-2 mb-4">
+                {lastUploadedPins.map((u: any) => (
+                  <div key={u.id} className="relative w-62 h-40 mb-4 group rounded-2xl overflow-hidden hover:shadow-xl transition-all">
+
+                    <div className=" absolute w-full h-full">
+
+                      <Image
+                        src={u.mediaUrl}
+                        alt={u.title}
+                        fill
+                        className="w-full h-auto object-cover"
+                        loading="lazy"
+                      />
+
+
+                      <Link href={`/main/pin/${u.id}`}>
+                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-black/40">
+                          <div className="absolute bottom-0 p-3 w-full">
+                            <p className="font-semibold text-sm text-white line-clamp-2">
+                              {u.title}
+                            </p>
+                          </div>
+                        </div>
+                      </Link>
+
+
+
+
+                    </div>
+
+                  </div>
+                ))}
               </div>
+
+              <Link href="/main/" className="btn-rect w-full text-center block">
+                View All {name.split(' ')[0]}'s Pins
+              </Link>
+
+
             </div>
 
 

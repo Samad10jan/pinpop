@@ -40,3 +40,9 @@ mutation Mutation($pinId: ID!, $content: String!) {
   }
 }
 `
+export const DELETE_COMMENT = gql`
+mutation ($commentId: ID!) {
+  deleteComment(commentId: $commentId) {
+    success
+  }
+}`

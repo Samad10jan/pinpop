@@ -5,7 +5,7 @@ import { context } from "@/utils/helper/context";
 import { login, signup } from "@/lib/gql/resolvers/auth";
 import { getCurrentProfile, getFollowingCount, getFollwersCount, getProfile, getTotalLikes, user } from "@/lib/gql/resolvers/user.resolver";
 import { get } from "https";
-import { createPin, getAllTags, getPinComments, getPinPageResponse, getSavedPins, getSearchPagePins, getSugg, getTagsForPin, getUserFeed, sendComment, toggleLike, toggleSave } from "@/lib/gql/resolvers/pin.resolver";
+import { createPin, deleteComment, getAllTags, getPinComments, getPinPageResponse, getSavedPins, getSearchPagePins, getSugg, getTagsForPin, getUserFeed, sendComment, toggleLike, toggleSave } from "@/lib/gql/resolvers/pin.resolver";
 import { create } from "domain";
 import { send } from "process";
 
@@ -74,6 +74,7 @@ export const resolvers = {
     sendComment: sendComment,
     toggleSave: toggleSave,
     toggleLike: toggleLike,
+    deleteComment: deleteComment,
     // addTags:addTags
   }
 

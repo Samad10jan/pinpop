@@ -2,9 +2,9 @@ import prisma from "@/lib/services/prisma";
 import { UserType } from "@/types/types";
 import { ApiError } from "@/utils/ApiError";
 
-export const user = async (_: any, __: any,  { user }: {user:UserType}) => user;
+export const user = async (_: any, __: any, { user }: { user: UserType }) => user;
 
-export const getCurrentProfile = async (_: any, __: any,  { user }: {user:UserType}) => {
+export const getCurrentProfile = async (_: any, __: any, { user }: { user: UserType }) => {
 
     if (!user) throw new ApiError(401, "Unauthorized");
 
@@ -15,10 +15,17 @@ export const getCurrentProfile = async (_: any, __: any,  { user }: {user:UserTy
         include: { pin: true }
     })
 
-    console.log("mera user:", user);
+    // console.log("mera user:", user);
 
     return {
-        user,
+        user: {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            avatar: user.avatar,
+            uploadCount: user.uploadCount,
+            createdAt: user.createdAt
+        },
         lastSavedPins: savedPins.map(s => s.pin),
 
 
@@ -62,12 +69,28 @@ export const getProfile = async (_: any, { userId }: any,) => {
     const user = await prisma.user.findUnique({
         where: { id: userId }
     })
+    // console.log(user);
 
     if (!user) throw new ApiError(404, "User not found");
 
+    const lastUploadedPins = await prisma.pin.findMany({
+        where: { userId: user.id },
+        orderBy: { createdAt: "desc" },
+        take: 3,
+        // include: { pin: true }
+    })
+
 
     return {
-        user
+        user:{
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            avatar: user.avatar,
+            uploadCount: user.uploadCount,
+            createdAt: user.createdAt
+        },
+        lastUploadedPins
     };
 
 

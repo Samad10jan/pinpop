@@ -50,6 +50,7 @@ type ProfileResponse {
   followingCount: Int!
   lastSavedPins: [Pin]
   totalLikes: Int!
+  lastUploadedPins: [Pin]
 }
 
 type Tag {
@@ -82,7 +83,9 @@ type ToggleSaveResponse {
 type ToggleLikeResponse {
   like: Boolean!
 }
-
+type BooleanResponse {
+  success: Boolean!
+}
 
 # Queries and Mutations
 
@@ -126,6 +129,9 @@ type Mutation {
   content: String!
 ): Comment!
 
+deleteComment(
+  commentId: ID!
+): BooleanResponse!
 
 toggleSave(pinId: ID!): ToggleSaveResponse!
 
