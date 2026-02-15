@@ -64,9 +64,13 @@ type GetTagsAndUploadCountResponse {
 }
 
 type FeedResponse {
-  pins: [Pin!]!
-  hasMore: Boolean!
+ pins: [Pin!]!
   page: Int!
+  limit: Int!
+  totalPins: Int!
+  totalPages: Int!
+  hasNextPage: Boolean!
+  hasPrevPage: Boolean!
 }
 
 type PinPageResponse {
@@ -93,14 +97,24 @@ type Query {
   user: User
   getCurrentProfile: ProfileResponse
   getAllTags: GetTagsAndUploadCountResponse,
-  getUserFeed(limit: Int, page: Int): [Pin!]!,
-  getSugg(search: String!): [String]
-  getSearchPagePins(search: String!,limit: Int, page: Int): [Pin]
-  getPinPageResponse(id: ID!): PinPageResponse
-  getPinComments(pinId: ID!, page: Int): [Comment]
-  getProfile(userId: ID!): ProfileResponse
-  getSavedPins: [Pin!]!
 
+  getSugg(search: String!): [String]
+
+  getPinPageResponse(id: ID!): PinPageResponse
+
+  getPinComments(pinId: ID!, page: Int): [Comment]
+
+  getProfile(userId: ID!): ProfileResponse
+
+  getSavedPins: [Pin!]!
+  
+  getUserFeed(limit: Int, page: Int): FeedResponse!
+  
+  getSearchPagePins(search: String!, limit: Int, page: Int): FeedResponse!
+
+
+  # getSearchPagePins(search: String!,limit: Int, page: Int): [Pin]
+  # getUserFeed(limit: Int, page: Int): [Pin!]!,
 }
 
 type Mutation {
@@ -138,7 +152,7 @@ toggleSave(pinId: ID!): ToggleSaveResponse!
 toggleLike(pinId:ID!): ToggleLikeResponse
 
 # addTags:Boolean!
-
+updateProfile(name: String, avatar: String): User!
 
 }
 

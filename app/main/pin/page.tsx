@@ -18,15 +18,26 @@ export default function CreatePin() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [success, setSuccess] = useState(false);
-    //   const [uplaodCount,setUploadCount]= useState(false)  // upload exceded
+    //   const [uplaodCount,setUploadCount]= useState(false)  // uploadcount--> get from Context
 
+    // get All Tags
+    useEffect(() => {
+        gqlClient.request(GET_TAGS_QUERY)
+            .then(data => setAvailableTags(data.getAllTags.tags))
+            .catch(err => {
+                console.error("Failed to fetch tags:", err);
+                setError("Failed to load tags. Please refresh the page.");
+            });
+    }, []);
 
     const toggleTag = (id: string) => {
+                                // if id already present, then remove, else add 
         setSelectedTags(prev => prev.includes(id) ? prev.filter(t => t !== id) : [...prev, id]);
     };
 
     // preview of image
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        
         // get file
         const selectedFile = e.target.files?.[0] || null;
 
@@ -34,7 +45,12 @@ export default function CreatePin() {
 
         if (selectedFile) {
             const reader = new FileReader();
+            // The FileReader interface lets web applications asynchronously read the contents of files (or raw data buffers) 
+            // stored on the user's computer, using File or Blob objects to specify the file or data to read.
+            
+            // tbh idk?
             // set url from FileReader.result
+
             reader.onloadend = () => setPreviewUrl(reader.result as string);
             reader.readAsDataURL(selectedFile);
         } else {
@@ -43,6 +59,7 @@ export default function CreatePin() {
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
+
         e.preventDefault();
         setLoading(true);
         setError("");
@@ -61,8 +78,11 @@ export default function CreatePin() {
             }
 
             const form = new FormData();
+
             form.append("file", file);
+            
             const upload = await fetch("/api/upload/pin", { method: "POST", body: form });
+            
             const uploaded = await upload.json();
 
             if (!uploaded.url) throw new Error("Image upload failed. Please try again.");
@@ -89,14 +109,7 @@ export default function CreatePin() {
         }
     };
 
-    useEffect(() => {
-        gqlClient.request(GET_TAGS_QUERY)
-            .then(data => setAvailableTags(data.getAllTags.tags))
-            .catch(err => {
-                console.error("Failed to fetch tags:", err);
-                setError("Failed to load tags. Please refresh the page.");
-            });
-    }, []);
+
 
     // Handle redirect after success
     useEffect(() => {

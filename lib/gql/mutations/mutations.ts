@@ -46,3 +46,16 @@ mutation ($commentId: ID!) {
     success
   }
 }`
+
+export const UPDATE_PROFILE = gql`
+
+mutation ($name: String, $avatar: String) {
+  updateProfile(name: $name, avatar: $avatar) {
+    name
+    uploadCount
+    createdAt
+    avatar
+    email
+    id
+  }
+}`

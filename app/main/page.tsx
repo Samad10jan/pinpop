@@ -19,7 +19,7 @@ export default function Home() {
           page: 1,
         });
 
-        setPins(res?.getUserFeed || []);
+        setPins(res?.getUserFeed.pins || []);
       } catch (err) {
         console.error(err);
       } finally {

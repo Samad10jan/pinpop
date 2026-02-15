@@ -36,6 +36,7 @@ export const POST = async (req: Request) => {
             ).end(buffer);
         });
 
+           // return NextResponse.json(uploadResult );
         return NextResponse.json({ url: uploadResult.secure_url });
 
     } catch (e) {

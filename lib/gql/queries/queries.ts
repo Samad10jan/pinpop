@@ -81,14 +81,42 @@ query($search: String!) {
   getSugg(search: $search)
 }`
 
+// export const SEARCH_PAGE_PINS_QUERY = gql`
+// query($search: String!) {
+//   getSearchPagePins(search: $search) {
+//     # isSaved
+//     id
+//     mediaUrl
+//     fileType
+//     tagIds
+//     title
+//     createdAt
+    
+//   }
+// }`
+
 export const SEARCH_PAGE_PINS_QUERY = gql`
-query($search: String!) {
-  getSearchPagePins(search: $search) {
-    fileType
-    id
-    createdAt
-    mediaUrl
-    title
+query ($search: String!, $limit: Int, $page: Int) {
+  getSearchPagePins(search: $search, limit: $limit, page: $page) {
+    hasNextPage
+    hasPrevPage
+    limit
+    page
+    pins {
+      createdAt
+      fileType
+      id
+      isSaved
+      mediaUrl
+      tagIds
+      title
+      user {
+        id
+        name
+      }
+    }
+    totalPages
+    totalPins
   }
 }`
 
@@ -136,24 +164,48 @@ query($getPinPageResponseId: ID!) {
 
 `
 
-export const FEED_QUERY = gql`
-query ($limit: Int, $page: Int) {
+// export const FEED_QUERY = gql`
+// query ($limit: Int, $page: Int) {
+//   getUserFeed(limit: $limit, page: $page) {
+//     isSaved
+//     id
+//     mediaUrl
+//     fileType
+//     tagIds
+//     title
+//     createdAt
+//     user {
+//       id
+//       name
+//       avatar
+//     }
+//   }
+// }
+// `;
+
+export const FEED_QUERY= gql`
+query ( $limit: Int, $page: Int) {
   getUserFeed(limit: $limit, page: $page) {
-    isSaved
-    id
-    mediaUrl
-    fileType
-    tagIds
-    title
-    createdAt
-    user {
+    
+    pins {
+      createdAt
+      fileType
       id
-      name
-      avatar
+      isSaved
+      mediaUrl
+      tagIds
+      title
+      user {
+        id
+        name
+      }
     }
+    
+    totalPages
+    totalPins
   }
 }
-`;
+`
 
 export const GET_PIN_COMMENTS_QUERY = gql`
 query($pinId: ID!, $page: Int) {

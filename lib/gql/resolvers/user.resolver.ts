@@ -82,7 +82,7 @@ export const getProfile = async (_: any, { userId }: any,) => {
 
 
     return {
-        user:{
+        user: {
             id: user.id,
             email: user.email,
             name: user.name,
@@ -94,5 +94,28 @@ export const getProfile = async (_: any, { userId }: any,) => {
     };
 
 
+}
+
+export const updateProfile = async (_: any, { name, avatar }: any, { user }: { user: UserType }) => {
+    if (!user) throw new ApiError(401, "Unauthorized");
+
+    if (!name && !avatar) throw new ApiError(400, "At least one field (name or avatar) is required");
+
+    const updatedUser = await prisma.user.update({
+        where: { id: user.id },
+        data: {
+            name: name || user.name,
+            avatar: avatar || user.avatar
+        }
+    });
+
+    return {
+        id: updatedUser.id,
+        email: updatedUser.email,
+        name: updatedUser.name,
+        avatar: updatedUser.avatar,
+        uploadCount: updatedUser.uploadCount,
+        createdAt: updatedUser.createdAt
+    };
 }
 

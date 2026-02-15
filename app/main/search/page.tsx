@@ -31,7 +31,7 @@ export default function SearchPage() {
                     search: q,
                 });
 
-                setPins(res?.getSearchPagePins || []);
+                setPins(res?.getSearchPagePins.pins || []);
             } catch (err) {
                 console.error('Error fetching pins:', err);
                 setError('Failed to load search results');

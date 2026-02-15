@@ -3,7 +3,7 @@ import { startServerAndCreateNextHandler } from "@as-integrations/next";
 import typeDefs from "@/lib/gql/typeDefs/typeDefs";
 import { context } from "@/utils/helper/context";
 import { login, signup } from "@/lib/gql/resolvers/auth";
-import { getCurrentProfile, getFollowingCount, getFollwersCount, getProfile, getTotalLikes, user } from "@/lib/gql/resolvers/user.resolver";
+import { getCurrentProfile, getFollowingCount, getFollwersCount, getProfile, getTotalLikes, updateProfile, user } from "@/lib/gql/resolvers/user.resolver";
 import { get } from "https";
 import { createPin, deleteComment, getAllTags, getPinComments, getPinPageResponse, getSavedPins, getSearchPagePins, getSugg, getTagsForPin, getUserFeed, sendComment, toggleLike, toggleSave } from "@/lib/gql/resolvers/pin.resolver";
 import { create } from "domain";
@@ -75,6 +75,7 @@ export const resolvers = {
     toggleSave: toggleSave,
     toggleLike: toggleLike,
     deleteComment: deleteComment,
+    updateProfile:updateProfile
     // addTags:addTags
   }
 

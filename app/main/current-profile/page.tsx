@@ -1,9 +1,10 @@
 "use client";
 
+import EditDetailsArea from "@/components/commons/EditDetailsArea";
 import { UserContext } from "@/components/contexts/UserContext";
 import { CURRENT_PROFILE_QUERY } from "@/lib/gql/queries/queries";
 import gqlClient from "@/lib/services/graphql";
-import { CurrentProfileType } from "@/types/types";
+import { CurrentProfileType, UserType } from "@/types/types";
 import Image from "next/image";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
@@ -12,6 +13,8 @@ export default function UserPage() {
     const [profile, setProfile] = useState<CurrentProfileType | null>(null);
     const [loading, setLoading] = useState(true);
     const { currentUser } = useContext(UserContext);
+    const [showEdit, setShowEdit] = useState(false);
+
 
     useEffect(() => {
         async function getData() {
@@ -104,10 +107,16 @@ export default function UserPage() {
                                 <h2 className="text-2xl font-bold mb-1">{name}</h2>
                                 <p className="text-sm opacity-70 mb-4">{email}</p>
 
-                                <button className="btn-rect w-full mb-3">
+                                <button className="btn-rect w-full mb-3" onClick={() => setShowEdit(true)} >
                                     Edit Profile
                                 </button>
 
+                                {showEdit && (
+                                    <EditDetailsArea
+                                        userData={profile?.user as UserType}
+                                        onClose={() => setShowEdit(false)}
+                                    />
+                                )}
                             </div>
 
 
@@ -145,12 +154,21 @@ export default function UserPage() {
                         <div className="card mb-6 bg-white">
                             <h3 className="text-xl font-bold mb-4">Actions</h3>
                             <div className="grid md:grid-cols-2 gap-3">
-                                <Link href={"/main/pin"} className="btn-rect text-center py-6">
-                                    <div className="text-2xl mb-2">➕</div>
-                                    <div className="text-sm">Create Pin</div>
+                                <Link href={"/main/pin"} className="btn-rect flex flex-col justify-center items-center py-6 ">
+
+                                    <div className=" mb-3">
+
+                                        <svg width="30" height="30" color="white" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.49991 0.876892C3.84222 0.876892 0.877075 3.84204 0.877075 7.49972C0.877075 11.1574 3.84222 14.1226 7.49991 14.1226C11.1576 14.1226 14.1227 11.1574 14.1227 7.49972C14.1227 3.84204 11.1576 0.876892 7.49991 0.876892ZM1.82707 7.49972C1.82707 4.36671 4.36689 1.82689 7.49991 1.82689C10.6329 1.82689 13.1727 4.36671 13.1727 7.49972C13.1727 10.6327 10.6329 13.1726 7.49991 13.1726C4.36689 13.1726 1.82707 10.6327 1.82707 7.49972ZM7.50003 4C7.77617 4 8.00003 4.22386 8.00003 4.5V7H10.5C10.7762 7 11 7.22386 11 7.5C11 7.77614 10.7762 8 10.5 8H8.00003V10.5C8.00003 10.7761 7.77617 11 7.50003 11C7.22389 11 7.00003 10.7761 7.00003 10.5V8H4.50003C4.22389 8 4.00003 7.77614 4.00003 7.5C4.00003 7.22386 4.22389 7 4.50003 7H7.00003V4.5C7.00003 4.22386 7.22389 4 7.50003 4Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path></svg>                                    </div>
+
+                                    <div className="text-sm text-white">Create Pin</div>
+
                                 </Link>
-                                <Link href={"/main"} className="btn-rect text-center py-6 bg-purple-600 text-white">
-                                    <div className="text-2xl mb-2">🔍</div>
+                                <Link href={"/main"} className="btn-rect flex flex-col justify-center items-center py-6 bg-purple-600 text-white">
+
+                                    <div className=" mb-3">
+                                        <svg width="30" height="30" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 6.5C10 8.433 8.433 10 6.5 10C4.567 10 3 8.433 3 6.5C3 4.567 4.567 3 6.5 3C8.433 3 10 4.567 10 6.5ZM9.30884 10.0159C8.53901 10.6318 7.56251 11 6.5 11C4.01472 11 2 8.98528 2 6.5C2 4.01472 4.01472 2 6.5 2C8.98528 2 11 4.01472 11 6.5C11 7.56251 10.6318 8.53901 10.0159 9.30884L12.8536 12.1464C13.0488 12.3417 13.0488 12.6583 12.8536 12.8536C12.6583 13.0488 12.3417 13.0488 12.1464 12.8536L9.30884 10.0159Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path></svg>
+
+                                    </div>
                                     <div className="text-sm">Explore</div>
                                 </Link>
                             </div>

@@ -29,6 +29,8 @@ export async function context() {
         },
         cache: "no-store",
       });
+      // console.log(res);
+      
       if (!res.ok) return { user: null };
 
       const data = await res.json();
