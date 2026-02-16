@@ -1,19 +1,22 @@
 "use client";
 
 import FollowBtn from "@/components/buttons/FollowBtn";
+import { UserContext } from "@/components/contexts/UserContext";
 import { PROFILE_QUERY } from "@/lib/gql/queries/queries";
 import gqlClient from "@/lib/services/graphql";
+import { UserType } from "@/types/types";
+import { getGraphQLError } from "@/utils/ApiError";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 export default function UserPage() {
 
   const params = useParams();
   const userId = params?.userId as string;
 
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<UserType>(null);
   const [followersCount, setFollowersCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
   const [totalLikes, setTotalLikes] = useState(0);
@@ -21,6 +24,9 @@ export default function UserPage() {
   const [lastUploadedPins, setLastUploadedPins] = useState<any[]>([]);
 
   const [loading, setLoading] = useState(true);
+  const { currentUser } = useContext(UserContext)
+
+  // const [error, setError] = useState("")
 
   useEffect(() => {
     if (!userId) return;
@@ -36,7 +42,7 @@ export default function UserPage() {
 
         if (!p) return;
 
-        
+
         setUser(p.user);
         setFollowersCount(p.followersCount || 0);
         setFollowingCount(p.followingCount || 0);
@@ -45,7 +51,9 @@ export default function UserPage() {
         setLastUploadedPins(p.lastUploadedPins || []);
 
       } catch (err: any) {
-        console.error("GraphQL error:", err.message);
+        console.error("GraphQL error:", getGraphQLError(err));
+
+        // setError(getGraphQLError(err))
       } finally {
         setLoading(false);
       }
@@ -53,6 +61,9 @@ export default function UserPage() {
 
     getData();
   }, [userId]);
+
+  // console.log("asasasda", error);
+
 
   if (loading) {
     return (
@@ -119,11 +130,10 @@ export default function UserPage() {
                 <h2 className="text-2xl font-bold mb-1">{name}</h2>
                 <p className="text-sm opacity-70 mb-4">{email}</p>
 
-                <FollowBtn
-                  targetUserId={user.id}
-                  initiallyFollowing={isFollowing}
-                  onFollowChange={handleFollowChange}
-                />
+                {
+                  currentUser.id !== user?.id &&
+                  <FollowBtn targetUserId={user.id} initiallyFollowing={isFollowing} onFollowChange={handleFollowChange} />
+                }
               </div>
 
               <div className="grid grid-cols-2 gap-3 p-4 rounded-lg mb-4 bg-[#F0E7D6] border-2 border-black">
@@ -137,6 +147,11 @@ export default function UserPage() {
                 </div>
               </div>
             </div>
+
+            {/* {
+              error && <p className="text-red-600 font-extrabold underline">{error}</p>
+            } */}
+
           </div>
 
           <div className="lg:col-span-8">

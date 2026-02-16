@@ -24,15 +24,16 @@ class ApiError extends Error {
 }
 
 export const getGraphQLError = (e: any) => {
-  const raw =
-    e?.response?.errors?.[0]?.message ||
-    e?.message ||
-    "Something went wrong";
+  console.log("RAW ERROR:", e);
 
-// get last line of error message
-  const lines = raw.split("\n").map((l:any) => l.trim()).filter(Boolean);
+  if (e?.response?.errors?.length) {
+    return e.response.errors[0].message;
+  }
 
-  return lines[lines.length - 1];
+  if (e?.message) return e.message;
+
+  return "Something went wrong";
 };
+
 
 export { ApiError };

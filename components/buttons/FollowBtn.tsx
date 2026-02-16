@@ -2,6 +2,7 @@
 
 import { TOGGLE_FOLLOW } from "@/lib/gql/mutations/mutations";
 import gqlClient from "@/lib/services/graphql";
+import { getGraphQLError } from "@/utils/ApiError";
 import { useEffect, useState } from "react";
 
 export default function FollowBtn({ targetUserId, initiallyFollowing = false, onFollowChange }: { targetUserId: string; initiallyFollowing?: boolean; onFollowChange?: (v: boolean) => void }) {
@@ -30,8 +31,11 @@ export default function FollowBtn({ targetUserId, initiallyFollowing = false, on
                 setIsFollowing(newState);
                 onFollowChange?.(newState);
             }
-        } catch (e: any) {
-            console.error(e.message);
+        }
+        catch (e: any) {
+            const msg = getGraphQLError(e);
+            console.log("Follow Error:", msg);
+
         } finally {
             setLoading(false);
         }
