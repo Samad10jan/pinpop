@@ -2,6 +2,7 @@ import Image from "next/image";
 import { FeedPinType } from "@/types/types";
 import Link from "next/link";
 import SaveBtn from "../buttons/SaveBtn";
+import Loading from "../commons/Loading";
 
 export default function PinCard({ data }: { data: FeedPinType }) {
     return (

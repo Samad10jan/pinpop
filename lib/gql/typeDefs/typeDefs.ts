@@ -51,6 +51,7 @@ type ProfileResponse {
   lastSavedPins: [Pin]
   totalLikes: Int!
   lastUploadedPins: [Pin]
+  isFollowing: Boolean!
 }
 
 type Tag {
@@ -80,6 +81,8 @@ type PinPageResponse {
   likesCount: Int!
   savesCount: Int!
   tags:[Tag!] 
+  isFollowing: Boolean!
+  
 }
 type ToggleSaveResponse {
   saved: Boolean!
@@ -112,7 +115,7 @@ type Query {
   
   getSearchPagePins(search: String!, limit: Int, page: Int): FeedResponse!
 
-
+  # isFollowing(targetUserId: ID!): Boolean!
   # getSearchPagePins(search: String!,limit: Int, page: Int): [Pin]
   # getUserFeed(limit: Int, page: Int): [Pin!]!,
 }
@@ -150,6 +153,8 @@ deleteComment(
 toggleSave(pinId: ID!): ToggleSaveResponse!
 
 toggleLike(pinId:ID!): ToggleLikeResponse
+
+toggleFollow(targetUserId: ID!): BooleanResponse!
 
 # addTags:Boolean!
 updateProfile(name: String, avatar: String): User!

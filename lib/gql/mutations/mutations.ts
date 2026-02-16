@@ -59,3 +59,11 @@ mutation ($name: String, $avatar: String) {
     id
   }
 }`
+
+export const TOGGLE_FOLLOW = gql`
+  mutation ToggleFollow($targetUserId: ID!) {
+    toggleFollow(targetUserId: $targetUserId) {
+      success
+    }
+  }
+`;

@@ -62,7 +62,7 @@ export const getTotalLikes = async (parent: any, _: any) => {
 }
 
 
-export const getProfile = async (_: any, { userId }: any,) => {
+export const getProfile = async (_: any, { userId }: any, currUser: UserType) => {
 
     if (!userId) throw new ApiError(400, "User ID is required");
 
@@ -90,7 +90,7 @@ export const getProfile = async (_: any, { userId }: any,) => {
             uploadCount: user.uploadCount,
             createdAt: user.createdAt
         },
-        lastUploadedPins
+        lastUploadedPins,
     };
 
 
@@ -118,4 +118,50 @@ export const updateProfile = async (_: any, { name, avatar }: any, { user }: { u
         createdAt: updatedUser.createdAt
     };
 }
+
+export const toggleFollow = async (_: any, { targetUserId }: any, { user }: { user: UserType }) => {
+
+    if (!user) throw new ApiError(401, "Unauthorized");
+
+    if (user.id === targetUserId) throw new ApiError(400, "You cannot follow yourself");
+
+    const where = {
+        followerId_followingId: {
+            followerId: user.id,
+            followingId: targetUserId,
+        },
+    };
+
+    const existing = await prisma.follow.findUnique({ where });
+
+    if (existing) {
+        await prisma.follow.delete({ where });
+        return { success: true };
+    }
+
+    await prisma.follow.create({
+        data: {
+            followerId: user.id,
+            followingId: targetUserId,
+        },
+    });
+
+    return { success: true };
+};
+
+export const isFollowing = async (parent: any, _: any, { user }: { user: UserType }) => {
+    if (!user) return false;
+
+    const follow = await prisma.follow.findUnique({
+        where: {
+            followerId_followingId: {
+                followerId: user.id,
+                followingId: parent.user.id,
+            },
+        },
+    });
+
+    return !!follow;
+};
+
 

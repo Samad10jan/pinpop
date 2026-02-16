@@ -24,6 +24,7 @@ type ProfileType = {
   followersCount: number;
   followingCount: number;
   totalLikes: number;
+  isFollowing: boolean;
   lastUploadedPins: FeedPinType[];
 };
 
@@ -75,7 +76,8 @@ type PinPageResponseType = {
   followersCount?: number;
   likesCount: number;
   savesCount: number;
-  tags: TagType[]
+  tags: TagType[],
+  isFollowing: boolean;
 };
 
 
@@ -99,6 +101,7 @@ type ToggleSaveResponseType = {
 type ToggleLikeResponseType = {
   like: boolean;
 };
+
 
 
 

@@ -4,6 +4,7 @@ import prisma from "@/lib/services/prisma";
 import { PinPageResponseType, UserType } from "@/types/types";
 import { ApiError } from "@/utils/ApiError";
 import { buildFeedResponse } from "@/utils/helper/pagination";
+import { isFollowing } from "./user.resolver";
 
 export const getAllTags = async (_: any, __: any, { user }: { user: UserType }) => {
     const tags = await prisma.tag.findMany({
@@ -34,7 +35,7 @@ export const createPin = async (_: any, { title, description, mediaUrl, fileType
 
 
     const uploadCount = user.uploadCount + 1;
-    
+
     if (uploadCount > 15) {
         throw new ApiError(403, "Upload limit reached. Please try again later.");
     }
@@ -94,22 +95,22 @@ export async function getUserFeed(_: any, { limit = 10, page = 1 }: any, { user 
             select: { id: true },
         });
 
-         let whereClause: any = {};
+        let whereClause: any = {};
 
         // exlucde user's own pins from feed
         const excludeIds = userPins.map(p => p.id);
 
-         if (excludeIds.length > 0) {
+        if (excludeIds.length > 0) {
             whereClause.id = { notIn: excludeIds };
         }
 
-       
-         //include pins with tags user has liked, if any
+
+        //include pins with tags user has liked, if any
         if (likedTagIds.length > 0) {
             whereClause.tagIds = { hasSome: likedTagIds };
         }
 
-       
+
         const totalPins = await prisma.pin.count({ where: whereClause });
 
         const pins = await prisma.pin.findMany({
@@ -169,7 +170,7 @@ export async function getSugg(_: any, { search }: any) {
 
 
 
-export async function getSearchPagePins(_: any, { search, limit = 10, page = 1 }: any, user:UserType) {
+export async function getSearchPagePins(_: any, { search, limit = 10, page = 1 }: any, user: UserType) {
     try {
         if (!search.trim()) {
             return buildFeedResponse([], 0, page, limit);
@@ -204,7 +205,7 @@ export async function getSearchPagePins(_: any, { search, limit = 10, page = 1 }
                 },
             },
         });
-         const mappedPins = pins.map(p => ({
+        const mappedPins = pins.map(p => ({
             ...p,
             isSaved: p.saves.length > 0,
         }));
@@ -274,6 +275,18 @@ export async function getPinPageResponse(_: any, { id }: { id: string }, { user 
             orderBy: { createdAt: "desc" },
         })
 
+        // console.log("aa",pin.user.id);
+
+
+
+        const follow = await prisma.follow.findFirst({
+            where: {
+                followerId: user.id,
+                followingId: pin.user.id,
+            },
+        });
+
+        const isFollowing = !!follow;
 
 
 
@@ -287,6 +300,7 @@ export async function getPinPageResponse(_: any, { id }: { id: string }, { user 
             likesCount: pin._count.likes,
             savesCount: pin._count.saves,
             followersCount: pin.user._count.followers ?? 0,
+            isFollowing,
 
             relatedPins: relatedPins.map(p => ({
                 ...p,

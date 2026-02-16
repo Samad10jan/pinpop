@@ -32,6 +32,7 @@ query GetProfile($userId: ID!) {
     followersCount
     followingCount
     totalLikes
+    isFollowing
     lastUploadedPins{
       id
       title
@@ -81,19 +82,6 @@ query($search: String!) {
   getSugg(search: $search)
 }`
 
-// export const SEARCH_PAGE_PINS_QUERY = gql`
-// query($search: String!) {
-//   getSearchPagePins(search: $search) {
-//     # isSaved
-//     id
-//     mediaUrl
-//     fileType
-//     tagIds
-//     title
-//     createdAt
-    
-//   }
-// }`
 
 export const SEARCH_PAGE_PINS_QUERY = gql`
 query ($search: String!, $limit: Int, $page: Int) {
@@ -128,6 +116,7 @@ query($getPinPageResponseId: ID!) {
     followersCount
     likesCount
     savesCount
+    isFollowing
 
     pin {
       isSaved
@@ -183,7 +172,7 @@ query($getPinPageResponseId: ID!) {
 // }
 // `;
 
-export const FEED_QUERY= gql`
+export const FEED_QUERY = gql`
 query ( $limit: Int, $page: Int) {
   getUserFeed(limit: $limit, page: $page) {
     
@@ -221,3 +210,6 @@ query($pinId: ID!, $page: Int) {
   }
 }
 `
+
+
+

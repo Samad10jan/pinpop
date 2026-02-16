@@ -1,13 +1,10 @@
-import { ApolloServer } from "@apollo/server";
-import { startServerAndCreateNextHandler } from "@as-integrations/next";
+import { login, signup } from "@/lib/gql/resolvers/auth";
+import { createPin, deleteComment, getAllTags, getPinComments, getPinPageResponse, getSavedPins, getSearchPagePins, getSugg, getTagsForPin, getUserFeed, sendComment, toggleLike, toggleSave } from "@/lib/gql/resolvers/pin.resolver";
+import { getCurrentProfile, getFollowingCount, getFollwersCount, getProfile, getTotalLikes, isFollowing, toggleFollow, updateProfile, user } from "@/lib/gql/resolvers/user.resolver";
 import typeDefs from "@/lib/gql/typeDefs/typeDefs";
 import { context } from "@/utils/helper/context";
-import { login, signup } from "@/lib/gql/resolvers/auth";
-import { getCurrentProfile, getFollowingCount, getFollwersCount, getProfile, getTotalLikes, updateProfile, user } from "@/lib/gql/resolvers/user.resolver";
-import { get } from "https";
-import { createPin, deleteComment, getAllTags, getPinComments, getPinPageResponse, getSavedPins, getSearchPagePins, getSugg, getTagsForPin, getUserFeed, sendComment, toggleLike, toggleSave } from "@/lib/gql/resolvers/pin.resolver";
-import { create } from "domain";
-import { send } from "process";
+import { ApolloServer } from "@apollo/server";
+import { startServerAndCreateNextHandler } from "@as-integrations/next";
 
 // import resolvers from "@/lib/gql/resolvers/auth";
 
@@ -54,35 +51,37 @@ export const resolvers = {
 
     getPinComments: getPinComments,
 
-    getSavedPins: getSavedPins
-
+    getSavedPins: getSavedPins,
+    
+    // isFollowing:isFollowing
   },
   ProfileResponse: {
     followersCount: getFollwersCount,
     followingCount: getFollowingCount,
     totalLikes: getTotalLikes,
+    isFollowing:isFollowing
   },
   PinPageResponse: {
     tags: getTagsForPin
   },
 
   Mutation: {
-    signup: signup,
 
+    signup: signup,
     login: login,
+
     createPin: createPin,
     sendComment: sendComment,
     toggleSave: toggleSave,
     toggleLike: toggleLike,
     deleteComment: deleteComment,
-    updateProfile:updateProfile
+    updateProfile:updateProfile,
+    toggleFollow: toggleFollow,
+    
     // addTags:addTags
   }
 
 };
-
-
-
 
 
 
