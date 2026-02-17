@@ -109,11 +109,13 @@ type Query {
 
   getProfile(userId: ID!): ProfileResponse
 
-  getSavedPins: [Pin!]!
+  getSavedPins: [Pin]
   
   getUserFeed(limit: Int, page: Int): FeedResponse!
   
   getSearchPagePins(search: String!, limit: Int, page: Int): FeedResponse!
+
+  # getAllPins(userId:ID!): FeedResponse!
 
   # isFollowing(targetUserId: ID!): Boolean!
   # getSearchPagePins(search: String!,limit: Int, page: Int): [Pin]

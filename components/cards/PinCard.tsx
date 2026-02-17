@@ -1,10 +1,12 @@
 import Image from "next/image";
-import { FeedPinType } from "@/types/types";
+import { PinType
+ } from "@/types/types";
 import Link from "next/link";
 import SaveBtn from "../buttons/SaveBtn";
 import Loading from "../commons/Loading";
 
-export default function PinCard({ data }: { data: FeedPinType }) {
+export default function PinCard({ data }: { data: PinType
+ }) {
     return (
         <div className="relative border mb-4 group rounded-2xl overflow-hidden shadow hover:shadow-xl transition-all">
 

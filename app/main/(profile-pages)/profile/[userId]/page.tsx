@@ -168,7 +168,7 @@ export default function UserPage() {
             </div>
 
             <div className="card mb-6 bg-white">
-              <h3 className="text-xl font-bold mb-4">{name}'s Pins</h3>
+              <h3 className="text-xl font-bold mb-4 capitalize">{name}'s Pins</h3>
 
               <div className="grid grid-cols-3 gap-2 mb-4">
                 {lastUploadedPins.map(u => (
@@ -196,7 +196,7 @@ export default function UserPage() {
                 ))}
               </div>
 
-              <Link href="/main/" className="btn-rect w-full text-center block">
+              <Link href="/main/" className="btn-rect w-full text-center block capitalize">
                 View All {name.split(" ")[0]}'s Pins
               </Link>
             </div>

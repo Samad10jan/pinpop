@@ -10,10 +10,6 @@ export default async function RootLayout({
     children: React.ReactNode;
 }) {
     const { user } = await context()
-    // console.log("asasas", user);
-    if (!user?.id) {
-        redirect(("/"))
-    }
     return (
         <div>
             <UserProvider user={user}>

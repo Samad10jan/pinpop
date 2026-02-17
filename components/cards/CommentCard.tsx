@@ -14,7 +14,7 @@ export default function CommentCard({
     currentUserId: string
 }) {
 
-    console.log(commentData.id);
+    // console.log(commentData.id);
     const isOwner = currentUserId === commentData.user.id;
 
     return (

@@ -96,7 +96,7 @@ export default function CreatePin() {
                 fileType,
                 tagIds: selectedTags
             });
-            console.log(res);
+            // console.log(res);
 
             if (res.createPin) {
                 setSuccess(true);

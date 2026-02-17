@@ -16,7 +16,7 @@ type CurrentProfileType = {
   followersCount?: number;
   followingCount?: number;
   totalLikes?: number;
-  lastSavedPins?: FeedPinType[];
+  lastSavedPins?: PinType[];
 };
 
 type ProfileType = {
@@ -25,14 +25,15 @@ type ProfileType = {
   followingCount: number;
   totalLikes: number;
   isFollowing: boolean;
-  lastUploadedPins: FeedPinType[];
+  lastUploadedPins: PinType[];
 };
 
 
 
 
 
-type FeedPinType = {
+type PinType
+ = {
   id: string;
   title: string;
   description: string,
@@ -65,14 +66,15 @@ type CommentType = {
 
 
 type FeedResponseType = {
-  items: FeedPinType[];
+  items: PinType[];
 };
 
 
 
 type PinPageResponseType = {
-  pin: FeedPinType;
-  relatedPins: FeedPinType[];
+  pin: PinType
+;
+  relatedPins: PinType[];
   followersCount?: number;
   likesCount: number;
   savesCount: number;
@@ -118,7 +120,8 @@ export type {
   UserType,
   ProfileType,
   CurrentProfileType,
-  FeedPinType,
+  PinType
+,
   CommentType,
 
   FeedResponseType,

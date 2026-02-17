@@ -1,48 +1,32 @@
-import { NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
-import prisma from "@/lib/services/prisma";
+import { refreshTokens } from "@/utils/helper/refersh";
 import { cookies } from "next/headers";
-import { signAccess, signRefresh } from "@/utils/helper/auth";
+import { NextResponse } from "next/server";
 
 export async function POST() {
-  const cookieStore = await cookies();
-  const access = cookieStore.get("access")?.value;
+  const cookieStore = cookies();
+  const refresh = (await cookieStore).get("refresh")?.value;
 
-  if (!access) return NextResponse.json(null);
+  if (!refresh) return NextResponse.json(null, { status: 401 });
 
-  // decode expired access
-  const decoded = jwt.decode(access) as {id:string,iat:string} | null;
+  const tokens = await refreshTokens(refresh);
 
-  if (!decoded?.id) return NextResponse.json(null);
+  if (!tokens) return NextResponse.json(null, { status: 401 });
 
-  const user = await prisma.user.findUnique({
-    where: { id: decoded.id },
+  const res = NextResponse.json({ ok: true });
+
+  res.cookies.set("access", tokens.newAccess, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "lax",
+    maxAge: 60 * 15,
   });
 
-  if (!user?.refreshToken) return NextResponse.json(null);
+  res.cookies.set("refresh", tokens.newRefresh, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "lax",
+    maxAge: 60 * 60 * 24 * 7,
+  });
 
-  try {
-
-    jwt.verify(user.refreshToken, process.env.REFRESH_SECRET!);
-
-    // ROTATE tokens
-    const newAccess = signAccess(user.id);
-    const newRefresh = signRefresh(user.id);
-
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { refreshToken: newRefresh },
-    });
-
-    cookieStore.set("access", newAccess, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "lax"
-    });
-
-    return NextResponse.json({ access: newAccess });
-
-  } catch {
-    return NextResponse.json(null);
-  }
+  return res;
 }

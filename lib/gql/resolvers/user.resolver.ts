@@ -2,7 +2,22 @@ import prisma from "@/lib/services/prisma";
 import { UserType } from "@/types/types";
 import { ApiError } from "@/utils/ApiError";
 
-export const user = async (_: any, __: any, { user }: { user: UserType }) => user;
+// Queries
+
+export const user = async (_: any, __: any, { user }: { user: UserType }) => {
+    if (!user) return null;
+
+    return {
+        user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            avatar: user.avatar,
+            uploadCount: user.uploadCount,
+            createdAt: user.createdAt,
+        },
+    };
+}
 
 export const getCurrentProfile = async (_: any, __: any, { user }: { user: UserType }) => {
 
@@ -96,7 +111,28 @@ export const getProfile = async (_: any, { userId }: any, currUser: UserType) =>
 
 }
 
-export const updateProfile = async (_: any, { name, avatar }: any, { user }: { user: UserType }) => {
+export const isFollowing = async (parent: any, _: any, { user }: { user: UserType }) => {
+
+    if (!user) return false;
+    // console.log("aaaa");
+    
+
+    const follow = await prisma.follow.findUnique({
+        where: {
+            followerId_followingId: {
+                followerId: user.id,
+                followingId: parent.user.id,
+            },
+        },
+    });
+
+    return !!follow;
+};
+
+// Mutations
+
+export const updateProfile = async (_: any, { name, avatar }: { name:string, avatar:string }, { user }: { user: UserType }) => {
+   
     if (!user) throw new ApiError(401, "Unauthorized");
 
     if (!name && !avatar) throw new ApiError(400, "At least one field (name or avatar) is required");
@@ -118,50 +154,3 @@ export const updateProfile = async (_: any, { name, avatar }: any, { user }: { u
         createdAt: updatedUser.createdAt
     };
 }
-
-export const toggleFollow = async (_: any, { targetUserId }: any, { user }: { user: UserType }) => {
-
-    if (!user) throw new ApiError(401, "Unauthorized");
-
-    if (user.id === targetUserId) throw new ApiError(400, "You cannot follow yourself");
-
-    const where = {
-        followerId_followingId: {
-            followerId: user.id,
-            followingId: targetUserId,
-        },
-    };
-
-    const existing = await prisma.follow.findUnique({ where });
-
-    if (existing) {
-        await prisma.follow.delete({ where });
-        return { success: true };
-    }
-
-    await prisma.follow.create({
-        data: {
-            followerId: user.id,
-            followingId: targetUserId,
-        },
-    });
-
-    return { success: true };
-};
-
-export const isFollowing = async (parent: any, _: any, { user }: { user: UserType }) => {
-    if (!user) return false;
-
-    const follow = await prisma.follow.findUnique({
-        where: {
-            followerId_followingId: {
-                followerId: user.id,
-                followingId: parent.user.id,
-            },
-        },
-    });
-
-    return !!follow;
-};
-
-

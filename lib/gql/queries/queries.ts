@@ -213,3 +213,16 @@ query($pinId: ID!, $page: Int) {
 
 
 
+export const GET_SAVED_PINS_QUERY = gql`
+query{
+  getSavedPins {
+    fileType
+    description
+    id
+    isSaved
+    mediaUrl
+    tagIds
+    title
+    
+  }
+}`

@@ -13,15 +13,17 @@ import LikeBtn from "@/components/buttons/LikeBtn";
 import SaveBtn from "@/components/buttons/SaveBtn";
 import PinCard from "@/components/cards/PinCard";
 import CommentArea from "@/components/commons/CommentsArea";
-import { FeedPinType } from "@/types/types";
+import { PinType
+ } from "@/types/types";
 import Link from "next/link";
 
 export default function PinPage() {
   const { pinId } = useParams();
 
   // split states
-  const [pin, setPin] = useState<FeedPinType | null>(null);
-  const [relatedPins, setRelatedPins] = useState<FeedPinType[]>([]);
+  const [pin, setPin] = useState<PinType
+ | null>(null);
+  const [relatedPins, setRelatedPins] = useState<PinType[]>([]);
   const [followersCount, setFollowersCount] = useState(0);
   const [likesCount, setLikesCount] = useState(0);
   const [savesCount, setSavesCount] = useState(0);
@@ -176,7 +178,8 @@ export default function PinPage() {
       <div className="columns-2 gap-4 w-[40%] space-y-4 m-5">
 
         {
-        relatedPins.map((pin: FeedPinType) => (
+        relatedPins.map((pin: PinType
+) => (
           <PinCard data={pin} key={pin.id} />
         ))}
       </div>

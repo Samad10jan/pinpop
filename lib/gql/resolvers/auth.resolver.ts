@@ -3,7 +3,9 @@ import { hashPassword, verifyPassword, signAccess, signRefresh } from "@/utils/h
 import { cookies } from "next/headers";
 import { ApiError } from "@/utils/ApiError";
 
+// Mutations
 export const signup = async (_: any, args: any) => {
+
     return await prisma.$transaction(async (tn) => {
 
         if (!args.name || !args.email || !args.password)
@@ -46,7 +48,19 @@ export const signup = async (_: any, args: any) => {
 
         cookieStore.set("access", access, {
             httpOnly: true,
+            secure: true,
+            sameSite: "lax",
+            maxAge: 60 * 20, // longer than JWT
         });
+
+        cookieStore.set("refresh", refresh, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "lax",
+            maxAge: 60 * 60 * 24 * 7, // 7 days
+        });
+
+
 
         return {
             user: {
@@ -88,7 +102,19 @@ export const login = async (_: any, args: any) => {
 
         cookieStore.set("access", access, {
             httpOnly: true,
+            secure: true,
+            sameSite: "lax",
+            maxAge: 60 * 20, // longer than JWT
         });
+
+        cookieStore.set("refresh", refresh, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "lax",
+            maxAge: 60 * 60 * 24 * 7, // 7 days
+        });
+
+
 
 
         return {

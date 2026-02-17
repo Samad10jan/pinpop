@@ -53,7 +53,7 @@ export default function SignupPage() {
 
                 }
             )
-           
+
 
             router.push("/main");
 
@@ -80,6 +80,7 @@ export default function SignupPage() {
                 <form onSubmit={handleSubmit} className="flex flex-col gap-3">
 
                     <input
+                        title="set name"
                         placeholder="Name"
                         className="card focus-within:bg-amber-200 outline-0"
                         value={name}
@@ -88,6 +89,7 @@ export default function SignupPage() {
                     />
 
                     <input
+                        title="set email"
                         placeholder="Email"
                         type="email"
                         className="card focus-within:bg-amber-200 outline-0"
@@ -97,6 +99,7 @@ export default function SignupPage() {
                     />
 
                     <input
+                        title="set password"
                         placeholder="Password (min 8)"
                         type="password"
                         className="card focus-within:bg-amber-200 outline-0 "
@@ -106,9 +109,9 @@ export default function SignupPage() {
                     />
 
                     <input
-                        title="a"
+                        title="file upload"
                         type="file"
-                        className="btn-rect !bg-amber-200"
+                        className="btn-rect bg-amber-200!"
                         onChange={e => setAvatar(e.target.files?.[0] || null)}
 
                     />

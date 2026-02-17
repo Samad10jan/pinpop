@@ -5,14 +5,15 @@ import { useSearchParams } from 'next/navigation';
 import PinCard from "@/components/cards/PinCard";
 import { SEARCH_PAGE_PINS_QUERY } from "@/lib/gql/queries/queries";
 import gqlClient from "@/lib/services/graphql";
-import { FeedPinType } from "@/types/types";
+import { PinType
+ } from "@/types/types";
 import Loading from '@/components/commons/Loading';
 
 export default function SearchPage() {
     const searchParams = useSearchParams();
     const q = searchParams.get('q');
 
-    const [pins, setPins] = useState<FeedPinType[]>([]);
+    const [pins, setPins] = useState<PinType[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -76,7 +77,8 @@ export default function SearchPage() {
             </h2>
 
             <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-4 space-y-4">
-                {pins.map((pin: FeedPinType) => (
+                {pins.map((pin: PinType
+) => (
                     <PinCard data={pin} key={pin.id} />
                 ))}
             </div>

@@ -5,10 +5,11 @@ import PinCard from "@/components/cards/PinCard";
 import gqlClient from "@/lib/services/graphql";
 import Loading from "@/components/commons/Loading";
 import { FEED_QUERY } from "@/lib/gql/queries/queries";
+import { PinType } from "@/types/types";
 
 
 export default function Home() {
-  const [pins, setPins] = useState<any[]>([]);
+  const [pins, setPins] = useState<PinType[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
