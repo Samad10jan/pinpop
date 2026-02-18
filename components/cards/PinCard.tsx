@@ -33,7 +33,7 @@ export default function PinCard({ data }: { data: PinType
                 </Link>
 
 
-                <div className="absolute top-3! right-3! *:py-2! *:scale-85 opacity-0! group-hover:opacity-100! transition! text-white  rounded-full! text-sm! font-semibold!">
+                <div className="absolute top-3! right-3! *:size-10! opacity-0! group-hover:opacity-100! transition!  ">
                     <SaveBtn pinId={data.id} isSaved={data.isSaved} />
                 </div>
 

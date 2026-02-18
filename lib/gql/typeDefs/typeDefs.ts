@@ -84,6 +84,44 @@ type PinPageResponse {
   isFollowing: Boolean!
   
 }
+type UserPinAnalytics {
+  id: ID!
+  title: String!
+  description: String
+  mediaUrl: String!
+  fileType: FileType!
+  tagIds: [ID!]!
+  createdAt: DateTime!
+
+  likesCount: Int!
+  savesCount: Int!
+  commentsCount: Int!
+
+  engagementScore: Float!
+}
+
+type CurrentUserAnalyticsResponse {
+  pins: [UserPinAnalytics!]!
+
+  totalPins: Int!
+  totalLikes: Int!
+  totalSaves: Int!
+  totalComments: Int!
+
+  followersCount: Int!
+  followingCount: Int!
+
+  avgEngagementPerPin: Float!
+
+  topPins: [UserPinAnalytics!]
+
+  # recentPerformance: [DailyStats!]
+
+  # popularTags: [TagStats!]
+
+  # growth: GrowthStats!
+}
+
 type ToggleSaveResponse {
   saved: Boolean!
 }
@@ -115,11 +153,10 @@ type Query {
   
   getSearchPagePins(search: String!, limit: Int, page: Int): FeedResponse!
 
-  # getAllPins(userId:ID!): FeedResponse!
+  getCurrentUserPinResponse: CurrentUserAnalyticsResponse!
+  getUserAllPins(userId:ID!): FeedResponse!
 
-  # isFollowing(targetUserId: ID!): Boolean!
-  # getSearchPagePins(search: String!,limit: Int, page: Int): [Pin]
-  # getUserFeed(limit: Int, page: Int): [Pin!]!,
+ 
 }
 
 type Mutation {

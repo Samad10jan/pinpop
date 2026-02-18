@@ -226,3 +226,43 @@ query{
     
   }
 }`
+
+
+export const GET_CURRENT_USER_ALL_PINS_QUERY = gql`
+query{
+  getCurrentUserPinResponse {
+    pins {
+      id
+      title
+      description
+      mediaUrl
+      fileType
+      tagIds
+      createdAt
+      likesCount
+      savesCount
+      commentsCount
+      engagementScore
+    }
+    totalPins
+    totalLikes
+    totalSaves
+    totalComments
+    followersCount
+    followingCount
+    avgEngagementPerPin
+    topPins {
+      id
+      title
+      description
+      mediaUrl
+      fileType
+      tagIds
+      createdAt
+      likesCount
+      savesCount
+      commentsCount
+      engagementScore
+    }
+  }
+}`

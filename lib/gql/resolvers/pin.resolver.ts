@@ -258,6 +258,95 @@ export async function getTagsForPin(parent: PinPageResponseType,) {
 }
 
 
+export async function getCurrentUserPinResponse(_: any, __: any, { user }: { user: UserType }) {
+
+    if (!user?.id) throw new Error("Unauthorized");
+
+    const userId = user.id;
+
+    // Fetch all pins with counts
+    const pins = await prisma.pin.findMany({
+        where: { userId },
+        include: {
+            _count: {
+                select: {
+                    likes: true,
+                    saves: true,
+                    comments: true,
+                },
+            },
+        },
+        orderBy: {
+            createdAt: "desc",
+        },
+    });
+
+    //  Format pins + engagement score
+    const formattedPins = pins.map((pin) => {
+        const likes = pin._count.likes;
+        const saves = pin._count.saves;
+        const comments = pin._count.comments;
+
+        return {
+            id: pin.id,
+            title: pin.title,
+            description: pin.description,
+            mediaUrl: pin.mediaUrl,
+            fileType: pin.fileType,
+            tagIds: pin.tagIds,
+            createdAt: pin.createdAt,
+
+            likesCount: likes,
+            savesCount: saves,
+            commentsCount: comments,
+
+            // Simple engagement formula
+            engagementScore: likes * 1 + saves * 2 + comments * 3,
+        };
+    });
+
+    // Totals
+    const [followersCount, followingCount] = await Promise.all([
+        prisma.follow.count({ where: { followingId: userId } }),
+        prisma.follow.count({ where: { followerId: userId } }),
+    ]);
+
+    const totalLikes = formattedPins.reduce((a, b) => a + b.likesCount, 0);
+    const totalSaves = formattedPins.reduce((a, b) => a + b.savesCount, 0);
+    const totalComments = formattedPins.reduce((a, b) => a + b.commentsCount, 0);
+
+    //  Top 5 pins by engagement
+    const topPins = [...formattedPins]
+        .sort((a, b) => b.engagementScore - a.engagementScore)
+        .slice(0, 5);
+
+    //  Average engagement
+    const avgEngagementPerPin =
+        formattedPins.length > 0
+            ? (
+                formattedPins.reduce((a, b) => a + b.engagementScore, 0) /
+                formattedPins.length
+            ).toFixed(2)
+            : 0;
+
+    return {
+        pins: formattedPins,
+
+        totalPins: formattedPins.length,
+        totalLikes,
+        totalSaves,
+        totalComments,
+
+        followersCount,
+        followingCount,
+
+        avgEngagementPerPin: Number(avgEngagementPerPin),
+
+        topPins,
+    };
+}
+
+
 
 // Mutations
 export const createPin = async (_: any, { title, description, mediaUrl, fileType, tagIds }: { title: string, description: string, mediaUrl: string, fileType: FileType, tagIds: string[] }, { user }: { user: UserType }) => {

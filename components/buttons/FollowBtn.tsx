@@ -3,6 +3,7 @@
 import { TOGGLE_FOLLOW } from "@/lib/gql/mutations/mutations";
 import gqlClient from "@/lib/services/graphql";
 import { getGraphQLError } from "@/utils/ApiError";
+import { UserMinus, UserPlus } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function FollowBtn({ targetUserId, initiallyFollowing = false, onFollowChange }: { targetUserId: string; initiallyFollowing?: boolean; onFollowChange?: (v: boolean) => void }) {
@@ -43,13 +44,16 @@ export default function FollowBtn({ targetUserId, initiallyFollowing = false, on
 
     return (
         <button
+            title="follow"
             onClick={handleFollow}
             disabled={loading}
-            className={`btn-rect border px-5 py-2 rounded-xl transition
+            className={`btn-rect border px-5 py-2 rounded-xl transition text-sm
         ${isFollowing ? "bg-black! text-white!" : "bg-white! text-black! border-black!"}
       `}
         >
-            {loading ? "..." : isFollowing ? "Unfollow" : "Follow"}
+            {
+                isFollowing ? <UserMinus /> : <UserPlus />
+            }
         </button>
     );
 }

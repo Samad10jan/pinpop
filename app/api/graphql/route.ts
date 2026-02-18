@@ -1,6 +1,6 @@
 import { login, signup } from "@/lib/gql/resolvers/auth.resolver";
 import { deleteComment, getPinComments, sendComment } from "@/lib/gql/resolvers/comments.resolver";
-import { createPin, getPinPageResponse, getSearchPagePins, getSugg, getTagsForPin, getUserFeed } from "@/lib/gql/resolvers/pin.resolver";
+import { createPin, getCurrentUserPinResponse, getPinPageResponse, getSearchPagePins, getSugg, getTagsForPin, getUserFeed } from "@/lib/gql/resolvers/pin.resolver";
 import { getAllTags, getSavedPins, toggleFollow, toggleLike, toggleSave } from "@/lib/gql/resolvers/toggles.resolver";
 import { getCurrentProfile, getFollowingCount, getFollwersCount, getProfile, getTotalLikes, isFollowing, updateProfile, user } from "@/lib/gql/resolvers/user.resolver";
 
@@ -31,6 +31,7 @@ export const resolvers = {
     getPinComments: getPinComments,
 
     getSavedPins: getSavedPins,
+    getCurrentUserPinResponse:getCurrentUserPinResponse
     
     // isFollowing:isFollowing
   },

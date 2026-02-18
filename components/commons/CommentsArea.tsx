@@ -1,12 +1,13 @@
 "use client";
 
-import { useContext, useState } from "react";
-import gqlClient from "@/lib/services/graphql";
-import { GET_PIN_COMMENTS_QUERY } from "@/lib/gql/queries/queries";
-import { getGraphQLError } from "@/utils/ApiError";
 import CommentCard from "@/components/cards/CommentCard";
-import { CommentType } from "@/types/types";
 import { CREATE_COMMENT, DELETE_COMMENT } from "@/lib/gql/mutations/mutations";
+import { GET_PIN_COMMENTS_QUERY } from "@/lib/gql/queries/queries";
+import gqlClient from "@/lib/services/graphql";
+import { CommentType } from "@/types/types";
+import { getGraphQLError } from "@/utils/ApiError";
+import { Send } from "lucide-react";
+import { useContext, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
 
 const LIMIT = 5;
@@ -129,7 +130,7 @@ export default function CommentArea({ pinId }: { pinId: string }) {
                     disabled={loading || alreadyCommented}
                     className={`btn-rect bg-white! border-black! border disabled:opacity-50 ${alreadyCommented ? "cursor-not-allowed!" : ""}`}
                 >
-                    <svg width="15" height="15" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><path d="M1.20308 1.04312C1.00481 0.954998 0.772341 1.0048 0.627577 1.16641C0.482813 1.32802 0.458794 1.56455 0.568117 1.75196L3.92115 7.50002L0.568117 13.2481C0.458794 13.4355 0.482813 13.672 0.627577 13.8336C0.772341 13.9952 1.00481 14.045 1.20308 13.9569L14.7031 7.95693C14.8836 7.87668 15 7.69762 15 7.50002C15 7.30243 14.8836 7.12337 14.7031 7.04312L1.20308 1.04312ZM4.84553 7.10002L2.21234 2.586L13.2689 7.50002L2.21234 12.414L4.84552 7.90002H9C9.22092 7.90002 9.4 7.72094 9.4 7.50002C9.4 7.27911 9.22092 7.10002 9 7.10002H4.84553Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path></svg>
+                    <Send/>
                 </button>
             </form>
 
