@@ -1,0 +1,136 @@
+import prisma from "@/src/lib/services/prisma";
+import { hashPassword, verifyPassword, signAccess, signRefresh } from "@/src/helper/auth";
+import { cookies } from "next/headers";
+import { ApiError } from "@/src/helper/ApiError";
+
+// Mutations
+export const signup = async (_: any, args: any) => {
+
+    return await prisma.$transaction(async (tn) => {
+
+        if (!args.name || !args.email || !args.password)
+            throw new ApiError(400, "All fields required");
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailRegex.test(args.email))
+            throw new ApiError(400, "Invalid email format");
+
+        if (args.password.length < 8)
+            throw new ApiError(400, "Password must be at least 8 characters");
+
+        const exists = await tn.user.findUnique({
+            where: { email: args.email }
+        });
+
+        if (exists) throw new ApiError(400, "Email already exists");
+
+        const hashed = await hashPassword(args.password);
+
+        const user = await tn.user.create({
+            data: {
+                name: args.name,
+                email: args.email,
+                passwordHash: hashed,
+                avatar: args.avatar
+            }
+        });
+
+        const access = signAccess(user.id);
+        const refresh = signRefresh(user.id);
+
+        await tn.user.update({
+            where: { id: user.id },
+            data: { refreshToken: refresh }
+        });
+
+        const cookieStore = await cookies();
+
+        cookieStore.set("access", access, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "lax",
+            maxAge: 60 * 20, // longer than JWT
+        });
+
+        cookieStore.set("refresh", refresh, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "lax",
+            maxAge: 60 * 60 * 24 * 7, // 7 days
+        });
+
+
+
+        return {
+            user: {
+
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                avatar: user.avatar,
+                uploadCount: user.uploadCount,
+                createdAt: user.createdAt,
+
+            }
+        };
+    });
+}
+export const login = async (_: any, args: any) => {
+
+    return await prisma.$transaction(async (tn) => {
+
+        const user = await tn.user.findUnique({
+
+            where: { email: args.email }
+        });
+
+        if (!user) throw new ApiError(400, "Invalid credentials");
+
+        const ok = await verifyPassword(args.password, user.passwordHash);
+        if (!ok) throw new ApiError(400, "Invalid credentials");
+
+        const access = signAccess(user.id);
+        const refresh = signRefresh(user.id);
+
+        await tn.user.update({
+            where: { id: user.id },
+            data: { refreshToken: refresh }
+        });
+
+        const cookieStore = await cookies();
+
+        cookieStore.set("access", access, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "lax",
+            maxAge: 60 * 20, // longer than JWT
+        });
+
+        cookieStore.set("refresh", refresh, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "lax",
+            maxAge: 60 * 60 * 24 * 7, // 7 days
+        });
+
+
+
+
+        return {
+            user: {
+
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                avatar: user.avatar,
+                uploadCount: user.uploadCount,
+                createdAt: user.createdAt,
+
+            }
+        };
+    });
+}
+
+
+
