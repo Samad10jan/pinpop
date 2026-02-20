@@ -1,9 +1,8 @@
 import { FileType } from "@/generated/prisma/enums";
-import { Prisma } from "@/generated/prisma/client";
-import prisma from "@/src/lib/services/prisma";
-import { PinPageResponseType, UserType } from "@/src/types/types";
 import { ApiError } from "@/src/helper/ApiError";
 import { buildFeedResponse } from "@/src/helper/pagination";
+import prisma from "@/src/lib/services/prisma";
+import { PinPageResponseType, UserType } from "@/src/types/types";
 
 
 // Queries
@@ -206,18 +205,45 @@ export async function getSearchPagePins(_: any, { search, limit = 10, page = 1 }
 
         const skip = (page - 1) * limit;
 
-        const whereClause: Prisma.PinWhereInput = {
-            title: {
-                contains: search,
-                mode: Prisma.QueryMode.insensitive,
-            },
-        };
+        // const whereClause: Prisma.PinWhereInput = {
+        //     title: {
+        //         contains: search,
+        //         mode: Prisma.QueryMode.insensitive,
+        //     },
+        // };
 
-        const totalPins = await prisma.pin.count({ where: whereClause });
+        const totalPins = await prisma.pin.count({
+            where: {
+                title: {
+                    contains: search,
+                    mode: "insensitive"
+                }
+            }
+        });
+
+        // OR: [
+        //       {
+        //         title: {
+        //           contains: search,
+        //           mode: "insensitive"
+        //         }
+        //       },
+        //       {
+        //         description: {
+        //           contains: search,
+        //           mode: "insensitive"
+        //         }
+        //       }
+        //     ]
 
         const pins = await prisma.pin.findMany({
 
-            where: whereClause,
+            where: {
+                title: {
+                    contains: search,
+                    mode: "insensitive"
+                }
+            },
             skip,
             take: limit,
             orderBy: { createdAt: "desc" },
@@ -349,7 +375,7 @@ export async function getCurrentUserPinResponse(_: any, __: any, { user }: { use
 
 
 // Mutations
-export const createPin = async (_: any, { title, description, mediaUrl, fileType, tagIds }: { title: string, description: string, mediaUrl: string, fileType: FileType, tagIds: string[] }, { user }: { user: UserType }) => {
+export async function createPin (_: any, { title, description, mediaUrl, fileType, tagIds }: { title: string, description: string, mediaUrl: string, fileType: FileType, tagIds: string[] }, { user }: { user: UserType }){
 
     if (!user) throw new ApiError(401, "Unauthorized");
 

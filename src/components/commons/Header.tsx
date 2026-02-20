@@ -2,6 +2,7 @@
 
 import { SUGG_QUERY } from "@/src/lib/gql/queries/queries";
 import gqlClient from "@/src/lib/services/graphql";
+import { SearchIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -14,6 +15,7 @@ export default function Header() {
     const router = useRouter()
 
     useEffect(() => {
+
         if (!q.trim()) {
             setSugg([]);
             return;
@@ -45,7 +47,7 @@ export default function Header() {
 
 
     return (
-        <div className="relative px-5 pt-2">
+        <div className=" relative px-5 pt-2  ">
             <form action="/main/search" className="relative duration-300 transition-all!">
                 <input
                     name="q"
@@ -53,7 +55,7 @@ export default function Header() {
                     placeholder="Search"
                     value={q}
                     autoComplete="off"
-                    className="card bg-amber-100 rounded-full px-4 font-bold focus:ring-2 placeholder:font-extrabold ring-red-500 py-2 w-full outline-0 focus:bg-white/90 transition-all duration-700"
+                    className="card bg-amber-100 rounded-full px-4 h-5 font-bold focus:ring-2 placeholder:font-extrabold ring-red-500 py-2 w-full outline-0 focus:bg-white/90 transition-all duration-700"
                     onChange={(e) => setQ(e.target.value)}
                     onFocus={() => setFocus(true)}
                     onBlur={() => setTimeout(() => setFocus(false), 150)}
@@ -63,16 +65,11 @@ export default function Header() {
                 <button
                     title="search button"
                     type="submit"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 px-3! py-1! btn-circle bg-red-600! text-white rounded-full! text-sm! font-semibold! transition-all! duration-300!"
+                    disabled={loading}
+                    className="absolute right-3 size-8! disabled:opacity-80!  top-1/2 -translate-y-1/2 btn-circle bg-red-600! text-white text-sm! font-semibold! transition-all! duration-300!"
                 >
-                    <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 6.5C10 8.433 8.433 10 6.5 10C4.567 10 3 8.433 3 6.5C3 4.567 4.567 3 6.5 3C8.433 3 10 4.567 10 6.5ZM9.30884 10.0159C8.53901 10.6318 7.56251 11 6.5 11C4.01472 11 2 8.98528 2 6.5C2 4.01472 4.01472 2 6.5 2C8.98528 2 11 4.01472 11 6.5C11 7.56251 10.6318 8.53901 10.0159 9.30884L12.8536 12.1464C13.0488 12.3417 13.0488 12.6583 12.8536 12.8536C12.6583 13.0488 12.3417 13.0488 12.1464 12.8536L9.30884 10.0159Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path></svg>
+                    <SearchIcon size={13}/>
                 </button>
-
-                {loading && (
-                    <span className="absolute right-20 top-1/2 -translate-y-1/2 text-xs transition-all! duration-300">
-
-                    </span>
-                )}
             </form>
 
             {focus && sugg.length > 0 && (
@@ -81,9 +78,9 @@ export default function Header() {
                         <div
                             key={i}
                             onMouseDown={() => handleSuggestionClick(s)}
-                            className="px-5 py-2 hover:bg-gray-200 cursor-pointer rounded-2xl font-bold text-sm transition-all! duration-500"
+                            className="px-5 py-2 flex justify-between hover:bg-gray-200 cursor-pointer rounded-2xl font-bold text-sm transition-all! duration-300"
                         >
-                            {s}
+                            {s} <SearchIcon/>
                         </div>
                     ))}
                 </div>

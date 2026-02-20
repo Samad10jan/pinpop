@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { ApiError } from "@/src/helper/ApiError";
 
 // Mutations
-export const signup = async (_: any, args: any) => {
+export async function signup (_: any, args: any) {
 
     return await prisma.$transaction(async (tn) => {
 
@@ -76,7 +76,7 @@ export const signup = async (_: any, args: any) => {
         };
     });
 }
-export const login = async (_: any, args: any) => {
+export async function login (_: any, args: any){
 
     return await prisma.$transaction(async (tn) => {
 
