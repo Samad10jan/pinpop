@@ -6,6 +6,7 @@ import { refreshTokens } from "./helper/refersh";
 
 export async function proxy(req: NextRequest) {
     
+  // access tokens from cookies
   const access = req.cookies.get("access")?.value;
   const refresh = req.cookies.get("refresh")?.value;
 
