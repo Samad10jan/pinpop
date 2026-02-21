@@ -1,16 +1,8 @@
-import nodemailer from "nodemailer";
-
-const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_APP_PASS,
-    },
-});
+import { transporter } from "../lib/services/nodemailer";
 
 export async function sendVerificationCode(email: string, otp: string) {
     await transporter.sendMail({
-        from: `"PinPop" <${process.env.GMAIL_USER}>`,
+        from: `"Fixel" <${process.env.GMAIL_USER}>`,
         to: email,
         subject: "Verify your Email",
         html: `
@@ -26,7 +18,7 @@ export function generateOTP() {
     return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
-export async function sendSignUpSucessMessage(email: string, otp: string) {
+export async function sendSignUpSuccessMessage(email: string) {
     await transporter.sendMail({
         from: `"Fixel" <${process.env.GMAIL_USER}>`,
         to: email,
