@@ -4,6 +4,7 @@ import { context } from "@/src/helper/context";
 import { redirect } from "next/navigation";
 import "../globals.css";
 import { UserType } from "@/src/types/types";
+import SideBar from "@/src/components/commons/SideBar";
 export default async function RootLayout({
     children,
 }: {
@@ -12,11 +13,16 @@ export default async function RootLayout({
     const { user } = await context()
     return (
         <div>
-            <UserProvider user={user}>
-                <Header />
+           <UserProvider user={user}>
+            <div className="flex">
+                <SideBar />
 
-                {children}
-            </UserProvider>
+                <div className="flex-1 ml-16">
+                    <Header />
+                    {children}
+                </div>
+            </div>
+        </UserProvider>
 
         </div>
 
