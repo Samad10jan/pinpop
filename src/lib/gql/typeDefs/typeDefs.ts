@@ -131,6 +131,9 @@ type ToggleLikeResponse {
 type BooleanResponse {
   success: Boolean!
 }
+type MessageResponse {
+  message: String!
+}
 
 # Queries and Mutations
 
@@ -160,11 +163,13 @@ type Query {
 }
 
 type Mutation {
+ sendSignupOtp(email: String!): MessageResponse!
   signup(
     name: String!
     email: String!
     password: String!
     avatar: String
+    otp: String!
   ): AuthPayload!
 
   login(

@@ -127,23 +127,19 @@ export async function getUserFeed(_: any, { limit = 10, page = 1 }: any, { user 
 
         let whereClause: any = {};
 
-        // exlucde user's own pins from feed
         const excludeIds = userPins.map(p => p.id);
 
         if (excludeIds.length > 0) {
             whereClause.id = { notIn: excludeIds };
         }
 
-
-        //include pins with tags user has liked, if any
         if (likedTagIds.length > 0) {
             whereClause.tagIds = { hasSome: likedTagIds };
         }
 
-
         const totalPins = await prisma.pin.count({ where: whereClause });
 
-        const pins = await prisma.pin.findMany({
+        let pins = await prisma.pin.findMany({
             where: whereClause,
             skip,
             take: limit,
@@ -161,6 +157,42 @@ export async function getUserFeed(_: any, { limit = 10, page = 1 }: any, { user 
                 },
             },
         });
+
+        // If less than limit, fill with top pins
+        if (pins.length < limit) {
+
+            const remaining = limit - pins.length;
+
+            const alreadyFetchedIds = pins.map(p => p.id);
+
+            const fallbackPins = await prisma.pin.findMany({
+                where: {
+                    id: {
+                        notIn: [...excludeIds, ...alreadyFetchedIds],
+                    },
+                },
+                take: remaining,
+                orderBy: {
+                    likes: {
+                        _count: "desc",
+                    },
+                },
+                include: {
+                    user: {
+                        select: { id: true, name: true, avatar: true },
+                    },
+                    saves: {
+                        where: { userId },
+                        select: { id: true },
+                    },
+                    _count: {
+                        select: { likes: true, saves: true, comments: true },
+                    },
+                },
+            });
+
+            pins = [...pins, ...fallbackPins];
+        }
 
         const mappedPins = pins.map(p => ({
             ...p,

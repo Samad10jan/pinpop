@@ -1,8 +1,8 @@
 import { gql } from "graphql-request";
 
 export const SIGN_UP = gql`
-mutation Mutation($name: String!, $email: String!, $password: String!, $avatar: String) {
-  signup(name: $name, email: $email, password: $password, avatar: $avatar) {
+mutation Mutation($name: String!, $email: String!, $password: String!, $avatar: String, $otp: String!) {
+  signup(name: $name, email: $email, password: $password, avatar: $avatar,otp: $otp) {
     user {
       email
       id
@@ -11,6 +11,14 @@ mutation Mutation($name: String!, $email: String!, $password: String!, $avatar: 
     }
   }
 }`
+
+export const SEND_SIGNUP_OTP = gql`
+mutation ($email: String!) {
+  sendSignupOtp(email: $email) {
+    message
+  }
+}
+`
 
 export const LOGIN = gql`
 mutation Mutation($email: String!, $password: String!) {

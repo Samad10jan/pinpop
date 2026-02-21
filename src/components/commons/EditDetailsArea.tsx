@@ -1,9 +1,10 @@
 "use client";
 
+import { getGraphQLError } from "@/src/helper/ApiError";
 import { UPDATE_PROFILE } from "@/src/lib/gql/mutations/mutations";
 import gqlClient from "@/src/lib/services/graphql";
 import { UserType } from "@/src/types/types";
-import { getGraphQLError } from "@/src/helper/ApiError";
+import { XIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
@@ -35,6 +36,19 @@ export default function EditDetailsArea({ userData, onClose }: { userData: UserT
             let avatarUrl = null;
 
             if (avatar) {
+
+                // const fileType = avatar.type.includes("gif") ? "GIF" : "PHOTO";
+                const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+
+
+                if (!allowedTypes.includes(avatar.type)) {
+                    throw new Error("Only JPG, PNG, WEBP or GIF images are allowed.");
+                }
+                const maxSize = 10 * 1024 * 1024;
+                if (avatar.size > maxSize) {
+                    throw new Error("Image must be less than 3MB.");
+                }
+
                 const form = new FormData();
                 form.append("file", avatar);
                 //  e.target.files?.[0]
@@ -43,11 +57,9 @@ export default function EditDetailsArea({ userData, onClose }: { userData: UserT
                     method: "POST",
                     body: form,
                 });
-                
-                if (!upload.url) throw new Error("Image upload failed. Please try again.");
 
-                // const fileType = file.type.includes("gif") ? "GIF" : "PHOTO";
                 const uploaded = await upload.json();
+                if (!upload.url) throw new Error("Image upload failed. Please try again.");
                 avatarUrl = uploaded?.url || null;
             }
 
@@ -56,8 +68,9 @@ export default function EditDetailsArea({ userData, onClose }: { userData: UserT
                 avatar: avatarUrl,
             });
 
-            onClose();
+
             location.reload();
+            onClose();
         } catch (e: any) {
             setError(getGraphQLError(e));
         } finally {
@@ -77,11 +90,12 @@ export default function EditDetailsArea({ userData, onClose }: { userData: UserT
             >
 
                 <button
+                    title="close edit card"
                     type="button"
                     onClick={onClose}
                     className="absolute top-3 right-3 btn-circle bg-red-500 text-white"
                 >
-                    ✕
+                    <XIcon />
                 </button>
 
                 <h1 className="text-2xl font-bold mb-4 text-center">
@@ -109,7 +123,7 @@ export default function EditDetailsArea({ userData, onClose }: { userData: UserT
                         onChange={(e) => setAvatar(e.target.files?.[0] || null)}
                     />
 
-                    <button disabled={loading} className="btn-rect mt-2">
+                    <button disabled={loading} className="btn-rect mt-2 disabled:opacity-50 disabled:cursor-not-allowed">
                         {loading ? "Saving..." : "Save Changes"}
                     </button>
                 </form>
