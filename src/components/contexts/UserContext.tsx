@@ -1,9 +1,9 @@
 "use client";
 
 import { UserType } from "@/src/types/types";
-import { createContext, useContext, useState } from "react";
+import { createContext, useState } from "react";
 
-export const UserContext = createContext<any>(null);
+export const UserContext = createContext<{ currentUser: UserType; setCurrentUser: (user: UserType) => void } | null>(null);
 
 export function UserProvider({
   children,
@@ -23,4 +23,3 @@ export function UserProvider({
   );
 }
 
-export const useUser = () => useContext(UserContext);

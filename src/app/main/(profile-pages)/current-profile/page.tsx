@@ -13,8 +13,8 @@ import { useContext, useEffect, useState } from "react";
 export default function UserPage() {
     const [profile, setProfile] = useState<CurrentProfileType | null>(null);
     const [loading, setLoading] = useState(true);
-    const { currentUser } = useContext(UserContext);
-    const [showEdit, setShowEdit] = useState(false);
+const context = useContext(UserContext);
+const currentUser = context?.currentUser;    const [showEdit, setShowEdit] = useState(false);
 
 
     useEffect(() => {

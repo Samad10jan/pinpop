@@ -13,7 +13,8 @@ import { UserContext } from "../contexts/UserContext";
 const LIMIT = 5;
 
 export default function CommentArea({ pinId }: { pinId: string }) {
-    const { currentUser } = useContext(UserContext);
+  const context = useContext(UserContext);
+const currentUser = context?.currentUser;
 
     const [comments, setComments] = useState<CommentType[]>([]);
     const [page, setPage] = useState(1);
@@ -164,7 +165,7 @@ export default function CommentArea({ pinId }: { pinId: string }) {
                                     commentData={c}
                                     handleDelete={handleDelete}
                                     loading={loading}
-                                    currentUserId={currentUser?.id}
+                                    currentUserId={currentUser?.id as string}
                                 />
                             ))}
                         </div>

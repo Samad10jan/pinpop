@@ -1,9 +1,10 @@
 "use client";
 
+import { UserContext } from "@/src/components/contexts/UserContext";
 import { CREATE_PIN_MUTATION, GET_TAGS_QUERY } from "@/src/lib/gql/queries/queries";
 import gqlClient from "@/src/lib/services/graphql";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 const MAX_SIZE = 10 * 1024 * 1024; // 10MB
 
@@ -20,6 +21,10 @@ export default function CreatePin() {
     const [success, setSuccess] = useState(false);
     //   const [uplaodCount,setUploadCount]= useState(false)  // uploadcount--> get from Context
 
+    const context = useContext(UserContext);
+    const currentUser = context?.currentUser;
+
+
     // get All Tags
     useEffect(() => {
         gqlClient.request(GET_TAGS_QUERY)
@@ -31,13 +36,13 @@ export default function CreatePin() {
     }, []);
 
     const toggleTag = (id: string) => {
-                                // if id already present, then remove, else add 
+        // if id already present, then remove, else add 
         setSelectedTags(prev => prev.includes(id) ? prev.filter(t => t !== id) : [...prev, id]);
     };
 
     // preview of image
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        
+
         // get file
         const selectedFile = e.target.files?.[0] || null;
 
@@ -47,7 +52,7 @@ export default function CreatePin() {
             const reader = new FileReader();
             // The FileReader interface lets web applications asynchronously read the contents of files (or raw data buffers) 
             // stored on the user's computer, using File or Blob objects to specify the file or data to read.
-            
+
             // tbh idk?
             // set url from FileReader.result
 
@@ -57,6 +62,15 @@ export default function CreatePin() {
             setPreviewUrl(null);
         }
     };
+    
+    // Cleanup preview URL to prevent memory leaks
+    useEffect(() => {
+        return () => {
+            if (previewUrl && previewUrl.startsWith('blob:')) {
+                URL.revokeObjectURL(previewUrl);
+            }
+        };
+    }, [previewUrl]);
 
     const handleSubmit = async (e: React.FormEvent) => {
 
@@ -67,7 +81,7 @@ export default function CreatePin() {
 
         try {
             if (!title.trim()) throw new Error("Title required");
-            if (title.trim().length>20) throw new Error("Title must be Less Than 20 char");
+            if (title.trim().length > 20) throw new Error("Title must be Less Than 20 char");
             if (!file) throw new Error("Image required");
             if (!selectedTags.length) throw new Error("Select at least one tag");
             if (selectedTags.length > 3) throw new Error("At Max only 3 tags Allowed");
@@ -81,9 +95,9 @@ export default function CreatePin() {
             const form = new FormData();
 
             form.append("file", file);
-            
+
             const upload = await fetch("/api/upload/pin", { method: "POST", body: form });
-            
+
             const uploaded = await upload.json();
 
             if (!uploaded.url) throw new Error("Image upload failed. Please try again.");
@@ -131,14 +145,7 @@ export default function CreatePin() {
         }
     }, [success, router]);
 
-    // Cleanup preview URL to prevent memory leaks
-    useEffect(() => {
-        return () => {
-            if (previewUrl && previewUrl.startsWith('blob:')) {
-                URL.revokeObjectURL(previewUrl);
-            }
-        };
-    }, [previewUrl]);
+
 
     const inputClass = "w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-400 focus:border-transparent outline-none transition-all duration-200";
 
@@ -181,7 +188,7 @@ export default function CreatePin() {
                         <div className="flex-1 space-y-6">
                             <label className="block">
                                 <span className="text-sm font-semibold text-gray-700 mb-2 block">Title *</span>
-                                <input type="text" placeholder="Give your pin a title, max 20 chars" className={inputClass} value={title} onChange={e => setTitle(e.target.value)} maxLength={20}/>
+                                <input type="text" placeholder="Give your pin a title, max 20 chars" className={inputClass} value={title} onChange={e => setTitle(e.target.value)} maxLength={20} />
                             </label>
 
                             <label className="block">

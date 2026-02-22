@@ -24,12 +24,12 @@ export default function UserPage() {
   const [lastUploadedPins, setLastUploadedPins] = useState<any[]>([]);
 
   const [loading, setLoading] = useState(true);
-  const { currentUser } = useContext(UserContext)
-
+  const context = useContext(UserContext);
+  const currentUser = context?.currentUser;
   // const [error, setError] = useState("")
 
-  if (userId === currentUser.id) redirect("/main/current-profile")
-    
+  if (userId === currentUser?.id) redirect("/main/current-profile")
+
   useEffect(() => {
     if (!userId) return;
 
@@ -133,7 +133,7 @@ export default function UserPage() {
                 <p className="text-sm opacity-70 mb-4">{email}</p>
 
                 {
-                  currentUser.id !== user?.id &&
+                  currentUser?.id !== user?.id &&
                   <FollowBtn targetUserId={user.id} initiallyFollowing={isFollowing} onFollowChange={handleFollowChange} />
                 }
               </div>
