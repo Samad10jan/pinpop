@@ -115,11 +115,6 @@ type CurrentUserAnalyticsResponse {
 
   topPins: [UserPinAnalytics!]
 
-  # recentPerformance: [DailyStats!]
-
-  # popularTags: [TagStats!]
-
-  # growth: GrowthStats!
 }
 
 type ToggleSaveResponse {
@@ -156,7 +151,7 @@ type Query {
   
   getSearchPagePins(search: String!, limit: Int, page: Int): FeedResponse!
 
-  getCurrentUserPinResponse: CurrentUserAnalyticsResponse!
+  getCurrentUserPins: CurrentUserAnalyticsResponse!
   getUserAllPins(userId:ID!): FeedResponse!
 
  

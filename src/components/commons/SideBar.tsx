@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
 import { logoutAction } from "@/src/helper/logout";
-import { HeartIcon, HomeIcon, LogOutIcon, PlusCircleIcon, UserIcon } from "lucide-react";
+import { HeartIcon, HomeIcon, LogOutIcon, PlusCircleIcon, UserIcon, } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -9,16 +9,13 @@ export default function SideBar() {
     const pathname = usePathname();
 
     const linkStyle = (path: string) =>
-        `p-2 rounded-xl transition cursor-pointer ${
-            pathname === path ? "bg-black text-white transition-all" : "hover:bg-white transition-all duration-300 "
-        }`;
+        `p-2 rounded-xl transition ${pathname === path ? "bg-black text-white" : "hover:bg-white duration-300"}`;
 
     return (
-        <div className="border-r-4 fixed z-99 h-screen w-15 flex justify-between flex-col px-2 py-6  bg-amber-100">
-            
-            {/* upper */}
-            <div className="flex flex-col gap-6 items-center">
-                <Link href="/main" className={linkStyle("/")}>
+        <div className=" fixed z-50  bg-amber-100 border-t md:border-t-0 md:border-r-4 bottom-0 md:bottom-auto w-full md:w-16 h-16 md:h-screen flex md:flex-col justify-between items-center md:px-2 py-2 md:py-6 shadow-md md:shadow-none ">
+
+            <div className="flex flex-row md:flex-col flex-1 md:flex-0 md:gap-6 md:justify-around justify-evenly ">
+                <Link href="/main" className={linkStyle("/main")}>
                     <HomeIcon />
                 </Link>
 
@@ -29,18 +26,27 @@ export default function SideBar() {
                 <Link href="/main/pin" className={linkStyle("/main/pin")}>
                     <PlusCircleIcon />
                 </Link>
-            </div>
 
-            {/* lower */}
-            <div className="flex flex-col gap-6 items-center">
-                <Link href="/main/current-profile" className={linkStyle("/main/current-profile")}>
+                 <Link
+                    href="/main/current-profile"
+                    className={linkStyle("/main/current-profile")}
+                >
                     <UserIcon />
                 </Link>
 
-                <button title="logout" className="p-2 rounded-xl hover:bg-red-300 transition " onClick={() => logoutAction()}>
+                <button
+                    title="logout"
+                    className="p-2 rounded-xl hover:bg-red-300 transition"
+                    onClick={() => logoutAction()}
+                >
                     <LogOutIcon />
                 </button>
             </div>
+
+
+            {/* <div className="flex flex-row md:flex-col gap-8 md:gap-6 items-center justify-around flex-1 md:flex-0">
+               
+            </div> */}
         </div>
     );
 }

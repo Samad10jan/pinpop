@@ -8,7 +8,7 @@ import { UserType } from "@/src/types/types";
 import { getGraphQLError } from "@/src/helper/ApiError";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 
 export default function UserPage() {
@@ -28,6 +28,8 @@ export default function UserPage() {
 
   // const [error, setError] = useState("")
 
+  if (userId === currentUser.id) redirect("/main/current-profile")
+    
   useEffect(() => {
     if (!userId) return;
 
@@ -172,7 +174,7 @@ export default function UserPage() {
 
               <div className="grid grid-cols-3 gap-2 mb-4">
                 {lastUploadedPins.map(u => (
-                  <div key={u.id} className="relative w-62 h-40 mb-4 group rounded-2xl overflow-hidden hover:shadow-xl transition-all">
+                  <div key={u.id} className="relative max-w-50 h-20 mb-4 group rounded-2xl overflow-hidden hover:shadow-xl transition-all">
                     <div className=" absolute w-full h-full">
                       <Image
                         src={u.mediaUrl}
@@ -196,7 +198,7 @@ export default function UserPage() {
                 ))}
               </div>
 
-              <Link href="/main/" className="btn-rect w-full text-center block capitalize">
+              <Link href={`/main/uploads/${user.id}`} className="btn-rect w-full text-center block capitalize">
                 View All {name.split(" ")[0]}'s Pins
               </Link>
             </div>

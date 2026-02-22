@@ -136,19 +136,26 @@ export default function UserPage() {
                     </div>
 
                     <div className="lg:col-span-8">
+                        <Link href={"/main/uploads"}>
 
-                        <div className="grid md:grid-cols-2 gap-4 mb-6">
+                            <div className="grid md:grid-cols-2 gap-4 mb-6">
 
-                            <div className="card text-center btn-rect bg-orange-500! text-white">
-                                <div className="text-3xl font-bold">{totalPins}</div>
-                                <div className="text-sm mt-1">Total Pins</div>
+                                <div className="card text-center btn-rect bg-orange-400! text-white relative overflow-hidden! group">
+                                    <div className="text-3xl font-bold">{totalPins}</div>
+                                    <div className="text-sm mt-1">Total Pins</div>
+                                    <div className="absolute inset-0 h-40 rounded-r-full w-[30%]  bg-purple-600 transform -translate-x-20 group-hover:-translate-x-10 skew-x-12 transition-transform duration-2500" />
+
+                                </div>
+
+
+                                <div className="card text-center btn-rect bg-purple-600! text-white relative overflow-hidden! group">
+                                    <div className="text-3xl font-bold">{likes}</div>
+                                    <div className="text-sm mt-1">Pins Liked</div>
+                                    <div className="absolute inset-0 h-40 rounded-r-full w-[30%]  bg-orange-400 transform -translate-x-20 group-hover:-translate-x-10 skew-x-12 transition-transform duration-2500" />
+
+                                </div>
                             </div>
-
-                            <div className="card text-center btn-rect bg-purple-600! text-white">
-                                <div className="text-3xl font-bold">{likes}</div>
-                                <div className="text-sm mt-1">Pins Liked</div>
-                            </div>
-                        </div>
+                        </Link>
 
 
                         <div className="card mb-6 bg-white">
@@ -193,7 +200,7 @@ export default function UserPage() {
 
                                 <div className="grid grid-cols-3 gap-2 mb-4">
                                     {lastSavedPins.map((s: any) => (
-                                        <div key={s.id} className="relative w-62 h-40 mb-4 group rounded-2xl overflow-hidden hover:shadow-xl transition-all">
+                                        <div key={s.id} className="relative max-w-50 h-20 mb-4 group rounded-2xl overflow-hidden hover:shadow-xl transition-all">
 
                                             <div className=" absolute w-full h-full">
 
@@ -239,6 +246,6 @@ export default function UserPage() {
                     </div>
                 </div>
             </div>
-        </main>
+        </main >
     );
 }

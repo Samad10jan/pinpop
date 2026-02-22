@@ -42,7 +42,7 @@ export default function Home() {
                     No pins yet
                 </p>
             )}
-
+<div className="text-center mb-5 font-extrabold text-4xl"> Saved Pins </div>
 
             <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-4 space-y-4">
 

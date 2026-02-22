@@ -12,7 +12,7 @@ export default function CurrentUserUploadsPage() {
     useEffect(() => {
         gqlClient
             .request(GET_CURRENT_USER_ALL_PINS_QUERY)
-            .then(res => setStats(res.getCurrentUserPinResponse));
+            .then(res => setStats(res.getCurrentUserPins));
     }, []);
 
     if (!stats)

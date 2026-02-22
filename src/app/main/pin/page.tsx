@@ -67,6 +67,7 @@ export default function CreatePin() {
 
         try {
             if (!title.trim()) throw new Error("Title required");
+            if (title.trim().length>20) throw new Error("Title must be Less Than 20 char");
             if (!file) throw new Error("Image required");
             if (!selectedTags.length) throw new Error("Select at least one tag");
             if (selectedTags.length > 3) throw new Error("At Max only 3 tags Allowed");
@@ -180,12 +181,12 @@ export default function CreatePin() {
                         <div className="flex-1 space-y-6">
                             <label className="block">
                                 <span className="text-sm font-semibold text-gray-700 mb-2 block">Title *</span>
-                                <input type="text" placeholder="Give your pin a title" className={inputClass} value={title} onChange={e => setTitle(e.target.value)} />
+                                <input type="text" placeholder="Give your pin a title, max 20 chars" className={inputClass} value={title} onChange={e => setTitle(e.target.value)} maxLength={20}/>
                             </label>
 
                             <label className="block">
                                 <span className="text-sm font-semibold text-gray-700 mb-2 block">Description</span>
-                                <textarea placeholder="Tell everyone what your pin is about" className={`${inputClass} resize-none h-22`} value={description} maxLength={50} onChange={e => setDescription(e.target.value)} />
+                                <textarea placeholder="Tell everyone what your pin is about, max 50 chars" className={`${inputClass} resize-none h-22`} value={description} maxLength={50} onChange={e => setDescription(e.target.value)} />
                             </label>
 
                             <div>

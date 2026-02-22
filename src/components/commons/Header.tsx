@@ -47,7 +47,7 @@ export default function Header() {
 
 
     return (
-        <div className=" relative px-5 pt-2  ">
+        <div className="px-5 pt-2 sticky z-99 top-0  ">
             <form action="/main/search" className="relative duration-300 transition-all!">
                 <input
                     name="q"

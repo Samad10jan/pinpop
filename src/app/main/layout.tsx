@@ -13,18 +13,18 @@ export default async function RootLayout({
     const { user } = await context()
     return (
         <div>
-           <UserProvider user={user}>
-            <div className="flex">
-                <SideBar />
+      <UserProvider user={user}>
+        <div>
+          <SideBar />
 
-                <div className="flex-1 ml-16">
-                    <Header />
-                    {children}
-                </div>
-            </div>
-        </UserProvider>
-
+        
+          <div className="md:ml-16 mb-16 md:mb-0">
+            <Header />
+            {children}
+          </div>
         </div>
+      </UserProvider>
+    </div>
 
     );
 }

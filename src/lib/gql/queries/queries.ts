@@ -221,7 +221,6 @@ query{
     id
     isSaved
     mediaUrl
-    tagIds
     title
     
   }
@@ -230,7 +229,7 @@ query{
 
 export const GET_CURRENT_USER_ALL_PINS_QUERY = gql`
 query{
-  getCurrentUserPinResponse {
+  getCurrentUserPins {
     pins {
       id
       title
@@ -264,5 +263,31 @@ query{
       commentsCount
       engagementScore
     }
+  }
+}`
+
+export const GET_A_USER_ALL_PINS_QUERY = gql`
+
+query ($userId: ID!) {
+  getUserAllPins(userId: $userId) {
+    pins {
+      createdAt
+      fileType
+      id
+      isSaved
+      mediaUrl
+      title
+      user {
+        id
+        name
+        avatar
+      }
+    }
+    hasNextPage
+    hasPrevPage
+    limit
+    page
+    totalPages
+    totalPins
   }
 }`

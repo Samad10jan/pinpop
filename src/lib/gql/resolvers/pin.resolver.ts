@@ -316,7 +316,7 @@ export async function getTagsForPin(parent: PinPageResponseType,) {
 }
 
 
-export async function getCurrentUserPinResponse(_: any, __: any, { user }: { user: UserType }) {
+export async function getCurrentUserPins(_: any, __: any, { user }: { user: UserType }) {
 
     if (!user?.id) throw new Error("Unauthorized");
 
@@ -402,6 +402,43 @@ export async function getCurrentUserPinResponse(_: any, __: any, { user }: { use
 
         topPins,
     };
+}
+
+export async function getUserAllPins(_:any,{ userId, limit = 10, page = 1 }: any, { user }: { user: UserType }) {
+    try {
+        const skip = (page - 1) * limit;
+
+        const totalPins = await prisma.pin.count({
+            where: { userId },
+        });
+
+        const pins = await prisma.pin.findMany({
+            where: { userId },
+            skip,
+            take: limit,
+            orderBy: { createdAt: "desc" },
+            include: {
+                user: {
+                    select: { id: true, name: true, avatar: true },
+                },
+                saves: {
+                    where: { userId: user?.id },
+                    select: { id: true },
+                },
+                _count: {
+                    select: { likes: true, saves: true, comments: true },
+                },
+            },
+        });
+        const mappedPins = pins.map(p => ({
+            ...p,
+            isSaved: p.saves.length > 0,
+        }));
+
+        return buildFeedResponse(mappedPins, totalPins, page, limit);
+    } catch (error:any) {
+        throw new ApiError(500, `Failed to fetch user's pins ${error?.message}`);
+    }
 }
 
 
