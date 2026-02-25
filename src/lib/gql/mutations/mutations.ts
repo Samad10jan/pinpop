@@ -34,6 +34,13 @@ mutation Mutation($email: String!, $password: String!) {
   }
 }`
 
+export const LOGOUT = gql`
+mutation {
+  logout {
+    success
+  }
+}`
+
 export const CREATE_COMMENT = gql`
 mutation Mutation($pinId: ID!, $content: String!) {
   sendComment(pinId: $pinId, content: $content) {

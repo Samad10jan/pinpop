@@ -16,9 +16,7 @@ export const POST = async (req: Request) => {
         { status: 400 }
       );
     
-      if (!["image/jpeg", "image/png"].includes(file.type))
-
-      return NextResponse.json({ error: "Only images allowed" }, { status: 400 });
+      if (!["image/jpeg", "image/png"].includes(file.type)) return NextResponse.json({ error: "Only images allowed" }, { status: 400 });
 
     const buffer = Buffer.from(await file.arrayBuffer());
 

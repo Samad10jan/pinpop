@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { SIGN_UP, SEND_SIGNUP_OTP } from "@/src/lib/gql/mutations/mutations";
 import gqlClient from "@/src/lib/services/graphql";
 import { getGraphQLError } from "@/src/helper/ApiError";
+const MAX_SIZE = 10 * 1024 * 1024; // 10MB
 
 export default function SignupPage() {
     const router = useRouter();
@@ -29,11 +30,25 @@ export default function SignupPage() {
             if (!email.includes("@")) throw new Error("Invalid email");
             if (password.length < 8) throw new Error("Password must be 8+ chars");
             if (!name.trim()) throw new Error("Name required");
+            if (avatar) {
+
+                if (avatar.size > MAX_SIZE) {
+                    throw Error("File Size Exceeded");
+
+
+                }
+
+
+                if (!["image/jpeg", "image/png"].includes(avatar.type)) {
+                    throw Error("Only Image Type Valid");
+
+                }
+            }
 
             await gqlClient.request(SEND_SIGNUP_OTP, { email });
 
             setStep("otp");
-            
+
         } catch (e: any) {
             setError(getGraphQLError(e));
         } finally {
@@ -45,11 +60,27 @@ export default function SignupPage() {
     async function handleSignup() {
         setLoading(true);
         setError("");
+        if (!otp || otp.length < 6)
+            throw new Error("Invalid OTP");
 
         try {
             let avatarUrl = null;
 
             if (avatar) {
+
+
+                if (avatar.size > MAX_SIZE) {
+                    throw Error("File Size Exceeded");
+
+
+                }
+
+
+                if (!["image/jpeg", "image/png"].includes(avatar.type)) {
+                    throw Error("Only Image Type Valid");
+
+                }
+
                 const form = new FormData();
                 form.append("file", avatar);
 
@@ -57,7 +88,9 @@ export default function SignupPage() {
                     method: "POST",
                     body: form,
                 });
-
+                if (!upload.ok) {
+                    throw new Error("Avatar upload failed");
+                }
                 const uploaded = await upload.json();
                 avatarUrl = uploaded?.url || null;
             }

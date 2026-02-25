@@ -1,37 +1,10 @@
-// class ApiError extends Error {
-//   statusCode: number;
-//   success: boolean;
-
-//   constructor(statusCode: number, message = "Something went wrong") {
-//     super(message);
-//     this.statusCode = statusCode;
-//     this.success = false;
-
-//     Error.captureStackTrace(this, this.constructor);
-//   }
-// }
-
-// export const getGraphQLError = (e: any): string => {
-//   if (e?.response?.errors?.[0]?.message)
-//     return e.response.errors[0].message;
-
-//   if (typeof e?.message === "string")
-//     return e.message;
-
-//   return "Something went wrong";
-// };
-
-
-// export { ApiError };
-
-
 import { GraphQLError } from "graphql";
 
 class ApiError extends GraphQLError {
   statusCode: number;
   success: boolean;
 
- private static getCodeFromStatus(status: number) {
+  private static getCodeFromStatus(status: number) {
     if (status === 400) return "BAD_REQUEST";
     if (status === 401) return "UNAUTHORIZED";
     if (status === 403) return "FORBIDDEN";
@@ -39,10 +12,7 @@ class ApiError extends GraphQLError {
     return "INTERNAL_SERVER_ERROR";
   }
 
-  constructor(
-    statusCode: number,
-    message = "Something went wrong"
-  ) {
+  constructor(statusCode: number, message = "Something went wrong") {
     super(message, {
       extensions: {
         statusCode,
@@ -56,7 +26,7 @@ class ApiError extends GraphQLError {
 
     Error.captureStackTrace(this, this.constructor);
   }
- 
+
 }
 
 export const getGraphQLError = (e: any): string => {

@@ -11,21 +11,39 @@ export async function refreshTokens(refresh: string) {
   try {
     const decoded = jwt.verify(refresh, process.env.REFRESH_SECRET!) as any;
 
-    const user = await prisma.user.findUnique({
-      where: { id: decoded.id },
+    const storedToken = await prisma.refreshToken.findUnique({
+      where: { token: refresh },
+      include: { user: true }
     });
 
-    // if user doesn't exist or refresh token doesn't match, return null
-    if (!user || user.refreshToken !== refresh) return null;
+    // if token doesn't exist, expired manually, or user missing
+    if (!storedToken || !storedToken.user) return null;
+
+    // if expired in DB
+    if (storedToken.expiresAt < new Date()) {
+      
+      await prisma.refreshToken.delete({
+        where: { token: refresh }
+      });
+      return null;
+    }
 
     // else, generate new tokens
-    const newAccess = signAccess(user.id);
-    const newRefresh = signRefresh(user.id);
+    const newAccess = signAccess(storedToken.user.id);
+    const newRefresh = signRefresh(storedToken.user.id);
+
+    // delete old refresh token (rotation)
+    await prisma.refreshToken.delete({
+      where: { token: refresh }
+    });
 
     // save new refresh token in db
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { refreshToken: newRefresh },
+    await prisma.refreshToken.create({
+      data: {
+        token: newRefresh,
+        userId: storedToken.user.id,
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+      }
     });
 
     // return new tokens

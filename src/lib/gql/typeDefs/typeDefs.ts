@@ -172,6 +172,8 @@ type Mutation {
     password: String!
   ): AuthPayload!
 
+  logout: BooleanResponse!
+
   createPin(
     title: String!
     description: String

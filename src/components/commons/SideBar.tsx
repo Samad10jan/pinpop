@@ -4,6 +4,7 @@ import { logoutAction } from "@/src/helper/logout";
 import { HeartIcon, HomeIcon, LogOutIcon, PlusCircleIcon, UserIcon, } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import LogoutButton from "../buttons/LogOutBtn";
 
 export default function SideBar() {
     const pathname = usePathname();
@@ -27,20 +28,14 @@ export default function SideBar() {
                     <PlusCircleIcon />
                 </Link>
 
-                 <Link
+                <Link
                     href="/main/current-profile"
                     className={linkStyle("/main/current-profile")}
                 >
                     <UserIcon />
                 </Link>
 
-                <button
-                    title="logout"
-                    className="p-2 rounded-xl hover:bg-red-300 transition"
-                    onClick={() => logoutAction()}
-                >
-                    <LogOutIcon />
-                </button>
+                <LogoutButton />
             </div>
 
 

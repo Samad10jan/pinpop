@@ -5,14 +5,18 @@ import { refreshTokens } from "./helper/refersh";
 
 
 export async function proxy(req: NextRequest) {
-    
+
   // access tokens from cookies
   const access = req.cookies.get("access")?.value;
   const refresh = req.cookies.get("refresh")?.value;
+  const pathname = req.nextUrl.pathname;
 
   // nothing exists -> logout
   if (!access && !refresh) {
-    return NextResponse.redirect(new URL("/", req.url));
+    if (pathname !== "/") {
+      return NextResponse.redirect(new URL("/", req.url));
+    }
+    return NextResponse.next();
   }
 
   // access valid -> continue
@@ -20,7 +24,7 @@ export async function proxy(req: NextRequest) {
     try {
       jwt.verify(access, process.env.JWT_SECRET!);
       return NextResponse.next();
-    } catch {}
+    } catch { }
   }
 
   // no refresh -> logout

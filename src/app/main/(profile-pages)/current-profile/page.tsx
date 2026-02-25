@@ -13,8 +13,8 @@ import { useContext, useEffect, useState } from "react";
 export default function UserPage() {
     const [profile, setProfile] = useState<CurrentProfileType | null>(null);
     const [loading, setLoading] = useState(true);
-const context = useContext(UserContext);
-const currentUser = context?.currentUser;    const [showEdit, setShowEdit] = useState(false);
+    const context = useContext(UserContext);
+    const currentUser = context?.currentUser; const [showEdit, setShowEdit] = useState(false);
 
 
     useEffect(() => {
@@ -137,11 +137,11 @@ const currentUser = context?.currentUser;    const [showEdit, setShowEdit] = use
                     </div>
 
                     <div className="lg:col-span-8">
-                        <Link href={"/main/uploads"}>
 
-                            <div className="grid md:grid-cols-2 gap-4 mb-6">
 
-                                <div className="card text-center btn-rect bg-orange-400! text-white relative overflow-hidden! group">
+                        <div className=" card flex flex-col gap-4 mb-6 ">
+                            <div className="flex *:flex-1 md:flex-row flex-col gap-4">
+                                <div className="card text-center btn-rect bg-orange-400! text-white relative overflow-hidden! group ">
                                     <div className="text-3xl font-bold">{totalPins}</div>
                                     <div className="text-sm mt-1">Total Pins</div>
                                     <div className="card absolute inset-0 h-full rounded-4xl w-[30%]  bg-purple-600 transform -translate-x-15 group-hover:-translate-x-10  transition-all duration-900 flex justify-end items-center pr-5! group-hover:pr-8!" ><Pin /></div>
@@ -155,7 +155,13 @@ const currentUser = context?.currentUser;    const [showEdit, setShowEdit] = use
                                     <div className="card absolute inset-0 h-full rounded-4xl w-[30%]  bg-orange-400 transform -translate-x-15 group-hover:-translate-x-10  transition-all duration-900 flex justify-end items-center pr-5! group-hover:pr-8!" ><ThumbsUpIcon /></div>
                                 </div>
                             </div>
-                        </Link>
+                            <Link href={"/main/uploads"} className="btn-rect text-center! bg-teal-500! ">
+                                View Details
+
+                            </Link>
+
+                        </div>
+
 
 
                         <div className="card mb-6 bg-white">

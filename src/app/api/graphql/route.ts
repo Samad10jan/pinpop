@@ -1,4 +1,4 @@
-import { login, sendSignupOtp, signup } from "@/src/lib/gql/resolvers/auth.resolver";
+import { login, logout, sendSignupOtp, signup } from "@/src/lib/gql/resolvers/auth.resolver";
 import { deleteComment, getPinComments, sendComment } from "@/src/lib/gql/resolvers/comments.resolver";
 import { createPin, getCurrentUserPins, getPinPageResponse, getSearchPagePins, getSugg, getTagsForPin, getUserAllPins, getUserFeed } from "@/src/lib/gql/resolvers/pin.resolver";
 import { getAllTags, getSavedPins, toggleFollow, toggleLike, toggleSave } from "@/src/lib/gql/resolvers/toggles.resolver";
@@ -8,6 +8,7 @@ import typeDefs from "@/src/lib/gql/typeDefs/typeDefs";
 import { context } from "@/src/helper/context";
 import { ApolloServer } from "@apollo/server";
 import { startServerAndCreateNextHandler } from "@as-integrations/next";
+import { log } from "node:console";
 
 
 export const resolvers = {
@@ -51,7 +52,7 @@ export const resolvers = {
     sendSignupOtp: sendSignupOtp,
     signup: signup,
     login: login,
-
+    logout: logout,
     createPin: createPin,
     sendComment: sendComment,
     toggleSave: toggleSave,

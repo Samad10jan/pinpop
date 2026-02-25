@@ -21,17 +21,29 @@ model User {
   email        String   @unique
   passwordHash String
   avatar       String?
-  refreshToken String?
+  // refreshToken String?
   uploadCount  Int      @default(0)
   createdAt    DateTime @default(now())
 
-  pins       Pin[]
-  likes      Like[]
-  comments   Comment[]
-  savedPins  Save[]
-  followers  Follow[]      @relation("followers")
-  following  Follow[]      @relation("following")
+  pins          Pin[]
+  likes         Like[]
+  comments      Comment[]
+  savedPins     Save[]
+  followers     Follow[]       @relation("followers")
+  following     Follow[]       @relation("following")
   // activities ActivityLog[]
+  refreshTokens RefreshToken[]
+}
+
+model RefreshToken {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  token     String   @unique
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  @@index([userId])
 }
 
 model EmailVerification {
@@ -41,8 +53,9 @@ model EmailVerification {
   expiresAt DateTime
   createdAt DateTime @default(now())
 }
+
 // Reccomending Feeds user->groupby tagid likes,save-> [Liketags,save] -> find pins with those tags -> order by likes count
- 
+
 model Pin {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   title       String
@@ -55,9 +68,9 @@ model Pin {
   userId String @db.ObjectId
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  likes      Like[]
-  comments   Comment[]
-  saves      Save[]
+  likes    Like[]
+  comments Comment[]
+  saves    Save[]
   // activities ActivityLog[]
 }
 
@@ -98,13 +111,13 @@ model Comment {
   content   String
   createdAt DateTime @default(now())
 
-  userId String @db.ObjectId 
+  userId String @db.ObjectId
   pinId  String @db.ObjectId
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   pin  Pin  @relation(fields: [pinId], references: [id], onDelete: Cascade)
-  @@unique([userId, pinId])
 
+  @@unique([userId, pinId])
 }
 
 model Follow {
@@ -120,25 +133,6 @@ model Follow {
   @@unique([followerId, followingId])
 }
 
-// model ActivityLog {
-//   id        String       @id @default(auto()) @map("_id") @db.ObjectId
-//   action    ActivityType
-//   createdAt DateTime     @default(now())
-
-//   userId String  @db.ObjectId
-//   pinId  String? @db.ObjectId
-
-//   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-//   pin  Pin? @relation(fields: [pinId], references: [id], onDelete: Cascade)
-// }
-
-// enum ActivityType {
-//   UPLOAD
-//   LIKE
-//   COMMENT
-//   SAVE
-//   FOLLOW
-// }
 
 enum FileType {
   PHOTO

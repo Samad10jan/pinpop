@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { ApiError } from "@/src/helper/ApiError";
 import { generateOTP, sendSignUpSuccessMessage, sendVerificationCode } from "@/src/helper/email";
 
-// hashotp, verifyotp, hashrefresh token
+// to do: hashotp, verifyotp, hashrefresh token
 // Mutations
 export async function signup(_: any, args: any) {
 
@@ -62,10 +62,31 @@ export async function signup(_: any, args: any) {
     const refresh = signRefresh(user.id);
 
     // Store refresh token
-    await prisma.user.update({
-        where: { id: user.id },
-        data: { refreshToken: refresh }
+    await prisma.refreshToken.create({
+        data: {
+            token: refresh,
+            userId: user.id,
+            expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+        }
     });
+
+    // Limit to 5 sessions
+    const sessions = await prisma.refreshToken.findMany({
+        where: { userId: user.id },
+        orderBy: { createdAt: "asc" },
+    });
+
+    if (sessions.length > 5) {
+        const toDelete = sessions.slice(0, sessions.length - 5);
+
+        await prisma.refreshToken.deleteMany({
+            where: {
+                id: {
+                    in: toDelete.map(s => s.id),
+                },
+            },
+        });
+    }
 
     //  Set cookies
     const cookieStore = await cookies();
@@ -120,10 +141,30 @@ export async function login(_: any, args: any) {
         const access = signAccess(user.id);
         const refresh = signRefresh(user.id);
 
-        await tn.user.update({
-            where: { id: user.id },
-            data: { refreshToken: refresh }
+        await tn.refreshToken.create({
+            data: {
+                token: refresh,
+                userId: user.id,
+                expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+            }
         });
+
+        const sessions = await tn.refreshToken.findMany({
+            where: { userId: user.id },
+            orderBy: { createdAt: "asc" },
+        });
+
+        if (sessions.length > 5) {
+            const toDelete = sessions.slice(0, sessions.length - 5);
+
+            await tn.refreshToken.deleteMany({
+                where: {
+                    id: {
+                        in: toDelete.map(s => s.id),
+                    },
+                },
+            });
+        }
 
         const cookieStore = await cookies();
 
@@ -159,6 +200,7 @@ export async function login(_: any, args: any) {
     });
 }
 
+// Check user existence, OTP validity, and send OTP to email. Save otp in db with expiry   . Upsert OTP record to prevent multiple valid OTPs.
 export async function sendSignupOtp(_: any, args: any) {
 
     if (!args.email)
@@ -197,3 +239,21 @@ export async function sendSignupOtp(_: any, args: any) {
     return { message: "OTP sent successfully" };
 }
 
+export async function logout(_: any, __: any, context: any) {
+    if (!context.user) throw new ApiError(401, "Not authenticated");
+
+    const cookieStore = await cookies();
+    const refresh = cookieStore.get("refresh")?.value;
+
+    if (refresh) {
+        await prisma.refreshToken.deleteMany({
+            where: { token: refresh }
+        });
+    }
+
+    cookieStore.delete("access");
+    cookieStore.delete("refresh");
+
+    return { success: true };
+
+}
