@@ -1,117 +1,125 @@
 import Footer from "@/src/components/commons/Footer";
+import { ArrowRight, Pin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
+
+const categories = [
+  { label: "TRAVEL", bg: "bg-[#EA2E00]", span: "row-span-2", pos: "top-4 right-4", src: "https://images.pexels.com/photos/2752037/pexels-photo-2752037.jpeg" },
+  { label: "FOOD", bg: "bg-[#EA2E00]", span: "", pos: "bottom-4 left-4", src: "https://images.pexels.com/photos/1092730/pexels-photo-1092730.jpeg" },
+
+  { label: "NATURE", bg: "bg-[#EA2E00]", span: "row-span-2", pos: "top-4 right-4", src: "https://images.pexels.com/photos/13524961/pexels-photo-13524961.jpeg" },
+  { label: "FASHION", bg: "bg-teal-600", span: "", pos: "bottom-4 left-4", src: "https://images.pexels.com/photos/1639729/pexels-photo-1639729.jpeg" },
+  { label: "INTERIORS", bg: "bg-[#c9b8a0]", span: "", pos: "bottom-4 left-4", src: "https://images.pexels.com/photos/1080721/pexels-photo-1080721.jpeg" },
+
+  { label: "ARCHITECTURE", bg: "bg-[#1a1a1a]", span: "", pos: "bottom-4 left-4", src: "https://images.pexels.com/photos/1029615/pexels-photo-1029615.jpeg" },
+];
+
 export default function Auth() {
-
-
   return (
-    <main className="page">
+    <main className="min-h-screen bg-[#f5f0ea] font-sans overflow-x-hidden">
 
-      <header className=" flex justify-between mx-8 mt-5  ">
-
-        <div className="flex gap-4 *:p-8">
-
-          <div title="PIN" className="btn-circle ">
-            <div className="relative">
-
-              <svg width="25" height="25" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M9.62129 1.13607C9.81656 0.940808 10.1331 0.940809 10.3284 1.13607L11.3891 2.19673L12.8033 3.61094L13.8639 4.6716C14.0592 4.86687 14.0592 5.18345 13.8639 5.37871C13.6687 5.57397 13.3521 5.57397 13.1568 5.37871L12.5038 4.7257L8.86727 9.57443L9.97485 10.682C10.1701 10.8773 10.1701 11.1939 9.97485 11.3891C9.77959 11.5844 9.463 11.5844 9.26774 11.3891L7.85353 9.97491L6.79287 8.91425L3.5225 12.1846C3.32724 12.3799 3.01065 12.3799 2.81539 12.1846C2.62013 11.9894 2.62013 11.6728 2.81539 11.4775L6.08576 8.20714L5.0251 7.14648L3.61089 5.73226C3.41563 5.537 3.41562 5.22042 3.61089 5.02516C3.80615 4.8299 4.12273 4.8299 4.31799 5.02516L5.42557 6.13274L10.2743 2.49619L9.62129 1.84318C9.42603 1.64792 9.42603 1.33133 9.62129 1.13607Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path></svg>
-
+      <header className="sticky top-0 z-50 bg-[#f5f0ea]/90 backdrop-blur-md border-b-2 border-black">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 sm:h-20">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black flex items-center justify-center text-white shrink-0">
+              <Pin size={16} />
             </div>
+            <span className="text-lg sm:text-xl font-black tracking-[0.2em] uppercase">Fixel</span>
           </div>
-
-          <Link href={"/signin"} className="btn-circle bg-[#3eea00ac] ">
-            Login
-          </Link>
+          <nav className="flex items-center gap-2 sm:gap-3">
+            <Link href="/signin" className=" btn-rect  px-2! py-2! sm:px-5! sm:py-2.5! text-xs! sm:text-sm! font-bold! tracking-wide! uppercase!">Sign In</Link>
+            <Link href="/signup" className=" btn-rect  px-2! py-2! sm:px-5! sm:py-2.5! text-xs! sm:text-sm! font-bold! tracking-wide! uppercase!">Join</Link>
+          </nav>
         </div>
-
-        <Link href={"/signup"} className="btn-circle bg-[#3eea00ac] p-8">
-          Join
-        </Link>
       </header>
 
-      <h1 className="text-center text-[96px] font-extrabold ">FIXEL</h1>
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+          <div className="space-y-6 sm:space-y-8">
+            <h1 className="text-7xl font-black leading-[0.9] tracking-tight uppercase">
+              Pin.<br /><span className="text-[#EA2E00]">Inspire.</span><br />Create.
+            </h1>
+            <div className="flex flex-col xs:flex-row gap-3">
+              <Link href="/signup" className=" btn-rect inline-flex! items-center! justify-center! px-7! py-3.5! rounded-full! bg-cyan-600! text-white! text-sm! font-bold! uppercase! tracking-wide!">Get Started</Link>
+              <Link href="/signin" className=" btn-rect inline-flex! items-center! justify-center! px-7! py-3.5! rounded-full! bg-white! text-sm! font-bold! uppercase! tracking-wide!">Sign In</Link>
+            </div>
 
-
-      <section className="container flex justify-center gap-15 my-80">
-
-        <div className="flex flex-col justify-between gap-10 ">
-
-          <div className="image-card hero-big bg-[#EA2E00] text-white">
-            Image
           </div>
 
-          <div className="card hero-text">
-            Image and from image something about ppinterest
+          <div className="grid grid-cols-2 grid-rows-3 gap-3 h-90 sm:h-110 lg:h-130">
+            <div className="row-span-2 rounded-2xl border-2 border-black bg-linear-to-br from-[#EA2E00] to-[#ff6b35] relative overflow-hidden h-full">
+            </div>
+            <div className="rounded-2xl border-2 border-black bg-black text-white p-4 flex flex-col justify-between">
+              
+            </div>
+            <div className="rounded-2xl border-2 border-black bg-linear-to-br from-teal-600 to-teal-800" />
+            <div className="col-span-2 rounded-2xl border-2 border-black bg-[#EA2E00] p-4 flex items-center justify-between gap-4">
+               </div>
           </div>
-
         </div>
-
-        <div className="flex flex-col justify-between gap-10">
-
-          <div className="card hero-text">
-            Image and from image something about pinterest
-          </div>
-
-          <div className="image-card hero-big bg-[#FE7F2D] text-white">
-            Image
-          </div>
-
-        </div>
-
       </section>
 
-      <section className="gallery">
-
-        <div className="container  flex gap-20">
-
-          <div className="image-card h-130 w-[35%]  bg-[#FE7F2D] text-white">
-            Image
+      <section className="bg-[#1a1a1a] py-16 sm:py-20 lg:py-28 mt-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row sm:items-end gap-6 sm:gap-12 mb-10 sm:mb-14">
+            <h2 className="text-7xl font-black leading-[0.9] tracking-tight uppercase text-white">Discover<br />Anything.</h2>
+            <div className="hidden sm:block w-px h-30 bg-white/20 shrink-0" />
           </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 grid-rows-2 gap-3 h-80 sm:h-95 lg:h-110">
 
-          <div className=" flex flex-1 flex-col gap-10">
-
-            <div className="image-card h-50 bg-[#FE7F2D] text-white">
-              Image
-            </div>
-
-            <div className=" flex! flex-!col justify-between h-full gap-8 ">
-
-              <div className="image-card bg-[#FE7F2D] flex-2  text-white">Image</div>
-              <div className="image-card bg-[#FE7F2D] flex-1 text-white">Image</div>
-
-            </div>
-
+            {categories.map(({ label, bg, span, pos, src }) => (
+              <div
+                key={label}
+                className={`card rounded-2xl! relative! overflow-hidden! cursor-pointer! group!  ${span}`}
+              >
+                <Image
+                  src={src}
+                  alt={label}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 640px) 50vw, 25vw"
+                />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300" />
+                <span
+                  className={`absolute ${pos} text-[10px] sm:text-xs text-white font-black tracking-[0.15em] uppercase bg-black/40 px-2.5 py-1 rounded-full border border-white/20 backdrop-blur-sm group-hover:bg-black/60 transition-all z-10`}
+                >
+                  {label}
+                </span>
+              </div>
+            ))}
           </div>
-
         </div>
-
       </section>
 
-
-      <section className="cta">
-
-        <div className="container flex justify-center gap-50">
-
-          <div className="cta-circle">Image</div>
-
-          <div className="self-center">
-
-            <div className="card mb-8 ">
-              Image at left and some quote and say to join
+      <section className="bg-[#EA2E00] border-t-2 border-b-2 border-black py-16 sm:py-20 lg:py-28">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <div>
+              <h2 className="text-7xl font-black leading-[0.9] tracking-tight uppercase text-white mb-8">Your next<br />obsession<br />is here.</h2>
+              <Link href="/signup" className=" btn-rect inline-flex items-center px-8 py-4 rounded-full! border-2!  border-white! bg-white! text-black! text-sm! sm:text-base! font-black! uppercase! tracking-wide! transition-all ">Join Fixel</Link>
             </div>
+            <div className=" flex-col items-center gap-5 hidden lg:flex">
+              <div className=" relative overflow-hidden w-48 h-48 sm:w-60 sm:h-60 lg:w-72 lg:h-72 rounded-full border-4 border-white bg-linear-to-br group from-teal-600 to-[#1a4a6a] flex items-center justify-center text-white font-black tracking-widest text-center leading-tight text-xl sm:text-2xl">
 
-            <Link href={"/signup"} className="btn-rect mt-2 bg-[#3eea00ac]">JOIN</Link>
+                <Image
+                  src={"https://images.pexels.com/photos/31740970/pexels-photo-31740970.jpeg"}
+                  alt={"al"}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 640px) 50vw, 25vw"
+                />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300" />
+               
 
+              </div>
+
+            </div>
           </div>
-
         </div>
-
       </section>
 
       <Footer />
-
     </main>
   );
 }

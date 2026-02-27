@@ -60,13 +60,42 @@ export async function getPinPageResponse(_: any, { id }: { id: string }, { user 
             },
 
             take: 10,
-            orderBy: { createdAt: "desc" },
+            orderBy: {
+                likes: {
+                    _count: "desc",
+                },
+            },
         })
+
+        // If no related pins, get top pins excluding current user's pins and current pin
+        if (relatedPins.length === 0) {
+
+            const fallbackPins = await prisma.pin.findMany({
+                where: {
+                    id: { not: pin.id },
+                    userId: { not: user.id },
+                },
+                include: {
+                    saves: {
+                        where: { userId: user.id },
+                        select: { id: true },
+                    },
+                },
+                take: 10,
+                orderBy: {
+                    likes: {
+                        _count: "desc",
+                    },
+                },
+            });
+
+            relatedPins.push(...fallbackPins);
+        }
 
         // console.log("aa",pin.user.id);
 
 
-
+        // Check if current user follows the pin's creator
         const follow = await prisma.follow.findFirst({
             where: {
                 followerId: user.id,
@@ -74,9 +103,8 @@ export async function getPinPageResponse(_: any, { id }: { id: string }, { user 
             },
         });
 
+        // convert to boolean
         const isFollowing = !!follow;
-
-
 
         return {
             pin: {
@@ -404,7 +432,7 @@ export async function getCurrentUserPins(_: any, __: any, { user }: { user: User
     };
 }
 
-export async function getUserAllPins(_:any,{ userId, limit = 10, page = 1 }: any, { user }: { user: UserType }) {
+export async function getUserAllPins(_: any, { userId, limit = 10, page = 1 }: any, { user }: { user: UserType }) {
     try {
         const skip = (page - 1) * limit;
 
@@ -436,7 +464,7 @@ export async function getUserAllPins(_:any,{ userId, limit = 10, page = 1 }: any
         }));
 
         return buildFeedResponse(mappedPins, totalPins, page, limit);
-    } catch (error:any) {
+    } catch (error: any) {
         throw new ApiError(500, `Failed to fetch user's pins ${error?.message}`);
     }
 }
@@ -444,7 +472,7 @@ export async function getUserAllPins(_:any,{ userId, limit = 10, page = 1 }: any
 
 
 // Mutations
-export async function createPin (_: any, { title, description, mediaUrl, fileType, tagIds }: { title: string, description: string, mediaUrl: string, fileType: FileType, tagIds: string[] }, { user }: { user: UserType }){
+export async function createPin(_: any, { title, description, mediaUrl, fileType, tagIds }: { title: string, description: string, mediaUrl: string, fileType: FileType, tagIds: string[] }, { user }: { user: UserType }) {
 
     if (!user) throw new ApiError(401, "Unauthorized");
 

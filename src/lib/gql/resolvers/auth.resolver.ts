@@ -3,6 +3,7 @@ import { hashPassword, verifyPassword, signAccess, signRefresh } from "@/src/hel
 import { cookies } from "next/headers";
 import { ApiError } from "@/src/helper/ApiError";
 import { generateOTP, sendSignUpSuccessMessage, sendVerificationCode } from "@/src/helper/email";
+import { UserType } from "@/src/types/types";
 
 // to do: hashotp, verifyotp, hashrefresh token
 // Mutations
@@ -29,7 +30,9 @@ export async function signup(_: any, args: any) {
     }
 
     //  Validate OTP
-    if (record.otp !== args.otp)
+    const isValid = await verifyPassword(args.otp, record.otp);
+
+    if (!isValid)
         throw new ApiError(400, "Invalid OTP");
 
     //  Check if user already exists
@@ -219,17 +222,18 @@ export async function sendSignupOtp(_: any, args: any) {
         throw new ApiError(400, "Account already exists. Please login.");
 
     const otp = generateOTP();
+    const hashedOtp = await hashPassword(otp);
 
     // Always replace old OTP
     await prisma.emailVerification.upsert({
         where: { email: args.email },
         update: {
-            otp,
+            otp: hashedOtp,
             expiresAt: new Date(Date.now() + 5 * 60 * 1000),
         },
         create: {
             email: args.email,
-            otp,
+            otp: hashedOtp,
             expiresAt: new Date(Date.now() + 5 * 60 * 1000),
         }
     });
@@ -239,8 +243,8 @@ export async function sendSignupOtp(_: any, args: any) {
     return { message: "OTP sent successfully" };
 }
 
-export async function logout(_: any, __: any, context: any) {
-    if (!context.user) throw new ApiError(401, "Not authenticated");
+export async function logout(_: any, __: any, { user }: { user: UserType }) {
+    if (!user) throw new ApiError(401, "Not authenticated");
 
     const cookieStore = await cookies();
     const refresh = cookieStore.get("refresh")?.value;

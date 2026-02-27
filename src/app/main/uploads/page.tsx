@@ -32,82 +32,121 @@ export default function CurrentUserUploadsPage() {
 
     return (
         <div className="page">
-            <div className="container py-10!">
+            <div className="container mx-auto px-5 py-5 md:py-10">
 
-                <div className="flex justify-between mb-10">
-                    <h1 className="text-4xl font-black">My Dashboard</h1>
-                    <div className="flex gap-3">
+                <div className="flex flex-col md:flex-row mt-5 md:items-center md:justify-between gap-4 mb-8">
+
+                    <h1 className="text-xl sm:text-2xl md:text-4xl font-black text-center md:text-left">
+                        My Dashboard
+                    </h1>
+
+                    <div className="flex justify-center md:justify-end gap-3 flex-wrap">
                         {["Followers", "Following"].map((k, i) => (
-                            <div key={k} className="card text-center bg-white!">
-                                <p className="text-2xl font-black">
+                            <div
+                                key={k}
+                                className="card bg-white py-2 px-4 sm:py-3 sm:px-6 text-center min-w-[90px]"
+                            >
+                                <p className="text-base sm:text-lg md:text-2xl font-black">
                                     {i === 0 ? stats.followersCount : stats.followingCount}
                                 </p>
-                                <p className="text-xs text-gray-500">{k}</p>
+                                <p className="text-[10px] sm:text-xs text-gray-500">{k}</p>
                             </div>
                         ))}
                     </div>
                 </div>
 
-                <div className="flex *:flex-1  gap-4 mb-12">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-10">
                     {statCards.map(([l, v, b]) => (
-                        <div key={l as string} className={`card ${b}`}>
-                            <p className="text-3xl font-black">{v}</p>
-                            <p className="text-xs uppercase tracking-widest">{l}</p>
+                        <div key={l as string} className={`card ${b} text-center py-3 sm:py-6`}>
+                            <p className="text-lg sm:text-xl md:text-3xl font-black">{v}</p>
+                            <p className="text-[10px] sm:text-xs uppercase tracking-widest">{l}</p>
                         </div>
                     ))}
                 </div>
 
                 {stats.topPins?.length > 0 && (
                     <>
-                        <h2 className="text-xl font-black uppercase mb-5">Top Pins</h2>
-                        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 mb-12">
+                        <h2 className="text-base sm:text-lg md:text-xl font-black uppercase mb-4">
+                            Top Pins
+                        </h2>
+
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-5 mb-10">
                             {stats.topPins.map((pin: any) => (
-                                <div key={pin.id} className="card">
-                                    <div className="h-44 mb-3 relative">
+                                <div key={pin.id} className="card overflow-hidden p-2 sm:p-3">
+
+                                    <div className="relative aspect-4/3 mb-2">
                                         {pin.mediaUrl ? (
-                                            <Image src={pin.mediaUrl} alt={pin.title || "Untitled"} fill className="object-cover" />
+                                            <Image
+                                                src={pin.mediaUrl}
+                                                alt={pin.title || "Untitled"}
+                                                fill
+                                                className="object-cover rounded"
+                                            />
                                         ) : (
-                                            <div className="bg-gray-200 w-full h-full" />
+                                            <div className="bg-gray-200 w-full h-full rounded" />
                                         )}
                                     </div>
-                                    <p className="font-black text-sm truncate">{pin.title}</p>
-                                    <div className="flex justify-between *:flex *:flex-col *:justify-center *:items-center text-xs font-bold border-t-2 border-black pt-3 mt-3">
-                                        <p><ThumbsUp /> {pin.likesCount}</p>
-                                        <p><Heart /> {pin.savesCount}</p>
-                                        <p><MessageCircle />{pin.commentsCount}</p>
-                                        <p><TrendingUp />{pin.engagementScore?.toFixed(1)}</p>
+
+                                    <p className="font-black text-xs sm:text-sm truncate">
+                                        {pin.title}
+                                    </p>
+
+                                    <div className="grid grid-cols-4 text-[10px] sm:text-xs font-bold border-t pt-2 mt-2 text-center">
+                                        <p className="flex flex-col items-center"><ThumbsUp size={14} /> {pin.likesCount}</p>
+                                        <p className="flex flex-col items-center"><Heart size={14} /> {pin.savesCount}</p>
+                                        <p className="flex flex-col items-center"><MessageCircle size={14} /> {pin.commentsCount}</p>
+                                        <p className="flex flex-col items-center"><TrendingUp size={14} /> {pin.engagementScore?.toFixed(1)}</p>
                                     </div>
+
                                 </div>
                             ))}
                         </div>
                     </>
                 )}
 
-                <div className="flex justify-between mb-5">
-                    <h2 className="text-xl font-black uppercase tracking-widest">All Uploads</h2>
-                    <p className="card bg-white! py-1! px-4!">{stats.totalPins} pins</p>
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
+                    <h2 className="text-base sm:text-lg md:text-xl font-black uppercase tracking-widest">
+                        All Uploads
+                    </h2>
+                    <p className="card bg-white px-3 py-1 text-sm">
+                        {stats.totalPins} pins
+                    </p>
                 </div>
 
+                {/* ALL PINS */}
                 {stats.pins.length === 0 ? (
-                    <div className="card bg-white! text-center py-20">No pins yet.</div>
+                    <div className="card bg-white text-center py-14">
+                        No pins yet.
+                    </div>
                 ) : (
-                    <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-5 mb-10">
                         {stats.pins.map((pin: any) => (
-                            <div key={pin.id} className="card">
-                                <div className=" h-44 mb-3 relative">
+                            <div key={pin.id} className="card overflow-hidden p-2 sm:p-3">
+
+                                <div className="relative aspect-4/3 mb-2">
                                     {pin.mediaUrl ? (
-                                        <Image src={pin.mediaUrl} alt={pin.title || "Untitled"} fill className="object-cover" />
+                                        <Image
+                                            src={pin.mediaUrl}
+                                            alt={pin.title || "Untitled"}
+                                            fill
+                                            className="object-cover rounded"
+                                        />
                                     ) : (
-                                        <div className="bg-gray-200 w-full h-full" />
+                                        <div className="bg-gray-200 w-full h-full rounded" />
                                     )}
                                 </div>
-                                <p className="font-black text-sm truncate">{pin.title}</p>
-                                <div className="flex justify-between *:flex *:flex-col *:justify-center *:items-center text-xs font-bold border-t-2 border-black pt-3 mt-3">
-                                    <p><ThumbsUp /> {pin.likesCount}</p>
-                                    <p><Heart /> {pin.savesCount}</p>
-                                    <p><MessageCircle />{pin.commentsCount}</p>
-                                    <p><TrendingUp />{pin.engagementScore?.toFixed(1)}</p>
+
+                                <p className="font-black text-xs sm:text-sm truncate">
+                                    {pin.title}
+                                </p>
+
+                                <div className="grid grid-cols-4 text-[10px] sm:text-xs font-bold border-t pt-2 mt-2 text-center">
+                                    <p className="flex flex-col items-center"><ThumbsUp size={14} /> {pin.likesCount}</p>
+                                    <p className="flex flex-col items-center"><Heart size={14} /> {pin.savesCount}</p>
+                                    <p className="flex flex-col items-center"><MessageCircle size={14} /> {pin.commentsCount}</p>
+                                    <p className="flex flex-col items-center"><TrendingUp size={14} /> {pin.engagementScore?.toFixed(1)}</p>
                                 </div>
+
                             </div>
                         ))}
                     </div>
