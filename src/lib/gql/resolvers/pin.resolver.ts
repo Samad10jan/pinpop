@@ -23,6 +23,7 @@ export async function getPinPageResponse(_: any, { id }: { id: string }, { user 
                     },
                 },
 
+                // !! get saves and likes by current user to determine if pin is saved/liked
                 saves: {
                     where: { userId: user.id },
                     select: { id: true },
@@ -52,6 +53,7 @@ export async function getPinPageResponse(_: any, { id }: { id: string }, { user 
                 userId: { not: user.id },
             },
 
+            // get user and check if current user saved thepins
             include: {
                 saves: {
                     where: { userId: user.id },
@@ -265,36 +267,27 @@ export async function getSearchPagePins(_: any, { search, limit = 10, page = 1 }
 
         const skip = (page - 1) * limit;
 
-        // const whereClause: Prisma.PinWhereInput = {
-        //     title: {
-        //         contains: search,
-        //         mode: Prisma.QueryMode.insensitive,
-        //     },
-        // };
+      
 
         const totalPins = await prisma.pin.count({
             where: {
+                     OR: [
+              {
                 title: {
-                    contains: search,
-                    mode: "insensitive"
+                  contains: search,
+                  mode: "insensitive"
                 }
+              },
+              {
+                description: {
+                  contains: search,
+                  mode: "insensitive"
+                }
+              }
+            ]
             }
         });
 
-        // OR: [
-        //       {
-        //         title: {
-        //           contains: search,
-        //           mode: "insensitive"
-        //         }
-        //       },
-        //       {
-        //         description: {
-        //           contains: search,
-        //           mode: "insensitive"
-        //         }
-        //       }
-        //     ]
 
         const pins = await prisma.pin.findMany({
 

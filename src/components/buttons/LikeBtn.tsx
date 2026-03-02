@@ -52,7 +52,7 @@ export default function LikeBtn({
             className="btn-circle relative overflow-hidden! group bg-white! disabled:opacity-50"
                title={isLiked ? "liked " : "like"}>
 
-             <ThumbsUp fill={isLiked ? "red" : "white"} size={25} />
+             <ThumbsUp fill={isLiked ? "yellow" : "white"} size={25} />
             <div className="absolute inset-0 w-2 h-full  bg-amber-300 transform -translate-x-30 group-hover:translate-x-30 skew-x-12 transition-transform duration-2500" />
         </button>
     );

@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #F0E7D6;
+  --bg: #f5f0ea;
   --orange: #FE7F2D;
   --teal: #2D9CDB;
   --red: #E63946;
@@ -153,6 +153,20 @@ body {
   justify-content: center;
 }
 
+@keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .fade-up {
+    animation: fadeUp 0.6s ease-out forwards;
+  }
 
 
 /* 

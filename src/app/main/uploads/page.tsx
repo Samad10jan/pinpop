@@ -44,7 +44,7 @@ export default function CurrentUserUploadsPage() {
                         {["Followers", "Following"].map((k, i) => (
                             <div
                                 key={k}
-                                className="card bg-white py-2 px-4 sm:py-3 sm:px-6 text-center min-w-[90px]"
+                                className="card bg-white py-2 px-4 sm:py-3 sm:px-6 text-center min-w-22.5"
                             >
                                 <p className="text-base sm:text-lg md:text-2xl font-black">
                                     {i === 0 ? stats.followersCount : stats.followingCount}

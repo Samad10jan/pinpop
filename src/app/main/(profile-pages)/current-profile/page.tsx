@@ -73,15 +73,20 @@ export default function UserPage() {
     const lastSavedPins = profile?.lastSavedPins || [];
 
     return (
-        <main className="page pt-8">
-            <div className="container py-8">
+            <main className=" p-8">
 
 
-                <div className="mb-8">
-                    <h1 className="text-4xl md:text-5xl font-bold mb-2">Dashboard</h1>
-                    <p className="text-lg opacity-70">Welcome back, {name.split(' ')[0]}!</p>
+                <div className="mb-8 relative">
+                    
+                    <h1 className="text-4xl md:text-5xl font-bold mb-1 text-center">Dashboard</h1>
+                    <p className="text-lg opacity-70 flex justify-center ">Welcome back, <div className="font-black text-(--orange)]">{name.split(' ')[0]}</div>!</p>
+                    
+                    <div className="mt-3 flex items-center justify-center gap-2">
+                        <div className="h-1 w-12 bg-black rounded-full" />
+                        <div className="h-1 w-4 bg-(--orange) rounded-full" />
+                        <div className="h-1 w-2 bg-(--teal) rounded-full" />
+                    </div>
                 </div>
-
 
                 <div className="grid lg:grid-cols-12 gap-6">
 
@@ -250,7 +255,7 @@ export default function UserPage() {
 
                     </div>
                 </div>
-            </div>
-        </main >
+            </main>
+       
     );
 }

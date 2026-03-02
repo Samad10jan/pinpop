@@ -62,7 +62,7 @@ export default function CreatePin() {
             setPreviewUrl(null);
         }
     };
-    
+
     // Cleanup preview URL to prevent memory leaks
     useEffect(() => {
         return () => {
@@ -152,87 +152,102 @@ export default function CreatePin() {
     return (
         <main className="scale-95 bg-linear-to-br py-5 px-4 transition-all duration-300">
             <div className="max-w-4xl mx-auto">
-                <div className="text-center mb-8">
-                    <h1 className="text-4xl font-bold text-gray-900 mb-2">Create New Pin</h1>
+                <div className="relative text-center mx-auto mb-5">
+
+                    <div className="text-6xl font-black tracking-tighter">
+                        Create
+                        <span className="italic text-yellow-500 ml-4">Pin</span>
+                    </div>
+
+                    <div className="mt-3 flex items-center justify-center gap-2">
+                        <div className="h-1 w-12 bg-black rounded-full" />
+                        <div className="h-1 w-4 bg-(--orange) rounded-full" />
+                        <div className="h-1 w-2 bg-(--teal) rounded-full" />
+                    </div>
                 </div>
 
                 {success && <div className="mb-6 p-4 bg-green-100 border border-green-300 rounded-xl text-green-800 text-center animate-pulse">✓ Pin created successfully!</div>}
                 {error && <div className="mb-6 p-4 bg-red-100 border border-red-300 rounded-xl text-red-800 text-center">⚠ {error}</div>}
 
                 <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-xl overflow-hidden">
-                    <div className="flex flex-col md:flex-row gap-8 p-8">
 
-                        <div className="flex-1 space-y-4">
-                            <label className="block">
-                                <span className="text-sm font-semibold text-gray-700 mb-2 block">Upload Image *</span>
-                                <input type="file" className="hidden" id="file-upload" accept="image/*" onChange={handleFileChange} />
-                                <label htmlFor="file-upload" className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-amber-400 hover:bg-amber-50 transition-all duration-200">
-                                    {previewUrl ? (
-                                        <div className="relative w-full h-full">
-                                            <img src={previewUrl} alt="Preview" className="w-full h-full object-cover rounded-xl" />
-                                            <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition-opacity duration-200 rounded-xl flex items-center justify-center">
-                                                <span className="text-white font-medium">Change Image</span>
+                    <div className="flex flex-col gap-8 p-8" >
+
+
+                        <div className="flex flex-col md:flex-row gap-8 p-8">
+
+                            <div className="flex-1 space-y-4">
+                                <label className="block">
+                                    <span className="text-sm font-semibold text-gray-700 mb-2 block">Upload Image *</span>
+                                    <input type="file" className="hidden" id="file-upload" accept="image/*" onChange={handleFileChange} />
+                                    <label htmlFor="file-upload" className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-amber-400 hover:bg-amber-50 transition-all duration-200">
+                                        {previewUrl ? (
+                                            <div className="relative w-full h-full">
+                                                <img src={previewUrl} alt="Preview" className="w-full h-full object-cover rounded-xl" />
+                                                <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition-opacity duration-200 rounded-xl flex items-center justify-center">
+                                                    <span className="text-white font-medium">Change Image</span>
+                                                </div>
                                             </div>
-                                        </div>
-                                    ) : (
-                                        <div className="text-center p-6">
-                                            <p className="text-sm text-gray-600 mb-1">Click to upload or drag and drop</p>
-                                            <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
-                                        </div>
-                                    )}
+                                        ) : (
+                                            <div className="text-center p-6">
+                                                <p className="text-sm text-gray-600 mb-1">Click to upload or drag and drop</p>
+                                                <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                                            </div>
+                                        )}
+                                    </label>
                                 </label>
-                            </label>
-                            {file && <div className="text-xs text-gray-600 bg-gray-50 p-3 rounded-lg"><span className="font-medium">Selected:</span> {file.name}</div>}
+                                {file && <div className="text-xs text-gray-600 bg-gray-50 p-3 rounded-lg"><span className="font-medium">Selected:</span> {file.name}</div>}
+                            </div>
+
+                            <div className="flex-1 space-y-6">
+                                <label className="block">
+                                    <span className="text-sm font-semibold text-gray-700 mb-2 block">Title *</span>
+                                    <input type="text" placeholder="Give your pin a title, max 20 chars" className={inputClass} value={title} onChange={e => setTitle(e.target.value)} maxLength={20} />
+                                </label>
+
+                                <label className="block">
+                                    <span className="text-sm font-semibold text-gray-700 mb-2 block">Description</span>
+                                    <textarea placeholder="Tell everyone what your pin is about, max 50 chars" className={`${inputClass} resize-none h-22`} value={description} maxLength={50} onChange={e => setDescription(e.target.value)} />
+                                </label>
+                            </div>
+
                         </div>
 
-                        <div className="flex-1 space-y-6">
-                            <label className="block">
-                                <span className="text-sm font-semibold text-gray-700 mb-2 block">Title *</span>
-                                <input type="text" placeholder="Give your pin a title, max 20 chars" className={inputClass} value={title} onChange={e => setTitle(e.target.value)} maxLength={20} />
-                            </label>
+                        <div className="-mt-4 mb-4">
+                            <label className="text-sm font-semibold text-gray-700 block">Tags * ({selectedTags.length} selected)  <span className="flex justify-end">* Select Only 3</span></label>
 
-                            <label className="block">
-                                <span className="text-sm font-semibold text-gray-700 mb-2 block">Description</span>
-                                <textarea placeholder="Tell everyone what your pin is about, max 50 chars" className={`${inputClass} resize-none h-22`} value={description} maxLength={50} onChange={e => setDescription(e.target.value)} />
-                            </label>
+                            <div className="flex flex-wrap gap-2 max-h-40 overflow-y-auto p-3 bg-gray-50 rounded-xl">
 
-                            <div>
-                                <label className="text-sm font-semibold text-gray-700 mb-3 block">Tags * ({selectedTags.length} selected)  <span className="flex justify-end">* Select Only 3</span></label>
+                                {availableTags.map((t) => {
 
-                                <div className="flex flex-wrap gap-2 max-h-40 overflow-y-auto p-3 bg-gray-50 rounded-xl">
+                                    const isSelected = selectedTags.includes(t.id);
+                                    const isMaxReached = selectedTags.length === 3;
 
-                                    {availableTags.map((t) => {
-
-                                        const isSelected = selectedTags.includes(t.id);
-                                        const isMaxReached = selectedTags.length === 3;
-
-                                        return (
-                                            <button
-                                                key={t.id}
-                                                type="button"
-                                                onClick={() => toggleTag(t.id)}
-                                                disabled={!isSelected && isMaxReached}
-                                                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 
+                                    return (
+                                        <button
+                                            key={t.id}
+                                            type="button"
+                                            onClick={() => toggleTag(t.id)}
+                                            disabled={!isSelected && isMaxReached}
+                                            className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 
                                                     ${isSelected
-                                                        ? "bg-linear-to-r from-amber-400 to-orange-500 text-white shadow-md scale-105"
-                                                        : "bg-white text-gray-700 border border-gray-300 hover:border-amber-400 hover:bg-amber-50"
-                                                    } 
+                                                    ? "bg-linear-to-r from-amber-400 to-orange-500 text-white shadow-md"
+                                                    : "bg-white text-gray-700 border border-gray-300 hover:border-amber-400 hover:bg-amber-50"
+                                                } 
                                                     ${!isSelected && isMaxReached
-                                                        ? "opacity-50 cursor-not-allowed"
-                                                        : ""
-                                                    } `}  >
+                                                    ? "opacity-50 cursor-not-allowed"
+                                                    : ""
+                                                } `}  >
 
-                                                {t.name}
-                                            </button>
-                                        );
-                                    })}
-                                </div>
-
-
+                                            {t.name}
+                                        </button>
+                                    );
+                                })}
                             </div>
+
+
                         </div>
                     </div>
-
                     <div className="px-8 pb-8">
                         <button type="submit" disabled={loading}
                             className={`w-full py-4 rounded-xl font-semibold text-white text-lg transition-all duration-200 ${loading ? "bg-gray-400 cursor-not-allowed" : "btn-rect from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"

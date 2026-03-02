@@ -139,6 +139,7 @@ export async function toggleFollow(_: any, { targetUserId }: any, { user }: { us
     if (user.id === targetUserId) throw new ApiError(400, "You cannot follow yourself");
 
     const where = {
+        // unique constraint on follow table to prevent duplicate follows
         followerId_followingId: {
             followerId: user.id,
             followingId: targetUserId,

@@ -14,7 +14,6 @@ export default function Home() {
         async function getFeed() {
             try {
                 const res = await gqlClient.request(GET_SAVED_PINS_QUERY);
-
                 setPins(res?.getSavedPins || []);
             } catch (err) {
                 console.error(err);
@@ -22,37 +21,48 @@ export default function Home() {
                 setLoading(false);
             }
         }
-
         getFeed();
     }, []);
 
-    if (loading) {
+    if (!loading && pins.length === 0)
         return (
-            <main className="page px-5 py-8">
-                <Loading />
-            </main>
+            <div className="relative flex flex-col items-center justify-center min-h-[60vh] overflow-hidden">
+
+                <div className="card text-center px-12 py-10 bg-white">
+                    <p className="text-2xl font-black tracking-tight">Nothing saved yet</p>
+                    <p className="text-zinc-500 text-sm mt-2 font-mono">Your curated collection will appear here</p>
+                </div>
+            </div>
         );
-    }
 
     return (
-        <main className="page px-5 py-8">
+        <main className="relative min-h-screen px-6 py-12 overflow-hidden">
 
-            {!pins.length && (
-                <p className="text-center opacity-60 mt-20">
-                    No pins yet
-                </p>
-            )}
-<div className="text-center mb-5 font-extrabold text-4xl"> Saved Pins </div>
+            <div className="relative text-center mx-auto mb-14">
 
-            <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-4 space-y-4">
+                <div className="text-6xl font-black tracking-tighter">
+                    Saved
+                    <span className="italic text-rose-500 ml-4">Pins</span>
+                </div>
 
-                {pins.map((pin) => (
-
-                    <PinCard data={pin} key={pin.id} />
-
-                ))}
-
+                <div className="mt-3 flex items-center justify-center gap-2">
+                    <div className="h-1 w-12 bg-black rounded-full" />
+                    <div className="h-1 w-4 bg-(--orange) rounded-full" />
+                    <div className="h-1 w-2 bg-(--teal) rounded-full" />
+                </div>
             </div>
+
+            {loading ? <Loading /> : (
+                <div className="max-w-screen-2xl mx-auto">
+                    <div className="columns-2 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-3 space-y-3">
+                        {pins.map((pin) => (
+                            <div key={pin.id}>
+                                <PinCard data={pin} />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
         </main>
     );
 }

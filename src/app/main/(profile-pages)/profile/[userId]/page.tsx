@@ -109,7 +109,12 @@ export default function UserPage() {
     <main className="page">
       <div className="container py-8">
         <div className="my-8">
-          <h1 className="text-4xl md:text-5xl font-bold mb-2">Profile View</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-2 text-center">Profile View</h1>
+          <div className="mt-3 flex items-center justify-center gap-2">
+            <div className="h-1 w-12 bg-black rounded-full" />
+            <div className="h-1 w-4 bg-(--orange) rounded-full" />
+            <div className="h-1 w-2 bg-(--teal) rounded-full" />
+          </div>
         </div>
 
         <div className="grid lg:grid-cols-12 gap-6">

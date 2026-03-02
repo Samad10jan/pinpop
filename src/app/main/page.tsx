@@ -6,6 +6,8 @@ import gqlClient from "@/src/lib/services/graphql";
 import Loading from "@/src/components/commons/Loading";
 import { FEED_QUERY } from "@/src/lib/gql/queries/queries";
 import { PinType } from "@/src/types/types";
+import HeroSection from "@/src/components/commons/HeroSection";
+import Tags from "@/src/components/commons/TagsView";
 
 
 export default function Home() {
@@ -47,8 +49,9 @@ export default function Home() {
           No pins yet
         </p>
       )}
+      <HeroSection/>
 
-
+<Tags/>
       <div className="columns-2 md:columns-4 lg:columns-4 xl:columns-5 gap-4 space-y-4">
 
         {pins.map((pin) => (

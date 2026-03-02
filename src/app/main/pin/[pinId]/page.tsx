@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { PIN_PAGE_QUERY } from "@/src/lib/gql/queries/queries";
 import gqlClient from "@/src/lib/services/graphql";
@@ -18,6 +18,7 @@ import {
 } from "@/src/types/types";
 import Link from "next/link";
 import { DownloadIcon } from "lucide-react";
+import { UserContext } from "@/src/components/contexts/UserContext";
 
 export default function PinPage() {
   const { pinId } = useParams();
@@ -34,6 +35,9 @@ export default function PinPage() {
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+
+  const context = useContext(UserContext)
+  const user = context?.currentUser
 
   useEffect(() => {
 
@@ -175,12 +179,16 @@ export default function PinPage() {
                   </p>
                 </div>
               </div>
+              {user?.id !== pin.user.id
+                
+                &&
 
-              <FollowBtn
-                targetUserId={pin.user.id}
-                initiallyFollowing={isFollowing}
-                onFollowChange={handleFollowChange}
-              />
+                <FollowBtn
+                  targetUserId={pin.user.id}
+                  initiallyFollowing={isFollowing}
+                  onFollowChange={handleFollowChange}
+                />
+              }
             </div>
           </div>
           <div>
