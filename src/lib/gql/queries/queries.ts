@@ -147,6 +147,11 @@ query($getPinPageResponseId: ID!) {
       title
       id
       fileType
+      user {
+        id
+        name
+        avatar
+      }
     }
   }
 }
@@ -187,6 +192,7 @@ query ( $limit: Int, $page: Int) {
       user {
         id
         name
+        avatar
       }
     }
     
@@ -222,6 +228,11 @@ query{
     isSaved
     mediaUrl
     title
+    user {
+        id
+        name
+        avatar
+      }
     
   }
 }`
@@ -289,5 +300,32 @@ query ($userId: ID!) {
     page
     totalPages
     totalPins
+  }
+}`
+
+export const GET_PINS_BY_TAG_QUERY = gql`
+query ($tagId: ID!) {
+  getPinsByTag(tagId: $tagId) {
+    pins {
+      id
+      title
+      description
+      mediaUrl
+      fileType
+      tagIds
+      createdAt
+      user {
+        avatar
+        name
+        id
+      }
+      isSaved
+    }
+    page
+    limit
+    totalPins
+    totalPages
+    hasNextPage
+    hasPrevPage
   }
 }`

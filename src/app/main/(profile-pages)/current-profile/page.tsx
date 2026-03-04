@@ -110,8 +110,8 @@ export default function UserPage() {
                             </div>
 
                             <div className="text-center mb-6">
-                                <h2 className="text-2xl font-bold mb-1">{name}</h2>
-                                <p className="text-sm opacity-70 mb-4">{email}</p>
+                                <div className="text-2xl font-bold mb-1">{name}</div>
+                                <div className="text-sm opacity-70 mb-4">{email}</div>
 
                                 <button className="btn-rect w-full mb-3" onClick={() => setShowEdit(true)} >
                                     Edit Profile

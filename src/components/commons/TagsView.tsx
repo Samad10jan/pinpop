@@ -1,144 +1,55 @@
+"use client";
+
+import { tags } from "@/src/lib/constants";
 import Link from "next/link";
+import { useState } from "react";
 
-const tags=
-     [
-        {
-          "name": "3d-design",
-          "id": "6990849e7c1019d092558d4c"
-        },
-        {
-          "name": "abstract",
-          "id": "6990849e7c1019d092558d2e"
-        },
-        {
-          "name": "accessories",
-          "id": "6990849e7c1019d092558d35"
-        },
-        {
-          "name": "aesthetic",
-          "id": "6990849e7c1019d092558d2c"
-        },
-        {
-          "name": "anime",
-          "id": "6990849e7c1019d092558d45"
-        },
-        {
-          "name": "architecture",
-          "id": "6990849e7c1019d092558d4a"
-        },
-        {
-          "name": "art",
-          "id": "6990849e7c1019d092558d26"
-        },
-        {
-          "name": "backgrounds",
-          "id": "6990849e7c1019d092558d6f"
-        },
-       
-        {
-          "name": "branding",
-          "id": "6990849e7c1019d092558d5a"
-        },
-       
-        {
-          "name": "cars",
-          "id": "6990849e7c1019d092558d52"
-        },
-        {
-          "name": "cats",
-          "id": "6990849e7c1019d092558d5e"
-        },
-        {
-          "name": "coding",
-          "id": "6990849e7c1019d092558d43"
-        },
-        {
-          "name": "craft",
-          "id": "6990849e7c1019d092558d6c"
-        },
-        {
-          "name": "creative",
-          "id": "6990849e7c1019d092558d57"
-        },
-        {
-          "name": "digital-art",
-          "id": "6990849e7c1019d092558d28"
-        },
-        {
-          "name": "diy",
-          "id": "6990849e7c1019d092558d6d"
-        },
-        {
-          "name": "dogs",
-          "id": "6990849e7c1019d092558d5d"
-        },
-        {
-          "name": "education",
-          "id": "6990849e7c1019d092558d65"
-        },
-        {
-          "name": "entrepreneur",
-          "id": "6990849e7c1019d092558d6b"
-        },
-        {
-          "name": "esports",
-          "id": "6990849e7c1019d092558d48"
-        },
-  
-        {
-          "name": "funny",
-          "id": "6990849e7c1019d092558d56"
-        },
-        {
-          "name": "gaming",
-          "id": "6990849e7c1019d092558d47"
-        },
-        {
-          "name": "guitar",
-          "id": "6990849e7c1019d092558d63"
-        },
-        {
-          "name": "gym",
-          "id": "6990849e7c1019d092558d3a"
-        },
-        {
-          "name": "hairstyle",
-          "id": "6990849e7c1019d092558d60"
-        },
-        {
-          "name": "home-decor",
-          "id": "698b5237ca361aed3ee1a966"
-        },
-        {
-          "name": "illustration",
-          "id": "6990849e7c1019d092558d27"
-        },
-       
-      ]
-
-      const colors = [
-    "bg-yellow-300!",
-    "bg-sky-400! text-white!",
-    "bg-rose-400! text-white!",
-    "bg-violet-400! text-white!",
-    "bg-emerald-300!",
-    "bg-orange-300!",
-    "bg-pink-300!",
-    "bg-lime-300!",
+const colors = [
+  "bg-yellow-300!",
+  "bg-sky-400! text-white!",
+  "bg-rose-400! text-white!",
+  "bg-violet-400! text-white!",
+  "bg-emerald-300!",
+  "bg-orange-300!",
+  "bg-pink-300!",
+  "bg-lime-300!",
 ];
 
+const STEP = 3;
+const sliced = tags.slice(0, 20);
+
 export default function Tags() {
-    return (
-        <div className="my-5 p-5 flex flex-wrap gap-3 justify-center">
-            {tags.slice(0, 20).map((t,i) => (
-                <Link
-                    key={t.id}
-                    href={`/main/tag/${t.id}`}
-                    className={`btn-rect text-sm! rounded-full! capitalize! px-4! py-2!  ${colors[i % colors.length]}`}
-                >
-                    {t.name}
-                </Link>
-            ))}
+  const [offset, setOffset] = useState(0);
+
+  return (
+    <div className=" my-2">
+      <div className="flex justify-between items-center">
+        <h2 className="text-sm font-semibold tracking-widest uppercase text-neutral-500">Tags</h2>
+        <div className="flex items-center gap-2">
+
+          <button onClick={() => setOffset((o) => Math.max(0, o - STEP))} disabled={offset === 0} className="w-5 h-5 flex items-center justify-center rounded border border-neutral-200 text-neutral-400 hover:text-neutral-700 disabled:opacity-30 disabled:cursor-not-allowed text-[10px]">‹</button>
+          <button onClick={() => setOffset((o) => Math.min(sliced.length - STEP, o + STEP))} disabled={offset + STEP >= sliced.length} className="w-5 h-5 flex items-center justify-center rounded border border-neutral-200 text-neutral-400 hover:text-neutral-700 disabled:opacity-30 disabled:cursor-not-allowed text-[10px]">›</button>
+          
+          <Link href="/main/tags" className="text-xs text-neutral-400 hover:text-neutral-700">Browse all →</Link>
         </div>
-    );
+      </div>
+
+      <div className="overflow-hidden">
+        <div
+          className="flex gap-2 transition-all duration-700"
+          style={{ transform: `translateX(calc(-${offset} * (100% / ${STEP})))` }}
+        >
+          {sliced.map((t, i) => (
+            <Link
+              key={t.id}
+              href={`/main/tags/${t.id}`}
+              className={` btn-rect rounded-full! my-5! shrink-0! text-xs! font-medium! capitalize! border!  px-3! py-1.5! transition-all ${colors[i % colors.length]}`}
+            >
+              {t.name}
+            </Link>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 }

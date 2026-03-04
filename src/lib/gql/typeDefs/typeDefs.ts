@@ -154,6 +154,8 @@ type Query {
   getCurrentUserPins: CurrentUserAnalyticsResponse!
   getUserAllPins(userId:ID!): FeedResponse!
 
+  getPinsByTag(tagId: ID!, limit: Int, page: Int): FeedResponse!
+
  
 }
 

@@ -1,6 +1,6 @@
 import { login, logout, sendSignupOtp, signup } from "@/src/lib/gql/resolvers/auth.resolver";
 import { deleteComment, getPinComments, sendComment } from "@/src/lib/gql/resolvers/comments.resolver";
-import { createPin, getCurrentUserPins, getPinPageResponse, getSearchPagePins, getSugg, getTagsForPin, getUserAllPins, getUserFeed } from "@/src/lib/gql/resolvers/pin.resolver";
+import { createPin, getCurrentUserPins, getPinPageResponse, getPinsByTag, getSearchPagePins, getSugg, getTagsForPin, getUserAllPins, getUserFeed } from "@/src/lib/gql/resolvers/pin.resolver";
 import { getAllTags, getSavedPins, toggleFollow, toggleLike, toggleSave } from "@/src/lib/gql/resolvers/toggles.resolver";
 import { getCurrentProfile, getFollowingCount, getFollwersCount, getProfile, getTotalLikes, isFollowing, updateProfile, user } from "@/src/lib/gql/resolvers/user.resolver";
 
@@ -9,6 +9,7 @@ import { context } from "@/src/helper/context";
 import { ApolloServer } from "@apollo/server";
 import { startServerAndCreateNextHandler } from "@as-integrations/next";
 import { log } from "node:console";
+import { get } from "node:http";
 
 
 export const resolvers = {
@@ -34,8 +35,9 @@ export const resolvers = {
     getSavedPins: getSavedPins,
     getCurrentUserPins: getCurrentUserPins,
 
-    getUserAllPins: getUserAllPins
+    getUserAllPins: getUserAllPins,
 
+    getPinsByTag: getPinsByTag
     // isFollowing:isFollowing
   },
   ProfileResponse: {

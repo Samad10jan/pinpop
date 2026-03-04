@@ -33,6 +33,7 @@ export async function getPinPageResponse(_: any, { id }: { id: string }, { user 
                     select: { id: true },
                 },
 
+                // get counts for likes and saves
                 _count: {
                     select: {
                         likes: true,
@@ -59,6 +60,9 @@ export async function getPinPageResponse(_: any, { id }: { id: string }, { user 
                     where: { userId: user.id },
                     select: { id: true },
                 },
+                user: {
+                    select: { id: true, name: true, avatar: true },
+                },
             },
 
             take: 10,
@@ -81,6 +85,9 @@ export async function getPinPageResponse(_: any, { id }: { id: string }, { user 
                     saves: {
                         where: { userId: user.id },
                         select: { id: true },
+                    },
+                    user: {
+                        select: { id: true, name: true, avatar: true },
                     },
                 },
                 take: 10,
@@ -462,7 +469,54 @@ export async function getUserAllPins(_: any, { userId, limit = 10, page = 1 }: a
     }
 }
 
+export async function getPinsByTag(_: any, { tagId, limit = 10, page = 1 }: any, { user }: { user: UserType }) {
+    try {
+        
+        if (!tagId) {
+            return buildFeedResponse([], 0, page, limit);
+        }
+        const skip = (page - 1) * limit;
 
+        const tag = await prisma.tag.findUnique({
+            where: { id: tagId },
+        });
+        if (!tag) {
+            return buildFeedResponse([], 0, page, limit);
+        }
+        const totalPins = await prisma.pin.count({
+            where: {
+                tagIds: { has: tagId },
+            },
+        });
+
+        const pins = await prisma.pin.findMany({
+            where: {
+                tagIds: { has: tagId },
+            },
+            skip,
+            take: limit,
+            orderBy: { createdAt: "desc" },
+            include: {
+                user: {
+                    select: { id: true, name: true, avatar: true },
+                },
+                saves: {
+                    where: { userId: user?.id },
+                    select: { id: true },
+                },
+               
+            },
+        });
+        const mappedPins = pins.map(p => ({
+            ...p,
+            isSaved: p.saves.length > 0,
+        }));
+
+        return buildFeedResponse(mappedPins, totalPins, page, limit);
+    } catch (error) {
+        
+    }
+}
 
 // Mutations
 export async function createPin(_: any, { title, description, mediaUrl, fileType, tagIds }: { title: string, description: string, mediaUrl: string, fileType: FileType, tagIds: string[] }, { user }: { user: UserType }) {

@@ -2,20 +2,21 @@ import Footer from "@/src/components/commons/Footer";
 import { ArrowRight, Pin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import Tags from "../components/commons/TagsView";
 
 
 const categories = [
-  { label: "TRAVEL", bg: "bg-[#EA2E00]", span: "row-span-2", pos: "top-4 right-4", src: "https://images.pexels.com/photos/2752037/pexels-photo-2752037.jpeg" },
-  { label: "FOOD", bg: "bg-[#EA2E00]", span: "", pos: "bottom-4 left-4", src: "https://images.pexels.com/photos/1092730/pexels-photo-1092730.jpeg" },
+  { label: "TRAVEL", span: "row-span-2", pos: "top-4 right-4", src: "https://images.pexels.com/photos/2752037/pexels-photo-2752037.jpeg" },
+  { label: "FOOD", span: "", pos: "bottom-4 left-4", src: "https://images.pexels.com/photos/1092730/pexels-photo-1092730.jpeg" },
 
-  { label: "NATURE", bg: "bg-[#EA2E00]", span: "row-span-2", pos: "top-4 right-4", src: "https://images.pexels.com/photos/13524961/pexels-photo-13524961.jpeg" },
-  { label: "FASHION", bg: "bg-teal-600", span: "", pos: "bottom-4 left-4", src: "https://images.pexels.com/photos/1639729/pexels-photo-1639729.jpeg" },
-  { label: "INTERIORS", bg: "bg-[#c9b8a0]", span: "", pos: "bottom-4 left-4", src: "https://images.pexels.com/photos/1080721/pexels-photo-1080721.jpeg" },
+  { label: "NATURE", span: "row-span-2", pos: "top-4 right-4", src: "https://images.pexels.com/photos/13524961/pexels-photo-13524961.jpeg" },
+  { label: "FASHION",  span: "", pos: "bottom-4 left-4", src: "https://images.pexels.com/photos/1639729/pexels-photo-1639729.jpeg" },
+  { label: "INTERIORS", span: "", pos: "bottom-4 left-4", src: "https://images.pexels.com/photos/1080721/pexels-photo-1080721.jpeg" },
 
-  { label: "ARCHITECTURE", bg: "bg-[#1a1a1a]", span: "", pos: "bottom-4 left-4", src: "https://images.pexels.com/photos/1029615/pexels-photo-1029615.jpeg" },
+  { label: "ARCHITECTURE", span: "", pos: "bottom-4 left-4", src: "https://images.pexels.com/photos/1029615/pexels-photo-1029615.jpeg" },
 ];
 
-export default function Auth() {
+export default function LandingPage() {
   return (
     <main className="min-h-screen bg-[#f5f0ea] font-sans overflow-x-hidden">
 
@@ -59,16 +60,17 @@ export default function Auth() {
           </div>
         </div>
       </section>
-
-      <section className="bg-[#1a1a1a] py-16 sm:py-20 lg:py-28 mt-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+  
+      <section className="bg-[#1a1a1a] p-5">
+        <div className="max-w-7xl pt-2 mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-end gap-6 sm:gap-12 mb-10 sm:mb-14">
             <h2 className="text-7xl font-black leading-[0.9] tracking-tight uppercase text-white">Discover<br />Anything.</h2>
             <div className="hidden sm:block w-px h-30 bg-white/20 shrink-0" />
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 grid-rows-2 gap-3 h-80 sm:h-95 lg:h-110">
 
-            {categories.map(({ label, bg, span, pos, src }) => (
+            {categories.map(({ label, span, pos, src }) => (
               <div
                 key={label}
                 className={`card rounded-2xl! relative! overflow-hidden! cursor-pointer! group!  ${span}`}
@@ -90,6 +92,13 @@ export default function Auth() {
             ))}
           </div>
         </div>
+            
+      </section>
+     <section className="relative bg-[#1a1a1a] py-5">
+         <Tags/>
+          <div className=" absolute top-0 right-0 h-full w-[50%] bg-linear-to-l from-black/70 via-black/50 to-transparent"/>
+        <div className=" absolute top-0 left-0 h-full w-[50%] bg-linear-to-r from-black/70 via-black/50 to-transparent"/>
+   
       </section>
 
       <section className="bg-[#EA2E00] border-t-2 border-b-2 border-black py-16 sm:py-20 lg:py-28">

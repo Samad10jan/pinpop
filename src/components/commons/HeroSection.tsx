@@ -2,7 +2,7 @@
 
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const slides = [
     { img: "https://picsum.photos/seed/aurora/1400/700", label: "Aurora", tag: "Nature" },
@@ -12,29 +12,38 @@ const slides = [
 ];
 
 export default function HeroSection() {
+
     const [current, setCurrent] = useState(0);
     const [animating, setAnimating] = useState(false);
 
-    const goTo = (index: number) => {
+    // The useCallback hook in React is used to memoize (cache) a function so that it isn’t recreated on every render.
+    // This can help improve performance, especially when passing callbacks to child components that rely on reference 
+    // equality to avoid unnecessary re-renders.
+
+    const goTo = useCallback((index: number) => {
         if (animating || index === current) return;
+
         setAnimating(true);
         setCurrent(index);
-        setTimeout(() => setAnimating(false), 600);
-    };
 
-    const next = () => goTo((current + 1) % slides.length);
-    const back = () => goTo((current - 1 + slides.length) % slides.length);
+        setTimeout(() => setAnimating(false), 600);
+    }, [animating, current]);
+
+    const next = useCallback(() => {
+        setCurrent((prev) => (prev + 1) % slides.length);
+    }, [slides.length]);
+
+    const back = useCallback(() => {
+        setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
+    }, [slides.length]);
 
     useEffect(() => {
-        const timer = setInterval(next, 4000);
+        const timer = setInterval(next, 5000);
         return () => clearInterval(timer);
-    }, [current]);
+    }, [next]);
 
     return (
-        <div
-            className="image-card relative!  w-full! overflow-hidden! flex! mb-5"
-
-        >
+        <div className="image-card relative!  w-full! overflow-hidden! flex! mb-5">
             <div className="relative w-full h-100">
                 {slides.map((slide, i) => (
                     <div
@@ -69,12 +78,12 @@ export default function HeroSection() {
                     </h2>
                 </div>
 
-                
+
                 <div className="absolute top-5 right-6 text-white/60 text-xs font-bold tracking-widest">
                     0{(current + 1)} / 0{slides.length}
                 </div>
 
-              
+
                 <button title="back" onClick={back} className="  size-9! btn-circle absolute left-5 top-1/2 -translate-y-1/2 bg-white">
                     <ArrowLeft />
                 </button>

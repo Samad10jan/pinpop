@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 
 import { PIN_PAGE_QUERY } from "@/src/lib/gql/queries/queries";
 import gqlClient from "@/src/lib/services/graphql";
@@ -38,6 +38,16 @@ export default function PinPage() {
 
   const context = useContext(UserContext)
   const user = context?.currentUser
+
+  // The useCallback hook in React is used to memoize (cache) a function so that it isn’t recreated on every render.
+  // This can help improve performance, especially when passing callbacks to child components that rely on reference 
+  // equality to avoid unnecessary re-renders.
+
+   //  optimistic update
+   const handleFollowChange = useCallback((val: boolean) => {
+    setIsFollowing(val);
+    setFollowersCount(prev => (val ? prev + 1 : Math.max(0, prev - 1)));
+  }, []);
 
   useEffect(() => {
 
@@ -91,11 +101,11 @@ export default function PinPage() {
 
   if (!pin) return null;
 
-  //  optimistic update
-  const handleFollowChange = (val: boolean) => {
-    setIsFollowing(val);
-    setFollowersCount(prev => (val ? prev + 1 : Math.max(0, prev - 1)));
-  };
+ 
+  // const handleFollowChange = (val: boolean) => {
+  //   setIsFollowing(val);
+  //   setFollowersCount(prev => (val ? prev + 1 : Math.max(0, prev - 1)));
+  // };
 
   return (
     <div className="flex flex-col md:flex-row gap-8 p-4 ">

@@ -49,9 +49,10 @@ export default function Home() {
           No pins yet
         </p>
       )}
-      <HeroSection/>
+      <HeroSection />
 
-<Tags/>
+      <Tags />
+      <div className="text-3xl font-bold my-3 ">Feed</div>
       <div className="columns-2 md:columns-4 lg:columns-4 xl:columns-5 gap-4 space-y-4">
 
         {pins.map((pin) => (
