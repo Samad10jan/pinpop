@@ -44,7 +44,8 @@ export const getAllTags = async (_: any, __: any, { user }: { user: UserType }) 
     }
 
 }
-// Mutations
+
+// Mutations Toggles
 
 // Save and Like and Follow
 export async function toggleSave(_: any, { pinId }: any, { user }: { user: UserType }) {

@@ -138,44 +138,59 @@ export async function getPinPageResponse(_: any, { id }: { id: string }, { user 
 }
 
 export async function getUserFeed(_: any, { limit = 10, page = 1 }: any, { user }: { user: UserType }) {
+
+    /*
+    Steps:
+    1. Validate user
+    2. Get tags from liked pins
+    3. Exclude user's own pins
+    4. Fetch personalized pins
+    5. If not enough, fetch popular pins
+    6. Return formatted feed
+    */
+
     try {
         const userId = user?.id;
+        if (!userId) throw new ApiError(401, "Unauthorized");
+
         const skip = (page - 1) * limit;
 
-        if (!userId) {
-            return buildFeedResponse([], 0, page, limit);
-        }
-
+        // get tags from pins the user liked
         const likedPins = await prisma.like.findMany({
             where: { userId },
             include: {
                 pin: {
-                    select: { tagIds: true, id: true },
+                    select: { tagIds: true },
                 },
             },
         });
 
-        const likedTagIds = [...new Set(likedPins.flatMap(like => like.pin.tagIds))];
+        // flatten tags and remove duplicates
+        const likedTagIds = [...new Set(likedPins.flatMap(l => l.pin.tagIds))];
 
+        // get user's own pin ids to exclude
         const userPins = await prisma.pin.findMany({
             where: { userId },
             select: { id: true },
         });
 
-        let whereClause: any = {};
-
         const excludeIds = userPins.map(p => p.id);
 
-        if (excludeIds.length > 0) {
+        const whereClause: any = {};
+
+        // exclude user's pins
+        if (excludeIds.length) {
             whereClause.id = { notIn: excludeIds };
         }
 
-        if (likedTagIds.length > 0) {
+        // prioritize pins with similar tags
+        if (likedTagIds.length) {
             whereClause.tagIds = { hasSome: likedTagIds };
         }
 
         const totalPins = await prisma.pin.count({ where: whereClause });
 
+        // fetch personalized feed
         let pins = await prisma.pin.findMany({
             where: whereClause,
             skip,
@@ -195,24 +210,24 @@ export async function getUserFeed(_: any, { limit = 10, page = 1 }: any, { user 
             },
         });
 
-        // If less than limit, fill with top pins
+        // fallback if personalized pins are not enough mix of personalized + popular
         if (pins.length < limit) {
 
             const remaining = limit - pins.length;
 
-            const alreadyFetchedIds = pins.map(p => p.id);
+            // exclude user's pins and already fetched pins
+            const excludeForFallback = [
+                ...excludeIds,
+                ...pins.map(p => p.id),
+            ];
 
             const fallbackPins = await prisma.pin.findMany({
                 where: {
-                    id: {
-                        notIn: [...excludeIds, ...alreadyFetchedIds],
-                    },
+                    id: { notIn: excludeForFallback },
                 },
                 take: remaining,
                 orderBy: {
-                    likes: {
-                        _count: "desc",
-                    },
+                    likes: { _count: "desc" }, // most liked pins
                 },
                 include: {
                     user: {
@@ -228,9 +243,11 @@ export async function getUserFeed(_: any, { limit = 10, page = 1 }: any, { user 
                 },
             });
 
+            // merge personalized + fallback pins
             pins = [...pins, ...fallbackPins];
         }
 
+        // convert saves relation to boolean
         const mappedPins = pins.map(p => ({
             ...p,
             isSaved: p.saves.length > 0,
@@ -271,27 +288,26 @@ export async function getSearchPagePins(_: any, { search, limit = 10, page = 1 }
             return buildFeedResponse([], 0, page, limit);
         }
         const userId = user?.id;
+        if (!userId) throw new ApiError(401, "Unauthorized");
 
         const skip = (page - 1) * limit;
 
-      
-
         const totalPins = await prisma.pin.count({
             where: {
-                     OR: [
-              {
-                title: {
-                  contains: search,
-                  mode: "insensitive"
-                }
-              },
-              {
-                description: {
-                  contains: search,
-                  mode: "insensitive"
-                }
-              }
-            ]
+                OR: [
+                    {
+                        title: {
+                            contains: search,
+                            mode: "insensitive"
+                        }
+                    },
+                    {
+                        description: {
+                            contains: search,
+                            mode: "insensitive"
+                        }
+                    }
+                ]
             }
         });
 
@@ -326,7 +342,8 @@ export async function getSearchPagePins(_: any, { search, limit = 10, page = 1 }
         return buildFeedResponse(mappedPins, totalPins, page, limit);
 
     } catch (error) {
-        throw error;
+        console.error("Error fetching feed:", error);
+        return buildFeedResponse([], 0, page, limit);
     }
 }
 
@@ -466,12 +483,13 @@ export async function getUserAllPins(_: any, { userId, limit = 10, page = 1 }: a
         return buildFeedResponse(mappedPins, totalPins, page, limit);
     } catch (error: any) {
         throw new ApiError(500, `Failed to fetch user's pins ${error?.message}`);
+        // return buildFeedResponse([], 0, page, limit);
     }
 }
 
 export async function getPinsByTag(_: any, { tagId, limit = 10, page = 1 }: any, { user }: { user: UserType }) {
     try {
-        
+
         if (!tagId) {
             return buildFeedResponse([], 0, page, limit);
         }
@@ -504,7 +522,7 @@ export async function getPinsByTag(_: any, { tagId, limit = 10, page = 1 }: any,
                     where: { userId: user?.id },
                     select: { id: true },
                 },
-               
+
             },
         });
         const mappedPins = pins.map(p => ({
@@ -514,7 +532,7 @@ export async function getPinsByTag(_: any, { tagId, limit = 10, page = 1 }: any,
 
         return buildFeedResponse(mappedPins, totalPins, page, limit);
     } catch (error) {
-        
+
     }
 }
 

@@ -3,43 +3,67 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="footer py-10 px-4">
-      <div className="container mx-auto flex flex-row items-start justify-between gap-8">
-        
-        <div className="flex flex-col items-start gap-4 text-left">
-          
-          <div className="text-3xl font-bold text-white">
-            Fixel
-          </div>
+    <footer className="border-t-2 border-black bg-[#1a1a1a] text-white py-12 px-6">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-10">
 
-          <div className="flex gap-3 flex-wrap justify-start">
+        {/* LEFT */}
+        <div className="flex flex-col gap-4 max-w-sm">
+
+          <h2 className="text-3xl font-black tracking-wider uppercase">
+            Fixel
+          </h2>
+
+          <p className="text-sm text-white/70 leading-relaxed">
+            Discover ideas, collect inspiration, and create your visual world.
+            Fixel helps you pin what you love.
+          </p>
+
+          <div className="flex gap-3 pt-2">
             <Link
-              href="/signin"
-              className="btn-rect py-2! px-5!  text-xs!  font-bold! tracking-wide! uppercase!"
+              href="/signup"
+              className="btn-rect px-6! py-2.5! text-xs! font-bold! uppercase!"
             >
-              Sign In
+              Join
             </Link>
 
             <Link
-              href="/signup"
-              className="btn-rect py-2! px-5!  text-xs!  font-bold! tracking-wide! uppercase!"
+              href="/signin"
+              className="btn-rect px-6! py-2.5! text-xs! font-bold! uppercase!"
             >
-              Join
+              Sign In
             </Link>
           </div>
 
         </div>
+        <div className="flex flex-col gap-4 items-start md:items-end">
 
-        <div className="flex justify-end">
+          <span className="text-white/50 uppercase text-xs">
+            Developer
+          </span>
+
           <Link
-            title="GitHub"
-            href="https://github.com"
+            href="https://github.com/Samad10jan"
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-full py-3 px-3 ring-3 ring-green-600! bg-white duration-200 hover:text-white hover:bg-green-600 transition-all"
+            className="flex items-center gap-2 rounded-full px-4 py-2 border border-white/30 hover:bg-white hover:text-black transition"
           >
-            <Github size={20} />
+            <Github size={18} />
+           
           </Link>
+
+        </div>
+
+      </div>
+
+
+      <div className="max-w-7xl mx-auto mt-10 pt-6 border-t border-white/10 flex flex-col sm:flex-row justify-between text-xs text-white/50 gap-4">
+
+        <span>© {new Date().getFullYear()} Fixel. All rights reserved.</span>
+
+        <div className="flex gap-4">
+          <Link href="#" className="hover:text-white">Privacy</Link>
+          <Link href="#" className="hover:text-white">Terms</Link>
+          <Link href="#" className="hover:text-white">Contact</Link>
         </div>
 
       </div>

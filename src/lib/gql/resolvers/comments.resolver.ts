@@ -1,21 +1,27 @@
 import prisma from "@/src/lib/services/prisma";
 import { UserType } from "@/src/types/types";
 import { ApiError } from "@/src/helper/ApiError";
+import { buildFeedResponse } from "@/src/helper/pagination";
 
 // Queries
 export async function getPinComments(_: any, { pinId, page = 1 }: any) {
     try {
         if (!pinId) throw new ApiError(400, "Pin ID is required");
 
-        const skip = (page - 1) * 5;
+        const limit = 5; // comments per page
+        const skip = (page - 1) * limit;
 
+        // get total comments for pagination
+        const totalComments = await prisma.comment.count({
+            where: { pinId },
+        });
+
+        // fetch paginated comments
         const comments = await prisma.comment.findMany({
             where: { pinId },
             skip,
-            take: 5,
-            orderBy: {
-                createdAt: "desc",
-            },
+            take: limit,
+            orderBy: { createdAt: "desc" }, // latest first
             include: {
                 user: {
                     select: {
@@ -26,8 +32,10 @@ export async function getPinComments(_: any, { pinId, page = 1 }: any) {
                 },
             },
         });
-        if (!comments) throw new ApiError(404, "Comments not found");
-        return comments;
+
+        // return paginated response
+        return buildFeedResponse(comments, totalComments, page, limit);
+
     } catch (error) {
         throw error;
     }
@@ -41,7 +49,8 @@ export async function sendComment(_: any, { pinId, content }: any, { user }: { u
         if (!content.trim()) throw new ApiError(400, "Comment content cannot be empty");
         if (content.length > 30) throw new ApiError(400, "Comment content cannot be more than 30 characters");
        
-       // Check if user already commented on this pin, Implemented one user one comment per pin
+       // Check if user already commented on this pin,
+       // Implemented one user one comment per pin
         const existing = await prisma.comment.findUnique({
             where: {
                 userId_pinId: {

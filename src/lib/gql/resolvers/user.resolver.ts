@@ -47,8 +47,10 @@ export const getCurrentProfile = async (_: any, __: any, { user }: { user: UserT
     };
 }
 
+// helper resolvers
 export const getFollwersCount = async (parent: any, _: any) => {
     const userId = parent.user.id;
+    if (!userId) throw new ApiError(400, "User ID is required");
     return await prisma.follow.count({
         where: { followingId: userId }
     });
@@ -56,6 +58,7 @@ export const getFollwersCount = async (parent: any, _: any) => {
 
 export const getFollowingCount = async (parent: any, _: any) => {
     const userId = parent.user.id;
+    if (!userId) throw new ApiError(400, "User ID is required");
     return await prisma.follow.count({
         where: { followerId: userId }
     });
@@ -76,8 +79,25 @@ export const getTotalLikes = async (parent: any, _: any) => {
     return likes;
 }
 
+export const isFollowing = async (parent: any, _: any, { user }: { user: UserType }) => {
 
-export const getProfile = async (_: any, { userId }: any, currUser: UserType) => {
+    if (!user) return false;
+    // console.log("aaaa");
+    
+
+    const follow = await prisma.follow.findUnique({
+        where: {
+            followerId_followingId: {
+                followerId: user.id,
+                followingId: parent.user.id,
+            },
+        },
+    });
+
+    return !!follow;
+};
+
+export const getProfile = async (_: any, { userId }: any) => {
 
     if (!userId) throw new ApiError(400, "User ID is required");
 
@@ -110,24 +130,6 @@ export const getProfile = async (_: any, { userId }: any, currUser: UserType) =>
 
 
 }
-
-export const isFollowing = async (parent: any, _: any, { user }: { user: UserType }) => {
-
-    if (!user) return false;
-    // console.log("aaaa");
-    
-
-    const follow = await prisma.follow.findUnique({
-        where: {
-            followerId_followingId: {
-                followerId: user.id,
-                followingId: parent.user.id,
-            },
-        },
-    });
-
-    return !!follow;
-};
 
 // Mutations
 

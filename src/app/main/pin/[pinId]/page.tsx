@@ -19,6 +19,7 @@ import {
 import Link from "next/link";
 import { DownloadIcon } from "lucide-react";
 import { UserContext } from "@/src/components/contexts/UserContext";
+import ShareButton from "@/src/components/buttons/ShareBtn";
 
 export default function PinPage() {
   const { pinId } = useParams();
@@ -149,7 +150,7 @@ export default function PinPage() {
             <div className="flex gap-3 items-start">
               <SaveBtn pinId={pin.id} isSaved={pin.isSaved} />
               <LikeBtn pinId={pin.id} isLiked={pin.isLiked} />
-
+<ShareButton/>
               <a
                 href={pin.mediaUrl}
                 download
