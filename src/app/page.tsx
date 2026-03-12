@@ -130,7 +130,7 @@ export default function LandingPage() {
                   alt={label}
                   fill
                   className="object-cover"
-                  sizes="(max-width:640px) 50vw, 25vw"
+              
                 />
 
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300" />

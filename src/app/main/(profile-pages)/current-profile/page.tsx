@@ -78,8 +78,8 @@ export default function UserPage() {
 
                 <div className="mb-8 relative">
                     
-                    <h1 className="text-4xl md:text-5xl font-bold mb-1 text-center">Dashboard</h1>
-                    <p className="text-lg opacity-70 flex justify-center ">Welcome back, <div className="font-black text-(--orange)]">{name.split(' ')[0]}</div>!</p>
+                    <div className="text-4xl md:text-5xl font-bold mb-1 text-center">Dashboard</div>
+                    <div className="text-lg opacity-70 flex justify-center ">Welcome back, <div className="font-black text-(--orange)]">{name.split(' ')[0]}</div>!</div>
                     
                     <div className="mt-3 flex items-center justify-center gap-2">
                         <div className="h-1 w-12 bg-black rounded-full" />

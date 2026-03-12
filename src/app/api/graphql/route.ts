@@ -1,6 +1,6 @@
 import { login, logout, sendSignupOtp, signup } from "@/src/lib/gql/resolvers/auth.resolver";
 import { deleteComment, getPinComments, sendComment } from "@/src/lib/gql/resolvers/comments.resolver";
-import { createPin, getCurrentUserPins, getPinPageResponse, getPinsByTag, getSearchPagePins, getSugg, getTagsForPin, getUserAllPins, getUserFeed } from "@/src/lib/gql/resolvers/pin.resolver";
+import { createPin, deletePin, getCurrentUserPins, getPinPageResponse, getPinsByTag, getSearchPagePins, getSugg, getTagsForPin, getUserAllPins, getUserFeed } from "@/src/lib/gql/resolvers/pin.resolver";
 import { getAllTags, getSavedPins, toggleFollow, toggleLike, toggleSave } from "@/src/lib/gql/resolvers/toggles.resolver";
 import { getCurrentProfile, getFollowingCount, getFollwersCount, getProfile, getTotalLikes, isFollowing, updateProfile, user } from "@/src/lib/gql/resolvers/user.resolver";
 
@@ -62,7 +62,7 @@ export const resolvers = {
     deleteComment: deleteComment,
     updateProfile: updateProfile,
     toggleFollow: toggleFollow,
-
+    deletePin: deletePin
     // addTags:addTags
   }
 

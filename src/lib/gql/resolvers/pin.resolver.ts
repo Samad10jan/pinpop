@@ -1,9 +1,9 @@
-import { FileType } from "@/generated/prisma/enums";
+import { FileType, ResourceType } from "@/generated/prisma/enums";
 import { ApiError } from "@/src/helper/ApiError";
 import { buildFeedResponse } from "@/src/helper/pagination";
 import prisma from "@/src/lib/services/prisma";
 import { PinPageResponseType, UserType } from "@/src/types/types";
-
+import cloudinary from "@/src/lib/services/cloudinary";
 
 // Queries
 export async function getPinPageResponse(_: any, { id }: { id: string }, { user }: { user: UserType }) {
@@ -397,6 +397,7 @@ export async function getCurrentUserPins(_: any, __: any, { user }: { user: User
             mediaUrl: pin.mediaUrl,
             fileType: pin.fileType,
             tagIds: pin.tagIds,
+            publicId: pin.publicId,
             createdAt: pin.createdAt,
 
             likesCount: likes,
@@ -537,7 +538,63 @@ export async function getPinsByTag(_: any, { tagId, limit = 10, page = 1 }: any,
 }
 
 // Mutations
-export async function createPin(_: any, { title, description, mediaUrl, fileType, tagIds }: { title: string, description: string, mediaUrl: string, fileType: FileType, tagIds: string[] }, { user }: { user: UserType }) {
+// export async function createPin(_: any, { title, description, mediaUrl, fileType, tagIds }: { title: string, description: string, mediaUrl: string, fileType: FileType, tagIds: string[] }, { user }: { user: UserType }) {
+
+//     if (!user) throw new ApiError(401, "Unauthorized");
+
+//     if (!title?.trim() || !mediaUrl?.trim() || !fileType || !tagIds?.length) {
+//         throw new ApiError(400, "Title, mediaUrl, fileType and tags are required");
+//     }
+
+
+
+//     const uploadCount = user.uploadCount + 1;
+
+//     if (uploadCount > 15) {
+//         throw new ApiError(403, "Upload limit reached. Please try again later.");
+//     }
+//     if (tagIds.length > 3) {
+//         throw new ApiError(403, "Only 3 tags Max Allowed");
+//     }
+
+//     const pin = await prisma.pin.create({
+//         data: {
+//             title,
+//             description,
+//             mediaUrl,
+//             fileType,
+//             tagIds,
+//             userId: user.id
+//         }
+//     });
+
+//     if (!pin) throw new ApiError(500, "Failed to create pin");
+
+//     await prisma.user.update({
+//         where: { id: user.id },
+//         data: {
+//             uploadCount: {
+//                 increment: 1
+//             }
+//         }
+//     });
+
+//     return pin;
+// };
+
+export async function createPin(
+    _: any,
+    { title, description, mediaUrl, publicId, resourceType, fileType, tagIds }: {
+        title: string,
+        description: string,
+        mediaUrl: string,
+        publicId: string,
+        resourceType: ResourceType,
+        fileType: FileType,
+        tagIds: string[]
+    },
+    { user }: { user: UserType }
+) {
 
     if (!user) throw new ApiError(401, "Unauthorized");
 
@@ -545,40 +602,94 @@ export async function createPin(_: any, { title, description, mediaUrl, fileType
         throw new ApiError(400, "Title, mediaUrl, fileType and tags are required");
     }
 
-
-
     const uploadCount = user.uploadCount + 1;
 
     if (uploadCount > 15) {
-        throw new ApiError(403, "Upload limit reached. Please try again later.");
+        throw new ApiError(403, "Upload limit reached.");
     }
+
     if (tagIds.length > 3) {
-        throw new ApiError(403, "Only 3 tags Max Allowed");
+        throw new ApiError(403, "Only 3 tags allowed");
     }
 
-    const pin = await prisma.pin.create({
-        data: {
-            title,
-            description,
-            mediaUrl,
-            fileType,
-            tagIds,
+    let pin;
 
+    try {
+
+        pin = await prisma.pin.create({
+            data: {
+                title,
+                description,
+                mediaUrl,
+                publicId,
+                resourceType,
+                fileType,
+                tagIds,
+                userId: user.id
+            }
+        });
+
+        await prisma.user.update({
+            where: { id: user.id },
+            data: {
+                uploadCount: {
+                    increment: 1
+                }
+            }
+        });
+
+    } catch (err) {
+
+        // cleanup cloudinary if DB fails
+        try {
+            await cloudinary.uploader.destroy(publicId, {
+                resource_type: resourceType.toLowerCase()
+            });
+        } catch (cleanupErr) {
+            console.error("Cloudinary cleanup failed:", cleanupErr);
+        }
+
+        throw new ApiError(500, "Failed to create pin");
+    }
+
+    return pin;
+}
+
+export async function deletePin(_: any, { pinId }: { pinId: string }, { user }: { user: UserType }) {
+
+    if (!user) throw new ApiError(401, "Unauthorized");
+
+    const pin = await prisma.pin.findFirst({
+        where: {
+            id: pinId,
             userId: user.id
         }
     });
 
-    if (!pin) throw new ApiError(500, "Failed to create pin");
+    if (!pin) throw new ApiError(403, "Forbidden");
 
-    await prisma.user.update({
-        where: { id: user.id },
-        data: {
-            uploadCount: {
-                increment: 1
-            }
+    // delete media first
+    try {
+        const result = await cloudinary.uploader.destroy(pin.publicId, {
+            resource_type: pin.resourceType.toLowerCase()
+        });
+
+        if (result.result !== "ok" && result.result !== "not found") {
+            throw new Error("Cloudinary deletion failed");
         }
-    });
 
-    return pin;
-};
+    } catch (err) {
+        throw new ApiError(500, "Failed to delete media");
+    }
 
+    // DB transaction
+    await prisma.$transaction([
+        prisma.pin.delete({ where: { id: pinId } }),
+        prisma.user.update({
+            where: { id: user.id },
+            data: { uploadCount: { decrement: 1 } }
+        })
+    ]);
+
+    return true;
+}

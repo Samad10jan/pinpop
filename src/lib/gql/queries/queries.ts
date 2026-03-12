@@ -63,18 +63,18 @@ query {
   }
 }`
 
-export const CREATE_PIN_MUTATION = gql`
-mutation($title: String!, $description: String, $mediaUrl: String!, $fileType: FileType!, $tagIds: [String!]!) {
-  createPin(title: $title, description: $description, mediaUrl: $mediaUrl, fileType: $fileType, tagIds: $tagIds) {
-    id
-    createdAt
-    description
-    fileType
-    mediaUrl
-    tagIds
-    title
-  }
-}`
+// export const CREATE_PIN_MUTATION = gql`
+// mutation($title: String!, $description: String, $mediaUrl: String!, $fileType: FileType!, $tagIds: [String!]!) {
+//   createPin(title: $title, description: $description, mediaUrl: $mediaUrl, fileType: $fileType, tagIds: $tagIds) {
+//     id
+//     createdAt
+//     description
+//     fileType
+//     mediaUrl
+//     tagIds
+//     title
+//   }
+// }`
 
 
 export const SUGG_QUERY = gql`
@@ -126,6 +126,7 @@ query($getPinPageResponseId: ID!) {
       description
       createdAt
       fileType
+      publicId
       id
       title
       user {
@@ -146,6 +147,7 @@ query($getPinPageResponseId: ID!) {
       mediaUrl
       title
       id
+      publicId
       fileType
       user {
         id
@@ -189,6 +191,7 @@ query ( $limit: Int, $page: Int) {
       mediaUrl
       tagIds
       title
+      publicId
       user {
         id
         name
@@ -225,6 +228,7 @@ query{
     fileType
     description
     id
+    publicId
     isSaved
     mediaUrl
     title
@@ -248,11 +252,13 @@ query{
       mediaUrl
       fileType
       tagIds
+     publicId
       createdAt
       likesCount
       savesCount
       commentsCount
       engagementScore
+      
     }
     totalPins
     totalLikes
@@ -268,6 +274,7 @@ query{
       mediaUrl
       fileType
       tagIds
+      publicId
       createdAt
       likesCount
       savesCount
@@ -288,6 +295,7 @@ query ($userId: ID!) {
       isSaved
       mediaUrl
       title
+      publicId
       user {
         id
         name

@@ -41,6 +41,8 @@ type PinType
   fileType: FileType;
   tagIds: string[];
   createdAt: string;
+  publicId: string;
+  
 
   user: {
     id: string;

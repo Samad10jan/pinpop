@@ -56,14 +56,33 @@ model EmailVerification {
 
 // Reccomending Feeds user->groupby tagid likes,save-> [Liketags,save] -> find pins with those tags -> order by likes count
 
+// model Pin {
+//   id          String   @id @default(auto()) @map("_id") @db.ObjectId
+//   title       String
+//   description String?
+//   mediaUrl    String
+//   fileType    FileType
+//   tagIds      String[] @db.ObjectId
+//   createdAt   DateTime @default(now())
+
+//   userId String @db.ObjectId
+//   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+//   likes    Like[]
+//   comments Comment[]
+//   saves    Save[]
+//   // activities ActivityLog[]
+// }
 model Pin {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  title       String
-  description String?
-  mediaUrl    String
-  fileType    FileType
-  tagIds      String[] @db.ObjectId
-  createdAt   DateTime @default(now())
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  title        String
+  description  String?
+  mediaUrl     String
+  publicId     String
+  resourceType ResourceType
+  fileType     FileType
+  tagIds       String[] @db.ObjectId
+  createdAt    DateTime @default(now())
 
   userId String @db.ObjectId
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -71,7 +90,6 @@ model Pin {
   likes    Like[]
   comments Comment[]
   saves    Save[]
-  // activities ActivityLog[]
 }
 
 model Tag {
@@ -137,4 +155,9 @@ model Follow {
 enum FileType {
   PHOTO
   GIF
+}
+enum ResourceType {
+  IMAGE
+  VIDEO
+  RAW
 }

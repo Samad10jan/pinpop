@@ -17,7 +17,7 @@ import {
   PinType
 } from "@/src/types/types";
 import Link from "next/link";
-import { DownloadIcon } from "lucide-react";
+import { DownloadIcon, MessageCircleIcon } from "lucide-react";
 import { UserContext } from "@/src/components/contexts/UserContext";
 import ShareButton from "@/src/components/buttons/ShareBtn";
 
@@ -33,6 +33,7 @@ export default function PinPage() {
   const [savesCount, setSavesCount] = useState(0);
   const [tags, setTags] = useState<any[]>([]);
   const [isFollowing, setIsFollowing] = useState(false);
+  const [showComments, setShowComments] = useState(false);
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
@@ -40,12 +41,13 @@ export default function PinPage() {
   const context = useContext(UserContext)
   const user = context?.currentUser
 
+
   // The useCallback hook in React is used to memoize (cache) a function so that it isn’t recreated on every render.
   // This can help improve performance, especially when passing callbacks to child components that rely on reference 
   // equality to avoid unnecessary re-renders.
 
-   //  optimistic update
-   const handleFollowChange = useCallback((val: boolean) => {
+  //  optimistic update
+  const handleFollowChange = useCallback((val: boolean) => {
     setIsFollowing(val);
     setFollowersCount(prev => (val ? prev + 1 : Math.max(0, prev - 1)));
   }, []);
@@ -102,7 +104,7 @@ export default function PinPage() {
 
   if (!pin) return null;
 
- 
+
   // const handleFollowChange = (val: boolean) => {
   //   setIsFollowing(val);
   //   setFollowersCount(prev => (val ? prev + 1 : Math.max(0, prev - 1)));
@@ -150,16 +152,17 @@ export default function PinPage() {
             <div className="flex gap-3 items-start">
               <SaveBtn pinId={pin.id} isSaved={pin.isSaved} />
               <LikeBtn pinId={pin.id} isLiked={pin.isLiked} />
-<ShareButton/>
-              <a
-                href={pin.mediaUrl}
-                download
-                target="_blank"
-                title={pin.title}
-                className="btn-circle bg-orange-400 active:bg-red-500 active:text-white"
+
+
+              <button
+                title="comments"
+                onClick={() => setShowComments((prev) => !prev)}
+                className={`btn-circle ${showComments ? "bg-orange-400" : "bg-white"} active:bg-orange-400 active:text-white `}
               >
-                <DownloadIcon />
-              </a>
+                <MessageCircleIcon />
+              </button>
+
+              <ShareButton />
             </div>
           </div>
 
@@ -191,7 +194,7 @@ export default function PinPage() {
                 </div>
               </div>
               {user?.id !== pin.user.id
-                
+
                 &&
 
                 <FollowBtn
@@ -205,18 +208,28 @@ export default function PinPage() {
           <div>
 
 
-            <CommentArea pinId={pin.id} />
-          </div>
+            <CommentArea
+              pinId={pin.id}
+              showComments={showComments}
+              setShowComments={setShowComments}
+            />          </div>
 
         </div>
       </div>
 
       <div className="w-full md:w-[60%]">
         <h2 className="font-semibold text-lg mb-4">Related Pins</h2>
+        <div className="flex gap-4">
+          {[0, 1, 2].map((colIndex) => (
 
-        <div className="columns-2 lg:columns-3 md:columns-2 gap-4 space-y-4">
-          {relatedPins.map((pin: PinType) => (
-            <PinCard data={pin} key={pin.id} />
+            <div key={colIndex} className="flex-1 flex flex-col gap-4">
+            
+              {relatedPins
+                .filter((_: PinType, i: number) => i % 3 === colIndex)
+                .map((pin: PinType) => (
+                  <PinCard data={pin} key={pin.id} />
+                ))}
+            </div>
           ))}
         </div>
       </div>

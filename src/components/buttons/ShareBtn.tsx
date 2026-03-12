@@ -1,12 +1,9 @@
-import { useState } from "react";
-import { Share2, Copy, Share, Share2Icon } from "lucide-react"; // optional icons
+import { Share2Icon } from "lucide-react";
 
-function ShareButton() {
-    const [copied, setCopied] = useState(false);
-
+export default function ShareButton() {
     const shareData = {
         title: "Fixel",
-        text: "Check out this Fix!",
+        text: "Check out this Pix!",
         url: window.location.href,
     };
 
@@ -14,7 +11,7 @@ function ShareButton() {
 
         try {
             await navigator.share(shareData);
-            console.log("Shared successfully!");
+            // console.log("Shared successfully!");
         } catch (err) {
             console.error("Error sharing:", err);
         }
@@ -23,12 +20,13 @@ function ShareButton() {
 
     return (
         <button
+            title="share"
             onClick={handleShare}
             className="btn-circle  relative overflow-hidden! group"
         >
             {typeof navigator.share === "function" && (
                 <>
-                    <Share2Icon size={18} />
+                    <Share2Icon size={20} />
                 </>
             )}
             <div className="absolute inset-0 w-2 h-full  bg-amber-300 transform -translate-x-30 group-hover:translate-x-30 skew-x-12 transition-transform duration-2500" />
@@ -36,5 +34,3 @@ function ShareButton() {
         </button>
     );
 }
-
-export default ShareButton;

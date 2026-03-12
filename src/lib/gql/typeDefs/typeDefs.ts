@@ -8,6 +8,11 @@ enum FileType {
   PHOTO
   GIF
 }
+enum ResourceType {
+  IMAGE
+  VIDEO
+  RAW
+}
 
 type User {
   id: ID!
@@ -31,6 +36,8 @@ type Pin {
   mediaUrl: String!
   fileType: FileType!
   tagIds: [ID!]!
+   publicId: String!
+  resourceType: ResourceType!
   createdAt: DateTime!
   user: User!
  
@@ -92,6 +99,7 @@ type UserPinAnalytics {
   fileType: FileType!
   tagIds: [ID!]!
   createdAt: DateTime!
+  publicId: String!
 
   likesCount: Int!
   savesCount: Int!
@@ -182,7 +190,11 @@ type Mutation {
     mediaUrl: String!
     fileType: FileType!
     tagIds: [String!]!
+    publicId: String!
+  resourceType: ResourceType!
   ): Pin!
+  
+  deletePin(pinId: ID!): BooleanResponse!
 
   sendComment(
   pinId: ID!
@@ -197,7 +209,7 @@ toggleSave(pinId: ID!): ToggleSaveResponse!
 
 toggleLike(pinId:ID!): ToggleLikeResponse
 
-toggleFollow(targetUserId: ID!): BooleanResponse!
+toggleFollow(targetUserId: ID!): Boolean!
 
 # addTags:Boolean!
 updateProfile(name: String, avatar: String): User!

@@ -3,9 +3,12 @@
 import { LOGIN } from "@/src/lib/gql/mutations/mutations";
 import gqlClient from "@/src/lib/services/graphql";
 import { getGraphQLError } from "@/src/helper/ApiError";
+
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { ToastContainer, useToast } from "@/src/components/commons/Toast";
+import Image from "next/image";
 
 export default function LoginPage() {
 
@@ -13,90 +16,79 @@ export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
+    const toast = useToast();
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
-
         setLoading(true);
-        setError("");
 
         try {
             if (!email.includes("@")) throw new Error("Invalid email");
             if (password.length < 8) throw new Error("Password must be 8+ chars");
-            // if (!name.trim()) throw new Error("Name required");
 
-            const res = await gqlClient.request(LOGIN,
-                {
-                    email,
-                    password,
+            await gqlClient.request(LOGIN, { email, password });
 
-                })
-
+            // toast.success("Welcome back!");
             router.push("/main");
 
         } catch (e: any) {
-
-
-            setError(getGraphQLError(e));
+            toast.error(getGraphQLError(e));
         } finally {
             setLoading(false);
         }
     }
 
     return (
-        <main className="page flex items-center justify-center">
+       <main className="page flex">
+    <ToastContainer toasts={toast.toasts} onClose={toast.remove} />
 
-            <div className="card w-95 ">
+   
+    <div className="flex flex-col justify-center w-full md:w-1/2 px-16 py-12 bg-[#f5f0ea] min-h-screen">
 
-                <h1 className="text-2xl font-bold mb-4 text-center">
-                    WELCOME BACK!
-                </h1>
+        <div className="mb-8 fade-up">
+            <h1 className="text-4xl font-bold">Welcome<br />Back!</h1>
+            <p className="text-sm text-gray-500 mt-2">Login to continue your journey.</p>
+        </div>
 
-                {error && (
-                    <p className="text-red-500 mb-3 text-sm">{error}</p>
-                )}
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4 fade-up">
+            <input
+                placeholder="Email address"
+                type="email"
+                className="card bg-white p-3 text-sm outline-none w-full focus:bg-amber-50"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                required
+            />
+            <input
+                placeholder="Password (min 8 chars)"
+                type="password"
+                className="card bg-white p-3 text-sm outline-none w-full focus:bg-amber-50"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                required
+            />
+            <button disabled={loading} className="btn-rect w-full mt-2 disabled:opacity-50">
+                {loading ? "Logging in…" : "Login"}
+            </button>
+        </form>
 
-                <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+        <p className="text-sm mt-8 text-gray-500">
+            New here?{" "}
+            <Link href="/signup" className="underline font-bold text-black">Sign Up</Link>
+        </p>
 
+    </div>
 
+  
+    <div className="hidden md:flex w-1/2 bg-[#FE7F2D] relative">
+        <Image
+            src="/login-illustration.png"
+            alt="Login"
+            fill
+            className="object-cover"
+        />
+    </div>
 
-                    <input
-                        placeholder="Email"
-                        type="email"
-                        className="card focus-within:bg-amber-200 outline-0"
-                        value={email}
-                        onChange={e => setEmail(e.target.value)}
-                        required
-                    />
-
-                    <input
-                        placeholder="Password (min 8)"
-                        type="password"
-                        className="card focus-within:bg-amber-200 outline-0 "
-                        value={password}
-                        onChange={e => setPassword(e.target.value)}
-                        required
-                    />
-
-
-
-                    <button
-                        disabled={loading}
-                        className="btn-rect mt-2"
-                    >
-                        {loading ? "Logging In..." : "Login"}
-                    </button>
-
-                </form>
-
-                <p className="text-center text-sm mt-4">
-                    New User?{" "}
-                    <Link href="/signup" className="underline font-bold">SignUp</Link>
-                </p>
-
-            </div>
-
-        </main>
+</main>
     );
 }

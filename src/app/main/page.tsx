@@ -9,7 +9,6 @@ import { PinType } from "@/src/types/types";
 import HeroSection from "@/src/components/commons/HeroSection";
 import Tags from "@/src/components/commons/TagsView";
 
-
 export default function Home() {
   const [pins, setPins] = useState<PinType[]>([]);
   const [loading, setLoading] = useState(true);
@@ -33,35 +32,26 @@ export default function Home() {
     getFeed();
   }, []);
 
-  if (loading) {
-    return (
-      <main className="page px-5 py-8">
-        <Loading />
-      </main>
-    );
-  }
-
   return (
     <main className="page px-5 py-8">
 
-      {!pins.length && (
-        <p className="text-center opacity-60 mt-20">
-          No pins yet
-        </p>
-      )}
       <HeroSection />
-
       <Tags />
-      <div className="text-3xl font-bold my-3 ">Feed</div>
-      <div className="columns-2 md:columns-4 lg:columns-4 xl:columns-5 gap-4 space-y-4">
 
-        {pins.map((pin) => (
+      <div className="text-3xl font-bold my-3">Feed</div>
 
-          <PinCard data={pin} key={pin.id} />
+      {loading ? (
+        <Loading />
+      ) : !pins.length ? (
+        <p className="text-center opacity-60 mt-20">No pins yet</p>
+      ) : (
+        <div className="columns-2 md:columns-4 lg:columns-4 xl:columns-5 gap-4 space-y-4">
+          {pins.map((pin) => (
+            <PinCard data={pin} key={pin.id} />
+          ))}
+        </div>
+      )}
 
-        ))}
-
-      </div>
     </main>
   );
 }

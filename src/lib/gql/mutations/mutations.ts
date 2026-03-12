@@ -82,3 +82,35 @@ export const TOGGLE_FOLLOW = gql`
     }
   }
 `;
+
+export const CREATE_PIN_MUTATION = gql`
+mutation(
+  $title: String!
+  $description: String
+  $mediaUrl: String!
+  $publicId: String!
+  $resourceType: ResourceType!
+  $fileType: FileType!
+  $tagIds: [String!]!
+) {
+  createPin(
+    title: $title
+    description: $description
+    mediaUrl: $mediaUrl
+    publicId: $publicId
+    resourceType: $resourceType
+    fileType: $fileType
+    tagIds: $tagIds
+  ) {
+    id
+    createdAt
+    title
+    description
+    mediaUrl
+    publicId
+    resourceType
+    fileType
+    tagIds
+  }
+}
+`;

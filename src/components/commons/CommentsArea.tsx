@@ -6,19 +6,28 @@ import { GET_PIN_COMMENTS_QUERY } from "@/src/lib/gql/queries/queries";
 import gqlClient from "@/src/lib/services/graphql";
 import { CommentType } from "@/src/types/types";
 import { getGraphQLError } from "@/src/helper/ApiError";
-import { Send } from "lucide-react";
+import { MessageCircleIcon, Send } from "lucide-react";
 import { useContext, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
 
 const LIMIT = 5;
 
-export default function CommentArea({ pinId }: { pinId: string }) {
-  const context = useContext(UserContext);
-const currentUser = context?.currentUser;
+export default function CommentArea({
+    pinId,
+    showComments,
+    setShowComments
+}: {
+    pinId: string;
+    showComments: boolean;
+    setShowComments: (v: boolean) => void;
+}) {
+
+    const context = useContext(UserContext);
+    const currentUser = context?.currentUser;
 
     const [comments, setComments] = useState<CommentType[]>([]);
     const [page, setPage] = useState(1);
-    const [showComments, setShowComments] = useState(false);
+    // const [showComments, setShowComments] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [postComment, setPostComment] = useState("");
@@ -43,13 +52,13 @@ const currentUser = context?.currentUser;
 
             if (data.length === 0 && p === 1) {
                 setComments([]);
-                setShowComments(true);
+                // if (!showComments) setShowComments(true);
                 return;
             }
 
             setComments(data);
             setPage(p);
-            setShowComments(true);
+            // if (!showComments) setShowComments(true);
         } catch (e) {
             setError(getGraphQLError(e));
         } finally {
@@ -97,7 +106,7 @@ const currentUser = context?.currentUser;
 
             setComments(prev => [res.sendComment, ...prev]);
             setPostComment("");
-            setShowComments(true);
+            // setShowComments(true);
         } catch (e) {
             setError(getGraphQLError(e));
         } finally {
@@ -108,17 +117,6 @@ const currentUser = context?.currentUser;
 
     return (
         <div className="mt-6 w-full max-w-2xl mx-auto px-2 sm:px-0">
-
-
-
-            {!showComments && (
-                <button
-                    onClick={() => loadComments(1)}
-                    className="text-sm border-b border-transparent hover:border-black transition-all"
-                >
-                    See comments
-                </button>
-            )}
 
             {showComments && (
                 <div>

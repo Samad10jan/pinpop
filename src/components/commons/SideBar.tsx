@@ -42,7 +42,7 @@ export default function SideBar() {
 
         >
 
-            <div className="hidden md:flex mb-8 w-11 h-11 rounded-xl bg-black text-white items-center justify-center shadow-[3px_3px_0_rgba(0,0,0,0.3)] shrink-0">
+            <div className="hidden *:rotate-45 md:flex mb-8 w-11 h-11 rounded-xl bg-black text-white items-center justify-center shadow-[3px_3px_0_rgba(0,0,0,0.3)] shrink-0">
                 <PinIcon size={20} />
             </div>
 

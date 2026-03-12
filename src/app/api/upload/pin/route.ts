@@ -36,8 +36,8 @@ export const POST = async (req: Request) => {
             ).end(buffer);
         });
 
-           // return NextResponse.json(uploadResult );
-        return NextResponse.json({ url: uploadResult.secure_url });
+           return NextResponse.json(uploadResult );
+        // return NextResponse.json({ url: uploadResult.secure_url });
 
     } catch (e) {
         return NextResponse.json({ error: "Upload failed" }, { status: 500 });

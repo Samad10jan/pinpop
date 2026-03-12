@@ -1,5 +1,6 @@
 "use client";
 
+import { getCloudinaryUrl } from "@/src/helper/optimisedUrl";
 import { GET_CURRENT_USER_ALL_PINS_QUERY } from "@/src/lib/gql/queries/queries";
 import gqlClient from "@/src/lib/services/graphql";
 import { Heart, MessageCircle, ThumbsUp, TrendingUp } from "lucide-react";
@@ -77,7 +78,7 @@ export default function CurrentUserUploadsPage() {
                                     <div className="relative aspect-4/3 mb-2">
                                         {pin.mediaUrl ? (
                                             <Image
-                                                src={pin.mediaUrl}
+                                            src={getCloudinaryUrl(pin.publicId,"feed")}
                                                 alt={pin.title || "Untitled"}
                                                 fill
                                                 className="object-cover rounded"
@@ -126,7 +127,7 @@ export default function CurrentUserUploadsPage() {
                                 <div className="relative aspect-4/3 mb-2">
                                     {pin.mediaUrl ? (
                                         <Image
-                                            src={pin.mediaUrl}
+                                            src={getCloudinaryUrl(pin.publicId,"feed")}
                                             alt={pin.title || "Untitled"}
                                             fill
                                             className="object-cover rounded"
