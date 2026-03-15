@@ -4,7 +4,7 @@ import Tags from "@/src/components/commons/TagsView";
 
 export default function Home() {
   return (
-    <main className=" px-5 py-8">
+    <main className="">
 
       <HeroSection />
       <Tags />

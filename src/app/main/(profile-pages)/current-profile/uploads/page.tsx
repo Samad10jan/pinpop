@@ -37,15 +37,17 @@ export default function CurrentUserUploadsPage() {
         { label: "Following", value: stats.followingCount },
         // { label: "Pins", value: stats.totalPins },
     ]
+    console.log(stats.pins);
+    
 
     return (
 
-        <div className="mx-auto! px-5! py-10! ">
+        <div className="">
 
-            <div className="flex flex-col md:flex-row mt-5 md:items-center md:justify-between gap-4 mb-8">
+            <div className="flex flex-col md:flex-row md:mt-5 md:items-center md:justify-between gap-4 mb-8">
 
                 <div className="flex flex-col items-center">
-                    <h1 className="text-xl sm:text-2xl md:text-4xl font-black ">
+                    <h1 className="text-4xl md:text-5xl font-black ">
                         Dashboard
                     </h1>
                     <div className="mt-3 flex gap-2">
@@ -126,7 +128,7 @@ export default function CurrentUserUploadsPage() {
                     All Uploads
                 </h2>
                 <div className="flex justify-end">
-                    <div className="card bg-orange-400 text-white! px-2! py-2! rounded-md! text-[2px] sm:text-sm! md:text-base! font-semibold!">
+                    <div className="card bg-orange-400 text-white! px-2! py-2! rounded-md! text-sm! md:text-base! font-semibold!">
                         {stats.totalPins} pins
                     </div>
                 </div>

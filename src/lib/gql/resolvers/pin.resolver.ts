@@ -648,5 +648,5 @@ export async function deletePin(_: any, { pinId }: { pinId: string }, { user }: 
         })
     ]);
 
-    return true;
+   return { success: true };
 }

@@ -33,7 +33,7 @@ export default function SearchPage() {
     }
 
     return (
-        <div className="p-4">
+        <div className="">
             <h2 className="text-xl font-bold mb-4">
                 Results for "{q}"
             </h2>

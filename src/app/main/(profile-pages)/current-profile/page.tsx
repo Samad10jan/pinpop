@@ -73,7 +73,7 @@ export default function UserPage() {
     const lastSavedPins = profile?.lastSavedPins || [];
 
     return (
-            <main className=" p-8">
+            <main className="">
 
 
                 <div className="mb-8 relative">
@@ -160,7 +160,7 @@ export default function UserPage() {
                                     <div className="card absolute inset-0 h-full rounded-4xl w-[30%]  bg-orange-400 transform -translate-x-15 group-hover:-translate-x-10  transition-all duration-900 flex justify-end items-center pr-5! group-hover:pr-8!" ><ThumbsUpIcon /></div>
                                 </div>
                             </div>
-                            <Link href={"/main/uploads"} className="btn-rect text-center! bg-teal-500! ">
+                            <Link href={"/main/current-profile/uploads"} className="btn-rect text-center! bg-teal-500! ">
                                 View Details
 
                             </Link>
@@ -181,7 +181,7 @@ export default function UserPage() {
                                     <div className="text-sm text-white">Create Pin</div>
 
                                 </Link>
-                                <Link href={"/main"} className="btn-rect flex flex-col justify-center items-center py-6 bg-purple-600 text-white">
+                                <Link href={"/main/tags"} className="btn-rect flex flex-col justify-center items-center py-6 bg-purple-600 text-white">
 
                                     <div className=" mb-3">
                                         <SearchIcon color="white" />

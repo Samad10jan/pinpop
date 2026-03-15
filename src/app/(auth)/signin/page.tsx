@@ -16,6 +16,7 @@ export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+
     const toast = useToast();
 
     async function handleSubmit(e: React.FormEvent) {
@@ -32,6 +33,7 @@ export default function LoginPage() {
             router.push("/main");
 
         } catch (e: any) {
+            //trigger an error toast with the error message
             toast.error(getGraphQLError(e));
         } finally {
             setLoading(false);
@@ -39,56 +41,69 @@ export default function LoginPage() {
     }
 
     return (
-       <main className="page flex">
-    <ToastContainer toasts={toast.toasts} onClose={toast.remove} />
+        <main className="page flex">
 
-   
-    <div className="flex flex-col justify-center w-full md:w-1/2 px-16 py-12 bg-[#f5f0ea] min-h-screen">
+            {/* Render the ToastContainer at first 
 
-        <div className="mb-8 fade-up">
-            <h1 className="text-4xl font-bold">Welcome<br />Back!</h1>
-            <p className="text-sm text-gray-500 mt-2">Login to continue your journey.</p>
-        </div>
+             At first there will be nothing in Array , so no toast 
+            but when we call toast.error or toast.success 
+            it will add a toast to the array and 
+            that will trigger re-render of ToastContainer and show the toast.
+            also Auto close after 3 sec.
+            Manual close by passing toast.remove to onClose, so when we click on close button of toast
+            it will remove that toast from array and hide it.
+    
+            */}
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 fade-up">
-            <input
-                placeholder="Email address"
-                type="email"
-                className="card bg-white p-3 text-sm outline-none w-full focus:bg-amber-50"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                required
-            />
-            <input
-                placeholder="Password (min 8 chars)"
-                type="password"
-                className="card bg-white p-3 text-sm outline-none w-full focus:bg-amber-50"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                required
-            />
-            <button disabled={loading} className="btn-rect w-full mt-2 disabled:opacity-50">
-                {loading ? "Logging in…" : "Login"}
-            </button>
-        </form>
+            <ToastContainer toasts={toast.toasts} onClose={toast.remove} />
 
-        <p className="text-sm mt-8 text-gray-500">
-            New here?{" "}
-            <Link href="/signup" className="underline font-bold text-black">Sign Up</Link>
-        </p>
 
-    </div>
+            <div className="flex flex-col justify-center w-full md:w-1/2 px-16 py-12 bg-[#f5f0ea] min-h-screen">
 
-  
-    <div className="hidden md:flex w-1/2 bg-[#FE7F2D] relative">
-        <Image
-            src="/login-illustration.png"
-            alt="Login"
-            fill
-            className="object-cover"
-        />
-    </div>
+                <div className="mb-8 fade-up">
+                    <h1 className="text-4xl font-bold">Welcome<br />Back!</h1>
+                    <p className="text-sm text-gray-500 mt-2">Login to continue your journey.</p>
+                </div>
 
-</main>
+                <form onSubmit={handleSubmit} className="flex flex-col gap-4 fade-up">
+                    <input
+                        placeholder="Email address"
+                        type="email"
+                        className="card bg-white p-3 text-sm outline-none w-full focus:bg-amber-50"
+                        value={email}
+                        onChange={e => setEmail(e.target.value)}
+                        required
+                    />
+                    <input
+                        placeholder="Password (min 8 chars)"
+                        type="password"
+                        className="card bg-white p-3 text-sm outline-none w-full focus:bg-amber-50"
+                        value={password}
+                        onChange={e => setPassword(e.target.value)}
+                        required
+                    />
+                    <button disabled={loading} className="btn-rect w-full mt-2 disabled:opacity-50">
+                        {loading ? "Logging in…" : "Login"}
+                    </button>
+                </form>
+
+                <p className="text-sm mt-8 text-gray-500">
+                    New here?{" "}
+                    <Link href="/signup" className="underline font-bold text-black">Sign Up</Link>
+                </p>
+
+            </div>
+
+
+            <div className="hidden md:flex w-1/2 bg-[#FE7F2D] relative">
+                <Image
+                    src="/login-illustration.png"
+                    alt="Login"
+                    fill
+                    className="object-cover"
+                />
+            </div>
+
+        </main>
     );
 }

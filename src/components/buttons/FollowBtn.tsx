@@ -47,7 +47,7 @@ export default function FollowBtn({ targetUserId, initiallyFollowing = false, on
             title="follow"
             onClick={handleFollow}
             disabled={loading}
-            className={`btn-rect border px-5 py-2 rounded-xl transition text-sm
+            className={`btn-rect px-5! py-2! rounded-xl! transition! text-sm!
         ${isFollowing ? "bg-black! text-white!" : "bg-white! text-black! border-black!"}
       `}
         >

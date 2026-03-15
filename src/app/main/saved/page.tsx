@@ -18,14 +18,15 @@ export default function SavedPage() {
 
 
     return (
-        <main className="relative min-h-screen px-6 py-12">
+        <main className="relative min-h-screen">
 
-            <div className="text-center mx-auto mb-14">
-                <div className="text-6xl font-black tracking-tighter">
+
+            <div className="flex flex-col items-center mb-5">
+                <div className="text-4xl md:text-5xl font-black ">
                     Saved
                     <span className="italic text-rose-500 ml-4">Pins</span>
                 </div>
-                <div className="mt-3 flex items-center justify-center gap-2">
+                <div className="mt-3 flex gap-2">
                     <div className="h-1 w-12 bg-black rounded-full" />
                     <div className="h-1 w-4 bg-(--orange) rounded-full" />
                     <div className="h-1 w-2 bg-(--teal) rounded-full" />

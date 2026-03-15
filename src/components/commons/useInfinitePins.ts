@@ -21,6 +21,7 @@ export default function useInfinitePins(
   const fetchingRef = useRef(false);
 
   async function fetchPins(currentPage: number) {
+
     if (fetchingRef.current) return;
 
     fetchingRef.current = true;
@@ -52,10 +53,10 @@ export default function useInfinitePins(
       setLoading(false);
     }
   }
-
+const variablesKey = JSON.stringify(variables);
   useEffect(() => {
     fetchPins(1);
-  }, [JSON.stringify(variables)]);
+  }, [variablesKey]);
 
   useEffect(() => {
     if (page === 1) return;
@@ -81,7 +82,7 @@ export default function useInfinitePins(
     observerInstance.current.observe(observerRef.current);
 
     return () => observerInstance.current?.disconnect();
-  }, [hasNextPage]);
+  }, [hasNextPage,loading]);
 
   return { pins, loading, observerRef };
 }

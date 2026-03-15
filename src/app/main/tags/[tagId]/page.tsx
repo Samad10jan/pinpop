@@ -50,7 +50,7 @@ export default function Home() {
         );
 
     return (
-        <main className="relative min-h-screen px-6 py-12">
+        <main className="relative min-h-screen">
 
             <div className="text-center mx-auto mb-14">
                 <div className="text-4xl md:text-6xl capitalize font-black tracking-tighter">

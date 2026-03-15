@@ -112,7 +112,7 @@ export default function PinPage() {
   // };
 
   return (
-    <div className="flex flex-col md:flex-row gap-8 p-4 ">
+    <div className="flex flex-col md:flex-row gap-8 ">
 
       <div className="w-full md:w-[45%]">
 
@@ -158,9 +158,11 @@ export default function PinPage() {
               <button
                 title="comments"
                 onClick={() => setShowComments((prev) => !prev)}
-                className={`btn-circle ${showComments ? "bg-orange-400" : "bg-white"} active:bg-orange-400 active:text-white `}
+                className={`btn-circle relative overflow-hidden! group ${showComments ? "bg-orange-400" : "bg-white"} active:bg-orange-400 active:text-white `}
               >
                 <MessageCircleIcon />
+                <div className="absolute inset-0 w-2 h-full  bg-amber-300 transform -translate-x-30 group-hover:translate-x-30 skew-x-12 transition-transform duration-2500" />
+
               </button>
 
               <ShareButton />
@@ -218,18 +220,13 @@ export default function PinPage() {
         </div>
       </div>
 
-      <div className="w-full md:w-[60%]">
+      <div className="w-full md:w-[50%]">
         <h2 className="font-semibold text-lg mb-4">Related Pins</h2>
-        <div className="flex gap-4">
-          {[0, 1, 2].map((colIndex) => (
 
-            <div key={colIndex} className="flex-1 flex flex-col gap-4">
-            
-              {relatedPins
-                .filter((_: PinType, i: number) => i % 3 === colIndex)
-                .map((pin: PinType) => (
-                  <PinCard data={pin} key={pin.id} />
-                ))}
+        <div className=" columns-2 gap-4">
+          {relatedPins.map((pin: PinType) => (
+            <div key={pin.id} className="mb-4 break-inside-avoid">
+              <PinCard data={pin} />
             </div>
           ))}
         </div>

@@ -13,7 +13,7 @@ export default function ExplorePage() {
     tags.some((t) => t.name[0].toUpperCase() === letter);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 scroll-smooth mt-2">
+    <div className=" scroll-smooth">
 
       {/* Header */}
       <div className="text-center mb-14">
