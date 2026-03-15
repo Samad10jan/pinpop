@@ -20,6 +20,7 @@ import Link from "next/link";
 import { DownloadIcon, MessageCircleIcon } from "lucide-react";
 import { UserContext } from "@/src/components/contexts/UserContext";
 import ShareButton from "@/src/components/buttons/ShareBtn";
+import { Tag } from "@/generated/prisma/client";
 
 export default function PinPage() {
   const { pinId } = useParams();
@@ -31,7 +32,7 @@ export default function PinPage() {
   const [followersCount, setFollowersCount] = useState(0);
   const [likesCount, setLikesCount] = useState(0);
   const [savesCount, setSavesCount] = useState(0);
-  const [tags, setTags] = useState<any[]>([]);
+  const [tags, setTags] = useState<Tag[]>([]);
   const [isFollowing, setIsFollowing] = useState(false);
   const [showComments, setShowComments] = useState(false);
 

@@ -78,7 +78,7 @@ export default function UserPage() {
 
                 <div className="mb-8 relative">
                     
-                    <div className="text-4xl md:text-5xl font-bold mb-1 text-center">Dashboard</div>
+                    <div className="text-4xl md:text-5xl font-bold mb-1 text-center">Profile</div>
                     <div className="text-lg opacity-70 flex justify-center ">Welcome back, <div className="font-black text-(--orange)]">{name.split(' ')[0]}</div>!</div>
                     
                     <div className="mt-3 flex items-center justify-center gap-2">
@@ -209,7 +209,7 @@ export default function UserPage() {
 
 
                                 <div className="grid grid-cols-3 gap-2 mb-4">
-                                    {lastSavedPins.map((s: any) => (
+                                    {lastSavedPins.map((s) => (
                                         <div key={s.id} className="relative max-w-50 h-20 mb-4 group rounded-2xl overflow-hidden hover:shadow-xl transition-all">
 
                                             <div className=" absolute w-full h-full">

@@ -58,6 +58,7 @@ export async function proxy(req: NextRequest) {
   return response;
 }
 
+// protecting main routes
 export const config = {
   matcher: ["/main/:path*"],
 };

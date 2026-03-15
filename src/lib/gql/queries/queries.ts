@@ -63,18 +63,6 @@ query {
   }
 }`
 
-// export const CREATE_PIN_MUTATION = gql`
-// mutation($title: String!, $description: String, $mediaUrl: String!, $fileType: FileType!, $tagIds: [String!]!) {
-//   createPin(title: $title, description: $description, mediaUrl: $mediaUrl, fileType: $fileType, tagIds: $tagIds) {
-//     id
-//     createdAt
-//     description
-//     fileType
-//     mediaUrl
-//     tagIds
-//     title
-//   }
-// }`
 
 
 export const SUGG_QUERY = gql`
@@ -101,6 +89,7 @@ query ($search: String!, $limit: Int, $page: Int) {
       user {
         id
         name
+        avatar
       }
     }
     totalPages
@@ -131,7 +120,6 @@ query($getPinPageResponseId: ID!) {
       title
       user {
         avatar
-        email
         name
         id
       }
@@ -160,25 +148,6 @@ query($getPinPageResponseId: ID!) {
 
 `
 
-// export const FEED_QUERY = gql`
-// query ($limit: Int, $page: Int) {
-//   getUserFeed(limit: $limit, page: $page) {
-//     isSaved
-//     id
-//     mediaUrl
-//     fileType
-//     tagIds
-//     title
-//     createdAt
-//     user {
-//       id
-//       name
-//       avatar
-//     }
-//   }
-// }
-// `;
-
 export const FEED_QUERY = gql`
 query ( $limit: Int, $page: Int) {
   getUserFeed(limit: $limit, page: $page) {
@@ -198,7 +167,10 @@ query ( $limit: Int, $page: Int) {
         avatar
       }
     }
-    
+     hasNextPage
+    hasPrevPage
+    limit
+    page
     totalPages
     totalPins
   }
@@ -223,23 +195,34 @@ query($pinId: ID!, $page: Int) {
 
 
 export const GET_SAVED_PINS_QUERY = gql`
-query{
-  getSavedPins {
-    fileType
-    description
-    id
-    publicId
-    isSaved
-    mediaUrl
-    title
-    user {
+query ($limit: Int, $page: Int) {
+  getSavedPins(limit: $limit, page: $page) {
+    pins {
+      id
+      title
+      description
+      mediaUrl
+      fileType
+      publicId
+      isSaved
+      createdAt
+
+      user {
         id
         name
         avatar
       }
-    
+    }
+
+    page
+    limit
+    totalPins
+    totalPages
+    hasNextPage
+    hasPrevPage
   }
-}`
+}
+`;
 
 
 export const GET_CURRENT_USER_ALL_PINS_QUERY = gql`

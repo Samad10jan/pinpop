@@ -1,65 +1,27 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams } from "next/navigation";
 import PinCard from "@/src/components/cards/PinCard";
 import { SEARCH_PAGE_PINS_QUERY } from "@/src/lib/gql/queries/queries";
-import gqlClient from "@/src/lib/services/graphql";
-import { PinType
- } from "@/src/types/types";
-import Loading from '@/src/components/commons/Loading';
+import Loading from "@/src/components/commons/Loading";
+import useInfinitePins from "@/src/components/commons/useInfinitePins";
 
 export default function SearchPage() {
     const searchParams = useSearchParams();
-    const q = searchParams.get('q');
+    const q = searchParams.get("q");
 
-    const [pins, setPins] = useState<PinType[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-
-    useEffect(() => {
-        const fetchPins = async () => {
-            if (!q) {
-                setLoading(false);
-                return;
-            }
-
-            try {
-                setLoading(true);
-                setError(null);
-
-                const res = await gqlClient.request(SEARCH_PAGE_PINS_QUERY, {
-                    search: q,
-                });
-
-                setPins(res?.getSearchPagePins.pins || []);
-            } catch (err) {
-                console.error('Error fetching pins:', err);
-                setError('Failed to load search results');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchPins();
-    }, [q]);
+    const { pins, loading, observerRef } = useInfinitePins(
+        SEARCH_PAGE_PINS_QUERY,
+        { search: q },
+        "getSearchPagePins"
+    );
 
     if (!q) {
         return <div className="text-center mt-20">No search query</div>;
     }
 
-    if (loading) {
-        return (
-            <Loading />
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="text-center mt-20">
-                <p className="text-red-500">{error}</p>
-            </div>
-        );
+    if (loading && !pins.length) {
+        return <Loading />;
     }
 
     if (!pins.length) {
@@ -77,10 +39,13 @@ export default function SearchPage() {
             </h2>
 
             <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-4 space-y-4">
-                {pins.map((pin: PinType
-) => (
-                    <PinCard data={pin} key={pin.id} />
+                {pins.map((pin) => (
+                    <PinCard key={pin.id} data={pin} />
                 ))}
+            </div>
+
+            <div ref={observerRef} className="flex justify-center mt-6">
+                {loading && <Loading />}
             </div>
         </div>
     );

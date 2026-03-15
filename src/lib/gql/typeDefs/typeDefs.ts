@@ -153,7 +153,7 @@ type Query {
 
   getProfile(userId: ID!): ProfileResponse
 
-  getSavedPins: [Pin]
+  getSavedPins(limit: Int, page: Int): FeedResponse!
   
   getUserFeed(limit: Int, page: Int): FeedResponse!
   

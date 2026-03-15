@@ -1,31 +1,61 @@
 import prisma from "@/src/lib/services/prisma";
 import { UserType } from "@/src/types/types";
 import { ApiError } from "@/src/helper/ApiError";
+import { buildFeedResponse } from "@/src/helper/pagination";
 
 // Queries
-export async function getSavedPins(_: any, __: any, { user }: { user: UserType }) {
-    if (!user) return [];
+export async function getSavedPins(
+  _: any,
+  { limit = 20, page = 1 }: { limit?: number; page?: number },
+  { user }: { user: UserType }
+) {
+  try {
+    if (!user) {
+      return buildFeedResponse([], 0, page, limit);
+    }
 
-    const saves = await prisma.save.findMany({
-        where: { userId: user.id },
-        include: {
-            pin: {
-                include: {
-                    user: true,
-                    likes: {
-                        where: { userId: user.id },
-                        select: { id: true },
-                    },
-                }
-            }
-        }
+    const skip = (page - 1) * limit;
+
+    const totalPins = await prisma.save.count({
+      where: { userId: user.id },
     });
 
-    return saves.map(s => ({
-        ...s.pin,
-        isLiked: s.pin.likes.length > 0,
-        isSaved: true
+    const saves = await prisma.save.findMany({
+      where: { userId: user.id },
+      skip,
+      take: limit,
+      orderBy: { createdAt: "desc" },
+
+      include: {
+        pin: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                avatar: true,
+              },
+            },
+            likes: {
+              where: { userId: user.id },
+              select: { id: true },
+            },
+          },
+        },
+      },
+    });
+
+    const mappedPins = saves.map((s) => ({
+      ...s.pin,
+      isLiked: s.pin.likes.length > 0,
+      isSaved: true,
     }));
+
+    return buildFeedResponse(mappedPins, totalPins, page, limit);
+  } catch (error) {
+    console.error(error);
+    return buildFeedResponse([], 0, page, limit);
+  }
 }
 
 export const getAllTags = async (_: any, __: any, { user }: { user: UserType }) => {

@@ -1,12 +1,7 @@
+import { PinType } from "@/src/types/types";
 import Image from "next/image";
-import {
-    PinType
-} from "@/src/types/types";
 import Link from "next/link";
 import SaveBtn from "../buttons/SaveBtn";
-import Loading from "../commons/Loading";
-import { MoreVertical } from "lucide-react";
-import { getCloudinaryUrl } from "@/src/helper/optimisedUrl";
 
 export default function PinCard({ data }: { data: PinType }) {
 
@@ -16,11 +11,10 @@ export default function PinCard({ data }: { data: PinType }) {
             <div className="relative w-full">
 
                 <Image
-                    src={getCloudinaryUrl(data.publicId, "feed")}
+                    src={data.mediaUrl}
                     alt={data.title}
                     width={500}
-                    placeholder="blur"
-                    blurDataURL={getCloudinaryUrl(data.publicId, "thumb")}
+
                     height={800}
                     className="w-full h-auto object-cover"
                     loading="lazy"

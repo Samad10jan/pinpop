@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { ImagePlus, Sparkles } from "lucide-react";
 import { ToastContainer, useToast } from "@/src/components/commons/Toast";
+import { Tag } from "@/generated/prisma/client";
 
 const MAX_SIZE = 10 * 1024 * 1024;
 
@@ -20,7 +21,7 @@ export default function CreatePin() {
     const [description, setDescription] = useState("");
     const [file, setFile] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-    const [availableTags, setAvailableTags] = useState<any[]>([]);
+    const [availableTags, setAvailableTags] = useState<Tag[]>([]);
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
 
@@ -35,7 +36,8 @@ export default function CreatePin() {
     const toggleTag = (id: string) => {
         setSelectedTags(prev => prev.includes(id) ? prev.filter(t => t !== id) : [...prev, id]);
     };
-
+    
+    //
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = e.target.files?.[0] || null;
         setFile(selectedFile);
@@ -47,6 +49,7 @@ export default function CreatePin() {
             setPreviewUrl(null);
         }
     };
+    //
 
     useEffect(() => {
         return () => {

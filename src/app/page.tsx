@@ -1,5 +1,5 @@
 import Footer from "@/src/components/commons/Footer";
-import { Pin } from "lucide-react";
+import { Pin, PinIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -20,8 +20,8 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 sm:h-20">
           
           <div className="flex items-center gap-2.5">
-            <div className=" *:size-5! md:*:size-10! p-1 *:rotate-45 rounded-full bg-black flex items-center justify-center text-white shrink-0 transition-all duration-500">
-              <Pin />
+            <div className=" *:size-7 p-1 *:rotate-45 rounded-full bg-black flex items-center justify-center text-white shrink-0 transition-all duration-500">
+              <PinIcon/>
               
             </div>
             <span className="text-xl md:text-5xl font-black tracking-[0.2em] uppercase">
@@ -30,10 +30,10 @@ export default function LandingPage() {
           </div>
 
           <nav className="flex items-center gap-2 sm:gap-3">
-            <Link href="/signin" className="btn-rect px-2! py-2! sm:px-5! sm:py-2.5! text-xs! sm:text-sm! font-bold! tracking-wide! uppercase!">
+            <Link href="/signin" className="btn-rect truncate px-2! py-2! sm:px-5! sm:py-2.5! text-xs! sm:text-sm! font-bold! tracking-wide! uppercase!">
               Sign In
             </Link>
-            <Link href="/signup" className="btn-rect px-2! py-2! sm:px-5! sm:py-2.5! text-xs! sm:text-sm! font-bold! tracking-wide! uppercase!">
+            <Link href="/signup" className="btn-rect truncate px-2! py-2! sm:px-5! sm:py-2.5! text-xs! sm:text-sm! font-bold! tracking-wide! uppercase!">
               Join
             </Link>
           </nav>
@@ -41,7 +41,7 @@ export default function LandingPage() {
       </header>
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+        <div className="grid grid-cols-2 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
 
           <div className="space-y-6 sm:space-y-8">
             <h1 className="text-4xl md:text-7xl font-black leading-[0.9] tracking-tight uppercase">
@@ -51,11 +51,11 @@ export default function LandingPage() {
             </h1>
 
             <div className="flex flex-col xs:flex-row gap-3">
-              <Link href="/signup" className="btn-rect inline-flex! items-center! justify-center! px-5! py-3.5! rounded-full! bg-cyan-600! text-white! text-sm! font-bold! uppercase! tracking-wide!">
-                Get Started
+              <Link href="/signup" className="btn-rect text-center truncate items-center! justify-center! px-5! py-3.5! rounded-full! bg-cyan-600! text-white! text-sm! font-bold! uppercase! tracking-wide!">
+                Join
               </Link>
 
-              <Link href="/signin" className="btn-rect inline-flex! items-center! justify-center! px-5! py-3.5! rounded-full! bg-white! text-sm! font-bold! uppercase! tracking-wide!">
+              <Link href="/signin" className="btn-rect text-center items-center! justify-center! px-5! py-3.5! rounded-full! bg-white! text-sm! font-bold! uppercase! tracking-wide!">
                 Sign In
               </Link>
             </div>
@@ -150,7 +150,7 @@ export default function LandingPage() {
       <section className="bg-[#EA2E00] border-t-2 border-b-2 border-black py-16 sm:py-20 lg:py-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <div className="flex sm:justify-between justify-center text-center md:text-left ">
 
             <div>
               <h2 className="text-4xl md:text-7xl font-black leading-[0.9] tracking-tight uppercase text-white mb-8">
@@ -165,7 +165,7 @@ export default function LandingPage() {
               </Link>
             </div>
 
-            <div className="hidden lg:flex flex-col items-center gap-5">
+            <div className="hidden md:flex flex-col items-center gap-5">
               <div className="relative overflow-hidden w-72 h-72 rounded-full border-4 border-white group">
 
                 <Image

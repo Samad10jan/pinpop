@@ -26,7 +26,7 @@ export default function LogoutButton() {
             onClick={handleLogout}
             className="p-2 rounded-xl hover:bg-red-300 transition"
         >
-              <LogOutIcon />
+              <LogOutIcon size={20} />
         </button>
     );
 }

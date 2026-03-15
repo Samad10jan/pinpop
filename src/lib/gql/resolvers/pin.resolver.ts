@@ -282,7 +282,7 @@ export async function getSugg(_: any, { search }: any) {
     }
 }
 
-export async function getSearchPagePins(_: any, { search, limit = 10, page = 1 }: any, user: UserType) {
+export async function getSearchPagePins(_: any, { search, limit = 10, page = 1 }: any, {user}:{user: UserType}) {
     try {
         if (!search.trim()) {
             return buildFeedResponse([], 0, page, limit);
@@ -360,7 +360,7 @@ export async function getTagsForPin(parent: PinPageResponseType,) {
     return tags
 }
 
-
+// Analytics Query
 export async function getCurrentUserPins(_: any, __: any, { user }: { user: UserType }) {
 
     if (!user?.id) throw new Error("Unauthorized");
@@ -538,49 +538,6 @@ export async function getPinsByTag(_: any, { tagId, limit = 10, page = 1 }: any,
 }
 
 // Mutations
-// export async function createPin(_: any, { title, description, mediaUrl, fileType, tagIds }: { title: string, description: string, mediaUrl: string, fileType: FileType, tagIds: string[] }, { user }: { user: UserType }) {
-
-//     if (!user) throw new ApiError(401, "Unauthorized");
-
-//     if (!title?.trim() || !mediaUrl?.trim() || !fileType || !tagIds?.length) {
-//         throw new ApiError(400, "Title, mediaUrl, fileType and tags are required");
-//     }
-
-
-
-//     const uploadCount = user.uploadCount + 1;
-
-//     if (uploadCount > 15) {
-//         throw new ApiError(403, "Upload limit reached. Please try again later.");
-//     }
-//     if (tagIds.length > 3) {
-//         throw new ApiError(403, "Only 3 tags Max Allowed");
-//     }
-
-//     const pin = await prisma.pin.create({
-//         data: {
-//             title,
-//             description,
-//             mediaUrl,
-//             fileType,
-//             tagIds,
-//             userId: user.id
-//         }
-//     });
-
-//     if (!pin) throw new ApiError(500, "Failed to create pin");
-
-//     await prisma.user.update({
-//         where: { id: user.id },
-//         data: {
-//             uploadCount: {
-//                 increment: 1
-//             }
-//         }
-//     });
-
-//     return pin;
-// };
 
 export async function createPin(
     _: any,

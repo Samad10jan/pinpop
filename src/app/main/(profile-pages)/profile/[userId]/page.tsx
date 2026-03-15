@@ -4,7 +4,7 @@ import FollowBtn from "@/src/components/buttons/FollowBtn";
 import { UserContext } from "@/src/components/contexts/UserContext";
 import { PROFILE_QUERY } from "@/src/lib/gql/queries/queries";
 import gqlClient from "@/src/lib/services/graphql";
-import { UserType } from "@/src/types/types";
+import { PinType, UserType } from "@/src/types/types";
 import { getGraphQLError } from "@/src/helper/ApiError";
 import Image from "next/image";
 import Link from "next/link";
@@ -21,7 +21,7 @@ export default function UserPage() {
   const [followingCount, setFollowingCount] = useState(0);
   const [totalLikes, setTotalLikes] = useState(0);
   const [isFollowing, setIsFollowing] = useState(false);
-  const [lastUploadedPins, setLastUploadedPins] = useState<any[]>([]);
+  const [lastUploadedPins, setLastUploadedPins] = useState<PinType[]>([]);
 
   const [loading, setLoading] = useState(true);
   const context = useContext(UserContext);

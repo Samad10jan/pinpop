@@ -13,7 +13,7 @@ export default async function RootLayout({
     const { user } = await context()
     return (
         <div>
-      <UserProvider user={user}>
+      <UserProvider user={user as UserType}>
         <div>
           <SideBar />
 
