@@ -3,12 +3,13 @@
 import PinCard from "@/src/components/cards/PinCard";
 import Loading from "@/src/components/commons/Loading";
 import useInfinitePins from "@/src/components/commons/useInfinitePins";
-import { tags } from "@/src/lib/constants";
+import { breakpointCols, tags } from "@/src/lib/constants";
 import { GET_PINS_BY_TAG_QUERY } from "@/src/lib/gql/queries/queries";
 import { PlusCircleIcon } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import Masonry from "react-masonry-css";
 
 export default function Home() {
     const { tagId } = useParams();
@@ -30,6 +31,9 @@ export default function Home() {
         if (tagId) setTagName(getTagName(tagId as string));
     }, [tagId]);
 
+    if (loading && !pins.length) {
+        return <Loading />;
+    }
     if (!loading && pins.length === 0)
         return (
             <div className="relative flex flex-col items-center justify-center min-h-[60vh]">
@@ -59,17 +63,19 @@ export default function Home() {
                 </div>
             </div>
 
-            {loading ? <Loading /> : (
-                <div className="max-w-screen-2xl mx-auto">
-                    <div className="columns-2 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-3 space-y-3">
-                        {pins.map((pin) => (
-                            <PinCard key={pin.id} data={pin} />
-                        ))}
-                    </div>
-                </div>)}
+
+            <Masonry
+                breakpointCols={breakpointCols}
+                className="masonry-grid"
+                columnClassName="masonry-grid-col"
+            >                        {pins.map((pin) => (
+                <PinCard key={pin.id} data={pin} />
+            ))}
+            </Masonry>
+
 
             <div ref={observerRef} className="flex justify-center mt-6">
-                {loading && <Loading />}
+
             </div>
 
         </main>

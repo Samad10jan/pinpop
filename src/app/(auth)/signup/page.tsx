@@ -8,6 +8,7 @@ import { getGraphQLError } from "@/src/helper/ApiError";
 import { ToastContainer, useToast } from "@/src/components/commons/Toast";
 import Image from "next/image";
 import Link from "next/link";
+import { UploadIcon } from "lucide-react";
 
 
 const MAX_SIZE = 10 * 1024 * 1024;
@@ -129,7 +130,7 @@ export default function SignupPage() {
                             className="card bg-white p-3 text-sm outline-none w-full"
                         />
 
-                        <label className="card bg-white p-3 flex items-center gap-3 cursor-pointer">
+                        <label className="card bg-white p-3 flex items-center gap-3 cursor-pointer justify-between">
                             <span className="text-sm text-gray-500">
                                 {avatar ? avatar.name : "Upload avatar (optional)"}
                             </span>
@@ -138,7 +139,9 @@ export default function SignupPage() {
                                 type="file"
                                 className="hidden"
                                 onChange={e => setAvatar(e.target.files?.[0] || null)}
+
                             />
+                            <UploadIcon/>
                         </label>
 
                         <button

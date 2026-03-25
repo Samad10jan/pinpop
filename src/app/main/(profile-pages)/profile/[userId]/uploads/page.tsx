@@ -9,6 +9,8 @@ import { getGraphQLError } from "@/src/helper/ApiError";
 
 import PinCard from "@/src/components/cards/PinCard";
 import { PinType } from "@/src/types/types";
+import Masonry from "react-masonry-css";
+import { breakpointCols } from "@/src/lib/constants";
 
 export default function UserUploadsPage() {
     const { userId } = useParams();
@@ -59,15 +61,15 @@ export default function UserUploadsPage() {
     return (
         <main className="">
             <div className="flex flex-col items-center mb-5">
-                    <h1 className="text-2xl md:text-5xl font-black ">
-                          {pins[1].user.name.split(" ")[0]}'s Uploads
-                    </h1>
-                    <div className="mt-3 flex gap-2">
-                        <div className="h-1 w-12 bg-black rounded-full" />
-                        <div className="h-1 w-4 bg-(--orange) rounded-full" />
-                        <div className="h-1 w-2 bg-(--teal) rounded-full" />
-                    </div>
+                <h1 className="text-2xl md:text-5xl font-black ">
+                    {pins[1].user.name.split(" ")[0]}'s Uploads
+                </h1>
+                <div className="mt-3 flex gap-2">
+                    <div className="h-1 w-12 bg-black rounded-full" />
+                    <div className="h-1 w-4 bg-(--orange) rounded-full" />
+                    <div className="h-1 w-2 bg-(--teal) rounded-full" />
                 </div>
+            </div>
 
             {!pins.length && (
                 <p className="text-center opacity-60 mt-20 text-lg">
@@ -75,11 +77,15 @@ export default function UserUploadsPage() {
                 </p>
             )}
 
-            <div className="columns-2 sm:columns-3 md:columns-4 gap-4 space-y-4">
+            <Masonry
+                breakpointCols={breakpointCols}
+                className="masonry-grid"
+                columnClassName="masonry-grid-col"
+            >
                 {pins.map((pin: PinType) => (
                     <PinCard data={pin} key={pin.id} />
                 ))}
-            </div>
+            </Masonry>
 
         </main>
     );

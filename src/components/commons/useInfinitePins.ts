@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import gqlClient from "@/src/lib/services/graphql";
 import { PinType } from "@/src/types/types";
 
@@ -13,39 +13,44 @@ export default function useInfinitePins(
 ) {
   const [pins, setPins] = useState<PinType[]>([]);
   const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
   const [hasNextPage, setHasNextPage] = useState(true);
 
-  const observerRef = useRef<HTMLDivElement | null>(null);
   const observerInstance = useRef<IntersectionObserver | null>(null);
   const fetchingRef = useRef(false);
+  const pageRef = useRef(1);
+  const hasNextPageRef = useRef(true);
+  const variablesRef = useRef(variables);
+  const queryRef = useRef(query);
 
-  async function fetchPins(currentPage: number) {
+  const variablesKey = JSON.stringify(variables);
 
-    if (fetchingRef.current) return;
+  async function fetchNextPage() {
+    if (fetchingRef.current || !hasNextPageRef.current) return;
 
     fetchingRef.current = true;
+    setLoading(true);
 
     try {
-      const res = await gqlClient.request(query, {
-        ...variables,
+      const res = await gqlClient.request(queryRef.current, {
+        ...variablesRef.current,
         limit: LIMIT,
-        page: currentPage,
+        page: pageRef.current,
       });
 
       const data = res?.[responseKey];
+      const incoming: PinType[] = data?.pins ?? [];
+      const nextPage: boolean = data?.hasNextPage ?? false;
 
       setPins((prev) => {
-        const merged = [...prev, ...(data?.pins || [])];
-
-        const unique = Array.from(
-          new Map(merged.map((pin) => [pin.id, pin])).values()
-        );
-
-        return unique;
+        const existingIds = new Set(prev.map((p) => p.id));
+        const fresh = incoming.filter((p) => !existingIds.has(p.id));
+        return [...prev, ...fresh];
       });
 
-      setHasNextPage(data?.hasNextPage ?? false);
+      hasNextPageRef.current = nextPage;
+      setHasNextPage(nextPage);
+
+      if (nextPage) pageRef.current += 1;
     } catch (err) {
       console.error(err);
     } finally {
@@ -53,36 +58,47 @@ export default function useInfinitePins(
       setLoading(false);
     }
   }
-const variablesKey = JSON.stringify(variables);
+
+  // Reset + fetch on variable change
   useEffect(() => {
-    fetchPins(1);
+    variablesRef.current = variables;
+    queryRef.current = query;
+
+    setPins([]);
+    setLoading(true);
+    setHasNextPage(true);
+    pageRef.current = 1;
+    hasNextPageRef.current = true;
+    fetchingRef.current = false;
+
+    fetchNextPage();
   }, [variablesKey]);
 
-  useEffect(() => {
-    if (page === 1) return;
-    fetchPins(page);
-  }, [page]);
-
-  useEffect(() => {
-    if (!observerRef.current) return;
-
+  // Callback ref — called by React the moment the sentinel mounts/unmounts
+  // This solves the null ref problem: observer is set up exactly when the
+  // DOM node is available, not on a fixed useEffect timing
+  const observerRef = useCallback((sentinel: HTMLDivElement | null) => {
+    // Clean up previous observer whenever the node changes
     observerInstance.current?.disconnect();
+    observerInstance.current = null;
+
+    if (!sentinel) return; // node unmounted, nothing to observe
 
     observerInstance.current = new IntersectionObserver(
       (entries) => {
-        const entry = entries[0];
-
-        if (entry.isIntersecting && hasNextPage && !fetchingRef.current) {
-          setPage((p) => p + 1);
+        if (
+          entries[0].isIntersecting &&
+          hasNextPageRef.current &&
+          !fetchingRef.current
+        ) {
+          fetchNextPage();
         }
       },
-      { rootMargin: "200px" }
+      { threshold: 0, rootMargin: "600px" }
     );
 
-    observerInstance.current.observe(observerRef.current);
+    observerInstance.current.observe(sentinel);
+  }, []); // stable — never recreated, reads refs directly
 
-    return () => observerInstance.current?.disconnect();
-  }, [hasNextPage,loading]);
-
-  return { pins, loading, observerRef };
+  return { pins, loading, hasNextPage, observerRef };
 }

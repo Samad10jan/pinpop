@@ -20,7 +20,7 @@ type User {
   email: String!
   avatar: String
   uploadCount: Int!
-  createdAt: DateTime!
+  # createdAt: DateTime!
 }
 type Comment {
   id: ID!
@@ -209,7 +209,7 @@ toggleSave(pinId: ID!): ToggleSaveResponse!
 
 toggleLike(pinId:ID!): ToggleLikeResponse
 
-toggleFollow(targetUserId: ID!): Boolean!
+toggleFollow(targetUserId: ID!): BooleanResponse!
 
 # addTags:Boolean!
 updateProfile(name: String, avatar: String): User!

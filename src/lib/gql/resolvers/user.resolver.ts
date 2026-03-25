@@ -14,7 +14,7 @@ export const user = async (_: any, __: any, { user }: { user: UserType }) => {
             email: user.email,
             avatar: user.avatar,
             uploadCount: user.uploadCount,
-            createdAt: user.createdAt,
+            // createdAt: user.createdAt,
         },
     };
 }
@@ -39,7 +39,7 @@ export const getCurrentProfile = async (_: any, __: any, { user }: { user: UserT
             name: user.name,
             avatar: user.avatar,
             uploadCount: user.uploadCount,
-            createdAt: user.createdAt
+            // createdAt: user.createdAt
         },
         lastSavedPins: savedPins.map(s => s.pin),
 
@@ -123,7 +123,7 @@ export const getProfile = async (_: any, { userId }: any) => {
             name: user.name,
             avatar: user.avatar,
             uploadCount: user.uploadCount,
-            createdAt: user.createdAt
+            // createdAt: user.createdAt
         },
         lastUploadedPins,
     };
@@ -153,6 +153,6 @@ export const updateProfile = async (_: any, { name, avatar }: { name:string, ava
         name: updatedUser.name,
         avatar: updatedUser.avatar,
         uploadCount: updatedUser.uploadCount,
-        createdAt: updatedUser.createdAt
+        // createdAt: updatedUser.createdAt
     };
 }

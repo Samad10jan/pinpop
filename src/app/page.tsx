@@ -3,6 +3,7 @@ import { Pin, PinIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
+
 const categories = [
   { label: "TRAVEL", span: "row-span-2", pos: "top-4 right-4", src: "/image5.jpeg" },
   { label: "FOOD", span: "", pos: "bottom-4 left-4", src: "/image6.jpeg" },
@@ -15,7 +16,7 @@ const categories = [
 export default function LandingPage() {
   return (
     <main className="min-h-screen bg-[#f5f0ea] font-sans overflow-x-hidden">
-
+{/* <SeedButton/> */}
       <header className="sticky top-0 z-50 bg-[#f5f0ea]/90 backdrop-blur-md border-b-2 border-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 sm:h-20">
           

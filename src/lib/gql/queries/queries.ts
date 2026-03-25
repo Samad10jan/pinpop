@@ -9,7 +9,7 @@ query{
       uploadCount
       email
       id
-      createdAt
+      # createdAt
     }
     followersCount
     followingCount
@@ -46,7 +46,7 @@ query GetProfile($userId: ID!) {
       email
       avatar
       uploadCount
-      createdAt
+      # createdAt
     }
   }
 }

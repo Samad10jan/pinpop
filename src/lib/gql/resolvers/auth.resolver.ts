@@ -120,7 +120,7 @@ export async function signup(_: any, args: any) {
             email: user.email,
             avatar: user.avatar,
             uploadCount: user.uploadCount,
-            createdAt: user.createdAt,
+            // createdAt: user.createdAt,
         }
     };
 }
@@ -200,7 +200,7 @@ export async function login(_: any, args: any) {
                 email: user.email,
                 avatar: user.avatar,
                 uploadCount: user.uploadCount,
-                createdAt: user.createdAt,
+                // createdAt: user.createdAt,
             }
         };
     });

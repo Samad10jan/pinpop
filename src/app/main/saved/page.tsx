@@ -3,7 +3,9 @@
 import PinCard from "@/src/components/cards/PinCard";
 import Loading from "@/src/components/commons/Loading";
 import useInfinitePins from "@/src/components/commons/useInfinitePins";
+import { breakpointCols } from "@/src/lib/constants";
 import { GET_SAVED_PINS_QUERY } from "@/src/lib/gql/queries/queries";
+import Masonry from "react-masonry-css";
 
 
 export default function SavedPage() {
@@ -15,7 +17,9 @@ export default function SavedPage() {
 
     // if (!loading && pins.length === 0)
     //     return <p className="text-center mt-20">Nothing saved yet</p>;
-
+    if (loading && !pins.length) {
+        return <Loading />;
+    }
 
     return (
         <main className="relative min-h-screen">
@@ -33,26 +37,25 @@ export default function SavedPage() {
                 </div>
             </div>
 
-            {loading ? <Loading /> : (
-                <div className="max-w-screen-2xl mx-auto">
-                    <div className="columns-2 sm:columns-3 md:columns-4 gap-4 space-y-4">
-                        {pins.map((pin) => (
-                            <PinCard key={pin.id} data={pin} />
-                        ))}
-                    </div>
-                </div>
-            )
-            }
+
+
+            <Masonry
+                breakpointCols={breakpointCols}
+                className="masonry-grid"
+                columnClassName="masonry-grid-col"
+            >
+                {pins.map((pin) => (
+                    <PinCard key={pin.id} data={pin} />
+                ))}
+            </Masonry>
+
 
             {
                 (!loading && pins.length === 0) &&
                 <p className="text-center mt-20">Nothing saved yet</p>
             }
 
-
-
             <div ref={observerRef} className="flex justify-center mt-6">
-                {loading && <Loading />}
             </div>
 
         </main>

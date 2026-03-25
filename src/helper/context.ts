@@ -30,7 +30,7 @@ export async function context() {
         email: user.email,
         avatar: user.avatar,
         uploadCount: user.uploadCount,
-        createdAt: user.createdAt,
+        // createdAt: user.createdAt,
       },
     };
 

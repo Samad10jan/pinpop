@@ -62,7 +62,7 @@ export const resolvers = {
     deleteComment: deleteComment,
     updateProfile: updateProfile,
     toggleFollow: toggleFollow,
-    deletePin: deletePin
+    deletePin: deletePin,
     // addTags:addTags
   }
 

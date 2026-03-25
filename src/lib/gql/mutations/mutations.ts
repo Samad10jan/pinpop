@@ -29,7 +29,7 @@ mutation Mutation($email: String!, $password: String!) {
       email
       avatar
       uploadCount
-      createdAt
+      # createdAt
     }
   }
 }`

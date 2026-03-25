@@ -137,7 +137,7 @@ export async function getPinPageResponse(_: any, { id }: { id: string }, { user 
     }
 }
 
-export async function getUserFeed(_: any, { limit = 10, page = 1 }: any, { user }: { user: UserType }) {
+export async function getUserFeed(_: any, { limit = 20, page = 1 }: any, { user }: { user: UserType }) {
 
     /*
     Steps:
@@ -255,9 +255,9 @@ export async function getUserFeed(_: any, { limit = 10, page = 1 }: any, { user 
 
         return buildFeedResponse(mappedPins, totalPins, page, limit);
 
-    } catch (error) {
+    } catch (error: any) {
         console.error("Error fetching feed:", error);
-        return buildFeedResponse([], 0, page, limit);
+        throw new ApiError(500, `Failed to fetch search results ${error?.message}`);
     }
 }
 
@@ -282,7 +282,7 @@ export async function getSugg(_: any, { search }: any) {
     }
 }
 
-export async function getSearchPagePins(_: any, { search, limit = 10, page = 1 }: any, {user}:{user: UserType}) {
+export async function getSearchPagePins(_: any, { search, limit = 10, page = 1 }: any, { user }: { user: UserType }) {
     try {
         if (!search.trim()) {
             return buildFeedResponse([], 0, page, limit);
@@ -341,9 +341,10 @@ export async function getSearchPagePins(_: any, { search, limit = 10, page = 1 }
 
         return buildFeedResponse(mappedPins, totalPins, page, limit);
 
-    } catch (error) {
+    } catch (error: any) {
         console.error("Error fetching feed:", error);
-        return buildFeedResponse([], 0, page, limit);
+        throw new ApiError(500, `Failed to fetch search results ${error?.message}`);
+        // return buildFeedResponse([], 0, page, limit);
     }
 }
 
@@ -532,8 +533,8 @@ export async function getPinsByTag(_: any, { tagId, limit = 10, page = 1 }: any,
         }));
 
         return buildFeedResponse(mappedPins, totalPins, page, limit);
-    } catch (error) {
-
+    } catch (error:any) {
+        throw new ApiError(500, `Failed to fetch ${error?.message}`);
     }
 }
 
@@ -561,7 +562,7 @@ export async function createPin(
 
     const uploadCount = user.uploadCount + 1;
 
-    if (uploadCount > 15) {
+    if (uploadCount > 100) {
         throw new ApiError(403, "Upload limit reached.");
     }
 
@@ -648,5 +649,5 @@ export async function deletePin(_: any, { pinId }: { pinId: string }, { user }: 
         })
     ]);
 
-   return { success: true };
+    return { success: true };
 }

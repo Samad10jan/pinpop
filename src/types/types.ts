@@ -157,7 +157,7 @@ export type UserType = {
   email: string;
   avatar: string | null;
   uploadCount: number;
-  createdAt: string;
+  // createdAt: string;
 } | null;
 
 
@@ -312,6 +312,7 @@ export type SuggestionType = string[];
 
 /* ---------------- ANALYTICS ---------------- */
 
+// One user Pin's analytics data contains
 export type UserPinAnalyticsType = {
   id: string;
   title: string;

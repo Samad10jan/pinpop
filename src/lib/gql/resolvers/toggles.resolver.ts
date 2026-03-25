@@ -2,60 +2,61 @@ import prisma from "@/src/lib/services/prisma";
 import { UserType } from "@/src/types/types";
 import { ApiError } from "@/src/helper/ApiError";
 import { buildFeedResponse } from "@/src/helper/pagination";
+import { tags } from "../../constants";
 
 // Queries
 export async function getSavedPins(
-  _: any,
-  { limit = 20, page = 1 }: { limit?: number; page?: number },
-  { user }: { user: UserType }
+    _: any,
+    { limit = 20, page = 1 }: { limit?: number; page?: number },
+    { user }: { user: UserType }
 ) {
-  try {
-    if (!user) {
-      return buildFeedResponse([], 0, page, limit);
+    try {
+        if (!user) {
+            return buildFeedResponse([], 0, page, limit);
+        }
+
+        const skip = (page - 1) * limit;
+
+        const totalPins = await prisma.save.count({
+            where: { userId: user.id },
+        });
+
+        const saves = await prisma.save.findMany({
+            where: { userId: user.id },
+            skip,
+            take: limit,
+            orderBy: { createdAt: "desc" },
+
+            include: {
+                pin: {
+                    include: {
+                        user: {
+                            select: {
+                                id: true,
+                                name: true,
+                                avatar: true,
+                            },
+                        },
+                        likes: {
+                            where: { userId: user.id },
+                            select: { id: true },
+                        },
+                    },
+                },
+            },
+        });
+
+        const mappedPins = saves.map((s) => ({
+            ...s.pin,
+            isLiked: s.pin.likes.length > 0,
+            isSaved: true,
+        }));
+
+        return buildFeedResponse(mappedPins, totalPins, page, limit);
+    } catch (error) {
+        console.error(error);
+        return buildFeedResponse([], 0, page, limit);
     }
-
-    const skip = (page - 1) * limit;
-
-    const totalPins = await prisma.save.count({
-      where: { userId: user.id },
-    });
-
-    const saves = await prisma.save.findMany({
-      where: { userId: user.id },
-      skip,
-      take: limit,
-      orderBy: { createdAt: "desc" },
-
-      include: {
-        pin: {
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                avatar: true,
-              },
-            },
-            likes: {
-              where: { userId: user.id },
-              select: { id: true },
-            },
-          },
-        },
-      },
-    });
-
-    const mappedPins = saves.map((s) => ({
-      ...s.pin,
-      isLiked: s.pin.likes.length > 0,
-      isSaved: true,
-    }));
-
-    return buildFeedResponse(mappedPins, totalPins, page, limit);
-  } catch (error) {
-    console.error(error);
-    return buildFeedResponse([], 0, page, limit);
-  }
 }
 
 export const getAllTags = async (_: any, __: any, { user }: { user: UserType }) => {
@@ -76,7 +77,51 @@ export const getAllTags = async (_: any, __: any, { user }: { user: UserType }) 
 }
 
 // Mutations Toggles
+// export async function addTags(_: any, __: any, { user }: { user: UserType | null }) {
+//     // console.log(user);
+    
+//   if (!user) throw new ApiError(401, "Unauthorized");
 
+//   const tagNames = [
+//     "art",
+//     "design",
+//     "abstract",
+//     "anime",
+//     "photography",
+//     "nature",
+//     "travel",
+//     "food",
+//     "fashion",
+//     "fitness",
+//     "technology",
+//     "web-development",
+//     "business",
+//     "education",
+//     "gaming",
+//     "music",
+//     "cars",
+//     "pets",
+//     "interior",
+//     "wallpapers"
+//   ];
+
+//   try {
+//     // ✅ delete tags NOT in list
+//     await prisma.tag.deleteMany({
+//       where: {
+//         name: {
+//           notIn: tagNames,
+//         },
+//       },
+//     });
+
+//     return true;
+
+//   } catch (err) {
+//     console.error(err);
+//     throw new ApiError(500, "Failed to sync tags");
+//   }
+// }
 // Save and Like and Follow
 export async function toggleSave(_: any, { pinId }: any, { user }: { user: UserType }) {
     if (!user) throw new ApiError(401, "Unauthorized");
@@ -163,7 +208,7 @@ export async function toggleLike(_: any, { pinId }: any, { user }: { user: UserT
     };
 }
 
-export async function toggleFollow(_: any, { targetUserId }: any, { user }: { user: UserType }){
+export async function toggleFollow(_: any, { targetUserId }: any, { user }: { user: UserType }) {
 
     if (!user) throw new ApiError(401, "Unauthorized");
 

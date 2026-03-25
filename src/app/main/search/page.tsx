@@ -5,6 +5,8 @@ import PinCard from "@/src/components/cards/PinCard";
 import { SEARCH_PAGE_PINS_QUERY } from "@/src/lib/gql/queries/queries";
 import Loading from "@/src/components/commons/Loading";
 import useInfinitePins from "@/src/components/commons/useInfinitePins";
+import Masonry from "react-masonry-css";
+import { breakpointCols } from "@/src/lib/constants";
 
 export default function SearchPage() {
     const searchParams = useSearchParams();
@@ -38,11 +40,14 @@ export default function SearchPage() {
                 Results for "{q}"
             </h2>
 
-            <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-4 space-y-4">
-                {pins.map((pin) => (
-                    <PinCard key={pin.id} data={pin} />
-                ))}
-            </div>
+            <Masonry
+                breakpointCols={breakpointCols}
+                className="masonry-grid"
+                columnClassName="masonry-grid-col"
+            >                {pins.map((pin) => (
+                <PinCard key={pin.id} data={pin} />
+            ))}
+            </Masonry>
 
             <div ref={observerRef} className="flex justify-center mt-6">
                 {loading && <Loading />}

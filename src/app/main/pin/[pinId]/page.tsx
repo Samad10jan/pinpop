@@ -175,7 +175,7 @@ export default function PinPage() {
               <div className="flex gap-4 items-center">
                 <Link
                   href={`/main/profile/${pin.user.id}`}
-                  className="btn-circle"
+                  className="btn-circle relative overflow-hidden"
                 >
                   <Image
                     src={
@@ -183,9 +183,8 @@ export default function PinPage() {
                       "https://tse1.mm.bing.net/th/id/OIP.2ZC6eH3utWfNn6yZaCEstgHaFf?w=5263&h=3903&rs=1&pid=ImgDetMain&o=7&rm=3"
                     }
                     alt={pin.user.name}
-                    width={56}
-                    height={56}
-                    className="rounded-full"
+                   fill
+                    className="rounded-full object-cover"
                   />
                 </Link>
 
