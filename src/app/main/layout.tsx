@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import "../globals.css";
 import { UserType } from "@/src/types/types";
 import SideBar from "@/src/components/commons/SideBar";
+import GotoTopBtn from "@/src/components/buttons/GotoTopBtn";
 export default async function RootLayout({
   children,
 }: {
@@ -23,6 +24,7 @@ export default async function RootLayout({
             <div className="mx-auto md:p-10 p-5 ">
 
               {children}
+              <GotoTopBtn/>
             </div>
           </div>
         </div>

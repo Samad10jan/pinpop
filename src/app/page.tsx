@@ -26,7 +26,7 @@ export default function LandingPage() {
               
             </div>
             <span className="text-xl md:text-5xl font-black tracking-[0.2em] uppercase">
-              Fixel
+             PinPop
             </span>
           </div>
 

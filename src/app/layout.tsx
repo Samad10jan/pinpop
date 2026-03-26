@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Fixel",
-  description: "",
+  title: "PinPop",
+  description: "Discover and Share Your Favorite Pins",
 };
 
 export default async function RootLayout({

@@ -2,7 +2,7 @@ import { Share2Icon } from "lucide-react";
 
 export default function ShareButton() {
     const shareData = {
-        title: "Fixel",
+        title: "PinPop",
         text: "Check out this Pix!",
         url: window.location.href,
     };

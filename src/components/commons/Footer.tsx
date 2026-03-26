@@ -8,12 +8,12 @@ export default function Footer() {
 
         <div className="flex flex-col gap-4 max-w-sm">
           <h2 className="text-3xl font-black tracking-wider uppercase">
-            Fixel
+            PinPop
           </h2>
 
           <p className="text-sm text-white/70 leading-relaxed">
             Discover ideas, collect inspiration, and create your visual world.
-            Fixel helps you pin what you love.
+            PinPop helps you pin what you love.
           </p>
 
           <div className="flex gap-3 pt-2">

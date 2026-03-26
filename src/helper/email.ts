@@ -2,7 +2,7 @@ import { transporter } from "../lib/services/nodemailer";
 
 export async function sendVerificationCode(email: string, otp: string) {
     await transporter.sendMail({
-        from: `"Fixel" <${process.env.GMAIL_USER}>`,
+        from: `"PinPop" <${process.env.GMAIL_USER}>`,
         to: email,
         subject: "Verify your Email",
         html: `
@@ -20,14 +20,14 @@ export function generateOTP() {
 
 export async function sendSignUpSuccessMessage(email: string) {
     await transporter.sendMail({
-        from: `"Fixel" <${process.env.GMAIL_USER}>`,
+        from: `"PinPop" <${process.env.GMAIL_USER}>`,
         to: email,
         subject: "Signup Successful",
         html: `
-        <h2>Welcome to Fixel!</h2>
+        <h2>Welcome to PinPop!</h2>
         <p>Your account has been created successfully.</p>
         <p>Feel free to explore and start pinning your favorite content!</p>
-        <a href=${process.env.NEXT_PUBLIC_BASE_URL}>Go to Fixel</a>
+        <a href=${process.env.NEXT_PUBLIC_BASE_URL}>Go to PinPop</a>
     `,
     });
 }
