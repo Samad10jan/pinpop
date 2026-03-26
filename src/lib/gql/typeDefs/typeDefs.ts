@@ -29,6 +29,7 @@ type Comment {
   user: User!
 }
 
+
 type Pin {
   id: ID!
   title: String!
@@ -46,6 +47,14 @@ type Pin {
   isLiked:Boolean!
 }
 
+type CommentResponse {
+  comments: [Comment]
+  page: Int
+  limit: Int
+  totalComments: Int!
+  hasNextPage: Boolean!
+  hasPrevPage: Boolean!
+}
 
 type AuthPayload {
   user: User!
@@ -149,7 +158,7 @@ type Query {
 
   getPinPageResponse(id: ID!): PinPageResponse
 
-  getPinComments(pinId: ID!, page: Int): [Comment]
+  getPinComments(pinId: ID!, page: Int): CommentResponse
 
   getProfile(userId: ID!): ProfileResponse
 

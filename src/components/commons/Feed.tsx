@@ -1,14 +1,14 @@
 "use client";
 
-import Masonry from "react-masonry-css";
 import PinCard from "@/src/components/cards/PinCard";
 import Loading from "@/src/components/commons/Loading";
 import { FEED_QUERY } from "@/src/lib/gql/queries/queries";
+import { PinType } from "@/src/types/types";
+import { Masonry } from "masonic";
 import useInfinitePins from "./useInfinitePins";
-import { breakpointCols } from "@/src/lib/constants";
 
 export default function Feed() {
-  const { pins, loading, observerRef } = useInfinitePins(
+  const { pins, loading, observerRef, hasNextPage, } = useInfinitePins(
     FEED_QUERY,
     {},
     "getUserFeed"
@@ -28,20 +28,23 @@ export default function Feed() {
     <>
       <h2 className="text-3xl font-bold my-3">Feed</h2>
 
+
+
+
       <Masonry
-        breakpointCols={breakpointCols}
-        className="masonry-grid"
-        columnClassName="masonry-grid-col"
-      >
-        {pins.map((pin) => (
-          <PinCard key={pin.id} data={pin} />
-        ))}
-      </Masonry>
-      {/* Loader (separate)
-     
+        items={pins}
+        columnGutter={16}
+        columnWidth={236}        // min width per column, masonic auto-calculates count
+      //  overscanBy={Infinity}    
+          itemKey={(item: PinType) => item.id}     
+        render={({ data }:{data:PinType}) => <PinCard data={data} />}
+      />
+
+
+
 
       {/* Invisible trigger */}
-      <div ref={observerRef} className="h-1" />
+      {hasNextPage && <div ref={observerRef} className="h-1" />}
     </>
   );
 }

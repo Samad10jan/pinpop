@@ -214,7 +214,8 @@ export default function PinPage() {
               pinId={pin.id}
               showComments={showComments}
               setShowComments={setShowComments}
-            />          </div>
+            />          
+            </div>
 
         </div>
       </div>

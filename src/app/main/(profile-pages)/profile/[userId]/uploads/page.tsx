@@ -1,16 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
-import gqlClient from "@/src/lib/services/graphql";
-import { GET_A_USER_ALL_PINS_QUERY } from "@/src/lib/gql/queries/queries";
 import { getGraphQLError } from "@/src/helper/ApiError";
+import { GET_A_USER_ALL_PINS_QUERY } from "@/src/lib/gql/queries/queries";
+import gqlClient from "@/src/lib/services/graphql";
 
 import PinCard from "@/src/components/cards/PinCard";
 import { PinType } from "@/src/types/types";
-import Masonry from "react-masonry-css";
-import { breakpointCols } from "@/src/lib/constants";
+
+import { Masonry } from "masonic";
+
 
 export default function UserUploadsPage() {
     const { userId } = useParams();
@@ -77,15 +78,14 @@ export default function UserUploadsPage() {
                 </p>
             )}
 
+
             <Masonry
-                breakpointCols={breakpointCols}
-                className="masonry-grid"
-                columnClassName="masonry-grid-col"
-            >
-                {pins.map((pin: PinType) => (
-                    <PinCard data={pin} key={pin.id} />
-                ))}
-            </Masonry>
+                items={pins}
+                columnGutter={16}
+                columnWidth={236}
+                itemKey={(item: PinType) => item.id}
+                render={({ data }: { data: PinType }) => <PinCard data={data} />}
+            />
 
         </main>
     );

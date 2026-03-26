@@ -18,7 +18,7 @@ export default function CommentCard({
     const isOwner = currentUserId === commentData.user.id;
 
     return (
-        <div className="flex gap-4 py-3 group">
+        <div className="flex gap-4 py-3 group fade-up">
             <Link href={`/main/profile/${commentData.user.id}`}>
                 <div className="shrink-0">
                     <div className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-transparent group-hover:ring-gray-200 transition-all duration-200">

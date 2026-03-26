@@ -61,11 +61,3 @@ export const featuredCategories = [
     ],
   },
 ];
-
-export const breakpointCols = {
-  default: 5,
-  1280: 5,
-  1024: 4,
-  768: 3,
-  640: 2,
-};

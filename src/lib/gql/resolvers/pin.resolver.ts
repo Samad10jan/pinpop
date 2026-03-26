@@ -65,7 +65,7 @@ export async function getPinPageResponse(_: any, { id }: { id: string }, { user 
                 },
             },
 
-            take: 10,
+            take: 6,
             orderBy: {
                 likes: {
                     _count: "desc",
@@ -451,7 +451,7 @@ export async function getCurrentUserPins(_: any, __: any, { user }: { user: User
     };
 }
 
-export async function getUserAllPins(_: any, { userId, limit = 10, page = 1 }: any, { user }: { user: UserType }) {
+export async function getUserAllPins(_: any, { userId, limit = 20, page = 1 }: any, { user }: { user: UserType }) {
     try {
         const skip = (page - 1) * limit;
 
@@ -489,7 +489,7 @@ export async function getUserAllPins(_: any, { userId, limit = 10, page = 1 }: a
     }
 }
 
-export async function getPinsByTag(_: any, { tagId, limit = 10, page = 1 }: any, { user }: { user: UserType }) {
+export async function getPinsByTag(_: any, { tagId, limit = 20, page = 1 }: any, { user }: { user: UserType }) {
     try {
 
         if (!tagId) {

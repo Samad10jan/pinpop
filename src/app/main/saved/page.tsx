@@ -3,13 +3,13 @@
 import PinCard from "@/src/components/cards/PinCard";
 import Loading from "@/src/components/commons/Loading";
 import useInfinitePins from "@/src/components/commons/useInfinitePins";
-import { breakpointCols } from "@/src/lib/constants";
 import { GET_SAVED_PINS_QUERY } from "@/src/lib/gql/queries/queries";
-import Masonry from "react-masonry-css";
+import { PinType } from "@/src/types/types";
+import { Masonry } from "masonic";
 
 
 export default function SavedPage() {
-    const { pins, loading, observerRef } = useInfinitePins(
+    const { pins, loading,hasNextPage ,observerRef } = useInfinitePins(
         GET_SAVED_PINS_QUERY,
         {},
         "getSavedPins"
@@ -40,14 +40,13 @@ export default function SavedPage() {
 
 
             <Masonry
-                breakpointCols={breakpointCols}
-                className="masonry-grid"
-                columnClassName="masonry-grid-col"
-            >
-                {pins.map((pin) => (
-                    <PinCard key={pin.id} data={pin} />
-                ))}
-            </Masonry>
+                items={pins}
+                columnGutter={16}
+                columnWidth={236}
+                 overscanBy={1} // this overSc
+                itemKey={(item:PinType) => item.id}
+                render={({ data }:{data:PinType}) => <PinCard data={data} />}
+            />
 
 
             {
@@ -55,8 +54,7 @@ export default function SavedPage() {
                 <p className="text-center mt-20">Nothing saved yet</p>
             }
 
-            <div ref={observerRef} className="flex justify-center mt-6">
-            </div>
+          {hasNextPage && <div ref={observerRef} className="h-1" />}
 
         </main>
     );

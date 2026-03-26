@@ -1,18 +1,17 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
 import PinCard from "@/src/components/cards/PinCard";
-import { SEARCH_PAGE_PINS_QUERY } from "@/src/lib/gql/queries/queries";
 import Loading from "@/src/components/commons/Loading";
 import useInfinitePins from "@/src/components/commons/useInfinitePins";
-import Masonry from "react-masonry-css";
-import { breakpointCols } from "@/src/lib/constants";
+import { SEARCH_PAGE_PINS_QUERY } from "@/src/lib/gql/queries/queries";
+import { Masonry } from "masonic";
+import { useSearchParams } from "next/navigation";
 
 export default function SearchPage() {
     const searchParams = useSearchParams();
     const q = searchParams.get("q");
 
-    const { pins, loading, observerRef } = useInfinitePins(
+    const { pins, loading,hasNextPage, observerRef } = useInfinitePins(
         SEARCH_PAGE_PINS_QUERY,
         { search: q },
         "getSearchPagePins"
@@ -41,17 +40,15 @@ export default function SearchPage() {
             </h2>
 
             <Masonry
-                breakpointCols={breakpointCols}
-                className="masonry-grid"
-                columnClassName="masonry-grid-col"
-            >                {pins.map((pin) => (
-                <PinCard key={pin.id} data={pin} />
-            ))}
-            </Masonry>
+                items={pins}
+                columnGutter={16}
+                columnWidth={236}
+                 overscanBy={1} 
+                itemKey={(item) => item.id}
+                render={({ data }) => <PinCard data={data} />}
+            />
 
-            <div ref={observerRef} className="flex justify-center mt-6">
-                {loading && <Loading />}
-            </div>
+            {hasNextPage && <div ref={observerRef} className="h-1" />}
         </div>
     );
 }

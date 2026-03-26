@@ -32,9 +32,17 @@ export async function getPinComments(_: any, { pinId, page = 1 }: any) {
                 },
             },
         });
+// console.log(comments);
 
         // return paginated response
-        return buildFeedResponse(comments, totalComments, page, limit);
+        return {
+            comments,
+            page,
+            limit,
+            totalComments,
+            hasNextPage: skip + limit < totalComments,
+            hasPrevPage: page > 1,
+        };
 
     } catch (error) {
         throw error;
@@ -44,6 +52,8 @@ export async function getPinComments(_: any, { pinId, page = 1 }: any) {
 // Mutations
 export async function sendComment(_: any, { pinId, content }: any, { user }: { user: UserType }) {
     try {
+        // console.log(user);
+        
         if (!user) throw new ApiError(401, "Unauthorized");
         if (!pinId) throw new ApiError(400, "Pin ID is required");
         if (!content.trim()) throw new ApiError(400, "Comment content cannot be empty");
@@ -84,8 +94,8 @@ export async function sendComment(_: any, { pinId, content }: any, { user }: { u
 
         // if (!comment) throw new ApiError(500, "Failed to post comment");
         return comment;
-    } catch (error) {
-        throw new ApiError(500, "Failed to post comment");
+    } catch (error:any) {
+        throw new ApiError(500, `Failed to post comment ${error.message}`);
     }
 }
 

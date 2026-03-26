@@ -172,35 +172,4 @@ body {
     animation: fadeUp 0.6s ease-out forwards;
   }
 
-/* .masonry-grid {
-  display: flex;
-  gap: 1rem;
-  width: 100%;
-}
 
-.masonry-grid-col {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-} */
-
-.masonry-grid {
-  display: flex;
-  margin-left: -16px; /* gutter */
-}
-
-.masonry-grid-col {
-  padding-left: 16px;
-  background-clip: padding-box;
-}
-
-.masonry-grid-col > * {
-  margin-bottom: 16px;
-}
-/* 
-
- <relative overflow-hidden>
-  <div className="absolute inset-0 w-2 h-full  bg-white blur-xs transform -translate-x-30 group-hover:translate-x-30 skew-x-12 transition-transform duration-1500" />
-
-
-*/

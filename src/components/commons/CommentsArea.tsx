@@ -1,16 +1,16 @@
 "use client";
 
 import CommentCard from "@/src/components/cards/CommentCard";
+import { getGraphQLError } from "@/src/helper/ApiError";
 import { CREATE_COMMENT, DELETE_COMMENT } from "@/src/lib/gql/mutations/mutations";
 import { GET_PIN_COMMENTS_QUERY } from "@/src/lib/gql/queries/queries";
 import gqlClient from "@/src/lib/services/graphql";
 import { CommentType } from "@/src/types/types";
-import { getGraphQLError } from "@/src/helper/ApiError";
-import { MessageCircleIcon, Send } from "lucide-react";
-import { useContext, useState } from "react";
+import { Send } from "lucide-react";
+import { use, useContext, useEffect, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
 
-const LIMIT = 5;
+// const LIMIT = 5;
 
 export default function CommentArea({
     pinId,
@@ -31,6 +31,8 @@ export default function CommentArea({
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [postComment, setPostComment] = useState("");
+    const [hasNextPage, setHasNextPage] = useState(false);
+    const [hasPrevPage, setHasPrevPage] = useState(false);
 
     const alreadyCommented = comments.some(
         c => c.user?.id === currentUser?.id
@@ -48,11 +50,15 @@ export default function CommentArea({
                 page: p,
             });
 
-            const data = res.getPinComments;
+            const data = res.getPinComments?.comments || [];
+            // console.log("data", res);
 
+            setHasNextPage(res.getPinComments.hasNextPage);
+            setHasPrevPage(res.getPinComments.hasPrevPage);
             if (data.length === 0 && p === 1) {
                 setComments([]);
                 // if (!showComments) setShowComments(true);
+
                 return;
             }
 
@@ -65,6 +71,8 @@ export default function CommentArea({
             setLoading(false);
         }
     }
+    // console.log(comments);
+
 
     async function handleDelete(id: string) {
         try {
@@ -108,12 +116,20 @@ export default function CommentArea({
             setPostComment("");
             // setShowComments(true);
         } catch (e) {
+            // console.log(e);
+
             setError(getGraphQLError(e));
         } finally {
             setLoading(false);
         }
     }
-    console.log(alreadyCommented);
+    // console.log(alreadyCommented);
+
+    useEffect(() => {
+        if (showComments) {
+            loadComments(1);
+        }
+    }, [showComments]);
 
     return (
         <div className="mt-6 w-full max-w-2xl mx-auto px-2 sm:px-0">
@@ -153,7 +169,7 @@ export default function CommentArea({
                     <div className="mt-4">
 
                         {comments.length === 0 && (
-                            <p className="text-sm text-gray-500">No comments yet</p>
+                            <p className="text-sm text-gray-500 ">No comments yet</p>
                         )}
 
                         <div className="space-y-4 mt-3">
@@ -175,21 +191,22 @@ export default function CommentArea({
                         )}
 
                         <div className="flex flex-col sm:flex-row gap-3 sm:justify-between mt-6">
-                            <button
+                            {hasPrevPage && <button
                                 disabled={page === 1 || loading}
                                 onClick={() => loadComments(page - 1)}
                                 className="w-full sm:w-auto px-4 py-2 rounded-xl border border-black hover:bg-black hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 Prev
-                            </button>
-
-                            <button
-                                disabled={comments.length < LIMIT || loading}
-                                onClick={() => loadComments(page + 1)}
-                                className="w-full sm:w-auto px-4 py-2 rounded-xl border border-black hover:bg-black hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                Next
-                            </button>
+                            </button>}
+                            {hasNextPage &&
+                                <button
+                                    disabled={!hasNextPage || loading}
+                                    onClick={() => loadComments(page + 1)}
+                                    className="w-full sm:w-auto px-4 py-2 rounded-xl border border-black hover:bg-black hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    Next
+                                </button>
+                            }
                         </div>
                     </div>
                 </div>

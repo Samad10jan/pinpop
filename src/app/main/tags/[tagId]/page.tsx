@@ -3,24 +3,25 @@
 import PinCard from "@/src/components/cards/PinCard";
 import Loading from "@/src/components/commons/Loading";
 import useInfinitePins from "@/src/components/commons/useInfinitePins";
-import { breakpointCols, tags } from "@/src/lib/constants";
+import { tags } from "@/src/lib/constants";
 import { GET_PINS_BY_TAG_QUERY } from "@/src/lib/gql/queries/queries";
 import { PlusCircleIcon } from "lucide-react";
+import { Masonry } from "masonic";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import Masonry from "react-masonry-css";
 
 export default function Home() {
     const { tagId } = useParams();
 
     const [tagName, setTagName] = useState("Tag");
 
-    const { pins, loading, observerRef } = useInfinitePins(
+    const { pins, loading,hasNextPage, observerRef } = useInfinitePins(
         GET_PINS_BY_TAG_QUERY,
         { tagId },
         "getPinsByTag"
     );
+console.log(hasNextPage);
 
     useEffect(() => {
         function getTagName(id: string) {
@@ -65,18 +66,18 @@ export default function Home() {
 
 
             <Masonry
-                breakpointCols={breakpointCols}
-                className="masonry-grid"
-                columnClassName="masonry-grid-col"
-            >                        {pins.map((pin) => (
-                <PinCard key={pin.id} data={pin} />
-            ))}
-            </Masonry>
+                items={pins}
+                columnGutter={16}
+                columnWidth={236}
+                 overscanBy={1} 
+                itemKey={(item) => item.id}
+                render={({ data }) => <PinCard data={data} />}
+            />
 
 
-            <div ref={observerRef} className="flex justify-center mt-6">
+           {hasNextPage && <div ref={observerRef} className="h-1" />}
 
-            </div>
+            
 
         </main>
     );

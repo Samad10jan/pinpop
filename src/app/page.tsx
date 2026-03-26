@@ -1,5 +1,5 @@
 import Footer from "@/src/components/commons/Footer";
-import { Pin, PinIcon } from "lucide-react";
+import { PinIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 

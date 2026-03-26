@@ -37,8 +37,12 @@ export default function useInfinitePins(
         page: pageRef.current,
       });
 
+      
+      
+
       const data = res?.[responseKey];
       const incoming: PinType[] = data?.pins ?? [];
+      console.log(data);
       const nextPage: boolean = data?.hasNextPage ?? false;
 
       setPins((prev) => {
@@ -94,11 +98,11 @@ export default function useInfinitePins(
           fetchNextPage();
         }
       },
-      { threshold: 0, rootMargin: "600px" }
+      { rootMargin: "300px" }
     );
 
     observerInstance.current.observe(sentinel);
-  }, []); // stable — never recreated, reads refs directly
+  }, []); 
 
   return { pins, loading, hasNextPage, observerRef };
 }

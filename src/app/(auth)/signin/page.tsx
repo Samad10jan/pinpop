@@ -34,11 +34,14 @@ export default function LoginPage() {
 
         } catch (e: any) {
             //trigger an error toast with the error message
+            console.log(e.message);
+            
             toast.error(getGraphQLError(e));
         } finally {
             setLoading(false);
         }
     }
+    
 
     return (
         <main className="page flex">

@@ -180,7 +180,7 @@ query ( $limit: Int, $page: Int) {
 export const GET_PIN_COMMENTS_QUERY = gql`
 query($pinId: ID!, $page: Int) {
   getPinComments(pinId: $pinId, page: $page) {
-    content
+    comments {content
     id
     createdAt
     user {
@@ -188,6 +188,10 @@ query($pinId: ID!, $page: Int) {
       avatar
       name
     }
+    }
+    hasNextPage
+    hasPrevPage
+    limit
   }
 }
 `
@@ -270,7 +274,7 @@ query{
 export const GET_A_USER_ALL_PINS_QUERY = gql`
 
 query ($userId: ID!) {
-  getUserAllPins(userId: $userId) {
+  getUserAllPins(userId: $userId, limit: $limit, page: $page) {
     pins {
       createdAt
       fileType
@@ -295,8 +299,8 @@ query ($userId: ID!) {
 }`
 
 export const GET_PINS_BY_TAG_QUERY = gql`
-query ($tagId: ID!) {
-  getPinsByTag(tagId: $tagId) {
+query ($tagId: ID!, $limit: Int, $page: Int) {
+  getPinsByTag(tagId: $tagId, limit: $limit, page: $page) {
     pins {
       id
       title
