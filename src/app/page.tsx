@@ -21,10 +21,10 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 sm:h-20">
           
           <div className="flex items-center gap-2.5">
-            <div className=" *:size-7 p-1 *:rotate-45 rounded-full bg-black flex items-center justify-center text-white shrink-0 transition-all duration-500">
+            {/* <div className=" *:size-7 p-1 *:rotate-45 rounded-full bg-black flex items-center justify-center text-white shrink-0 transition-all duration-500">
               <PinIcon/>
               
-            </div>
+            </div> */}
             <span className="text-xl md:text-5xl font-black tracking-[0.2em] uppercase">
              PinPop
             </span>
@@ -162,7 +162,7 @@ export default function LandingPage() {
                 href="/signup"
                 className="btn-rect inline-flex items-center px-8 py-4 rounded-full! border-2! border-white! bg-white! text-black! text-sm! sm:text-base! font-black! uppercase! tracking-wide!"
               >
-                Join Fixel
+                Join
               </Link>
             </div>
 
