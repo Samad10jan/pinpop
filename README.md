@@ -11,9 +11,33 @@ A Pinterest-style social image pinboard — built with Next.js 16, React 19, Typ
 
 ---
 # Show Case
-| **Page** | **Screenshot** |
+
+| Landing Page | Home Page  |
 |---|---|
-| Page1  | screenshot   |
+| <img width="1283" height="824" alt="image" src="https://github.com/user-attachments/assets/ea054feb-4f7f-4edf-bcc4-c28e0abb94a1" /> | <img width="1283" height="824" alt="image" src="https://github.com/user-attachments/assets/ea054feb-4f7f-4edf-bcc4-c28e0abb94a1" /> |
+
+| SignUp Page | Login Page|
+|---|---|
+| <img width="1283" height="824" alt="image" src="https://github.com/user-attachments/assets/ea054feb-4f7f-4edf-bcc4-c28e0abb94a1" /> | <img width="1283" height="824" alt="image" src="https://github.com/user-attachments/assets/ea054feb-4f7f-4edf-bcc4-c28e0abb94a1" /> |
+
+| Explore Page | Pin Page |
+|---|---|
+| <img width="1283" height="824" alt="image" src="https://github.com/user-attachments/assets/ea054feb-4f7f-4edf-bcc4-c28e0abb94a1" /> | <img width="1283" height="824" alt="image" src="https://github.com/user-attachments/assets/ea054feb-4f7f-4edf-bcc4-c28e0abb94a1" /> |
+
+| Tags Pins Page | Search Page |
+|---|---|
+| <img width="1283" height="824" alt="image" src="https://github.com/user-attachments/assets/ea054feb-4f7f-4edf-bcc4-c28e0abb94a1" /> | <img width="1283" height="824" alt="image" src="https://github.com/user-attachments/assets/ea054feb-4f7f-4edf-bcc4-c28e0abb94a1" /> |
+
+| Create Pin Page | Current User Profile Page |
+|---|---|
+| <img width="1283" height="824" alt="image" src="https://github.com/user-attachments/assets/ea054feb-4f7f-4edf-bcc4-c28e0abb94a1" /> | <img width="1283" height="824" alt="image" src="https://github.com/user-attachments/assets/ea054feb-4f7f-4edf-bcc4-c28e0abb94a1" /> |
+
+| Saved Pins Page | Dashboard Page  |
+|---|---|
+| <img width="1283" height="824" alt="image" src="https://github.com/user-attachments/assets/ea054feb-4f7f-4edf-bcc4-c28e0abb94a1" /> | <img width="1283" height="824" alt="image" src="https://github.com/user-attachments/assets/ea054feb-4f7f-4edf-bcc4-c28e0abb94a1" /> |
+
+
+
 ---
 ## Table of Contents
 
@@ -21,13 +45,9 @@ A Pinterest-style social image pinboard — built with Next.js 16, React 19, Typ
 - [Features](#features)
 - [Setup](#setup)
 - [Project Structure](#project-structure)
-- [Page Routes](#page-routes)
 - [Auth System](#auth-system)
-- [Infinite Scroll](#infinite-scroll)
-- [Masonry Layout](#masonry-layout)
 - [Database Schema](#database-schema)
 - [API Reference](#api-reference)
-- [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -84,7 +104,7 @@ A Pinterest-style social image pinboard — built with Next.js 16, React 19, Typ
 ### Install
 
 ```bash
-git clone https://github.com/Samad10jan/Fixel.git
+git clone https://github.com/Samad10jan/pinpop.git
 cd pinpop
 npm install
 ```
@@ -312,6 +332,6 @@ All relations use `onDelete: Cascade`. Full schema in `prisma/schema.prisma`.
 - Cookies: httpOnly, secure, sameSite=lax
 - Refresh tokens: DB-stored, rotated on every use, invalidated on logout
 - OTP: bcrypt-hashed before storage, deleted after use
-- Sessions: max 5 per user
+- Sessions: max 2 per user
 
 ---
