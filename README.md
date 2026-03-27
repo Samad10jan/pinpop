@@ -14,11 +14,11 @@ A Pinterest-style social image pinboard — built with Next.js 16, React 19, Typ
 
 | Landing Page | Home Page  |
 |---|---|
-| <img width="1283" height="824" alt="image" src="https://github.com/user-attachments/assets/ea054feb-4f7f-4edf-bcc4-c28e0abb94a1" /> | <img width="1283" height="824" alt="image" src="https://github.com/user-attachments/assets/ea054feb-4f7f-4edf-bcc4-c28e0abb94a1" /> |
+| <img width="1283" height="824" alt="image" src="https://github.com/user-attachments/assets/ea054feb-4f7f-4edf-bcc4-c28e0abb94a1" /> | <img width="1283" height="824"  alt="image" src="https://github.com/user-attachments/assets/c46a14d8-d0f3-4117-9322-37f749ffaa94" />|
 
-| SignUp Page | Login Page|
+| SignUp Page | SignIn Page|
 |---|---|
-| <img width="1283" height="824" alt="image" src="https://github.com/user-attachments/assets/ea054feb-4f7f-4edf-bcc4-c28e0abb94a1" /> | <img width="1283" height="824" alt="image" src="https://github.com/user-attachments/assets/ea054feb-4f7f-4edf-bcc4-c28e0abb94a1" /> |
+| <img width="1283" height="824" alt="image" src="https://github.com/user-attachments/assets/fb942acf-7a2e-43d0-86e8-d9a4a72e2d1f" />| <img width="1283" height="824" alt="image" src="https://github.com/user-attachments/assets/c13848e2-db7b-41cd-8989-4b1cdb7a8eca" />|
 
 | Explore Page | Pin Page |
 |---|---|
