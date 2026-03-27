@@ -26,7 +26,7 @@ export const getCurrentProfile = async (_: any, __: any, { user }: { user: UserT
     const savedPins = await prisma.save.findMany({
         where: { userId: user.id },
         orderBy: { createdAt: "desc" },
-        take: 3,
+        take: 4,
         include: { pin: true }
     })
 

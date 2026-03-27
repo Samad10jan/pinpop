@@ -30,7 +30,8 @@ export default function PinCard({ data }: { data: PinType }) {
           alt={data.title}
           width={500}
           height={800}
-          loading="lazy"
+          // loading="lazy"
+           priority
           onLoad={() => setIsLoaded(true)}
           className={`w-full h-auto object-cover rounded-2xl transition-all duration-700 ease-in-out
             ${isLoaded ? "opacity-100 blur-0 scale-100" : "opacity-0 blur-md scale-105"}

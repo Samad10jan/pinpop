@@ -49,7 +49,7 @@ export default function SideBar() {
 
             <nav className="flex flex-row md:flex-col items-center justify-evenly md:justify-start md:gap-3 flex-1 md:flex-none w-full md:w-auto px-4 md:px-0">
                 <NavLink href="/main" icon={HomeIcon} label="Home" />
-                <NavLink href="/main/tags" icon={Compass} label="Explore"/>
+                <NavLink href="/main/tags" icon={Compass} label="Explore" />
                 <NavLink href="/main/saved" icon={HeartIcon} label="Saved" />
                 <NavLink href="/main/pin" icon={PlusCircleIcon} label="Add Pin" />
                 <NavLink href="/main/current-profile" icon={UserIcon} label="Profile" />

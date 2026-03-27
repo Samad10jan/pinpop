@@ -261,91 +261,131 @@ export async function getUserFeed(_: any, { limit = 20, page = 1 }: any, { user 
     }
 }
 
-export async function getSugg(_: any, { search }: any) {
-    try {
-        if (!search.trim()) {
-            return [];
-        }
-        const pins = await prisma.pin.findMany({
-            where: {
-                title: {
-                    contains: search,
-                    mode: "insensitive"
-                }
-            },
-            take: 5
-        });
+export async function getSugg(_: any, { search }: { search: string }) {
+  try {
+    const trimmed = search.trim();
+    if (!trimmed) return [];
 
-        return pins.map(p => p.title)
-    } catch (error) {
-        throw error;
-    }
+    const words = trimmed.split(/\s+/);
+
+    // Fetch pins + tags in parallel
+    const [pins, tags] = await Promise.all([
+      prisma.pin.findMany({
+        where: {
+          OR: [
+            ...words.map((word) => ({
+              title: { contains: word, mode: "insensitive" as const },
+            })),
+            ...words.map((word) => ({
+              description: { contains: word, mode: "insensitive" as const },
+            })),
+          ],
+        },
+        select: { title: true },
+        take: 5,
+      }),
+
+      prisma.tag.findMany({
+        where: {
+          OR: words.map((word) => ({
+            name: { contains: word, mode: "insensitive" as const },
+          })),
+        },
+        select: { name: true },
+        take: 5,
+      }),
+    ]);
+
+    // Combine + dedupe
+    const suggestions = [
+      ...pins.map((p) => p.title),
+      ...tags.map((t) => t.name),
+    ];
+
+    const unique = [...new Set(suggestions)];
+
+    return unique.slice(0, 8); // limit final output
+  } catch (error) {
+    console.error("Suggestion error:", error);
+    throw error;
+  }
 }
 
-export async function getSearchPagePins(_: any, { search, limit = 10, page = 1 }: any, { user }: { user: UserType }) {
-    try {
-        if (!search.trim()) {
-            return buildFeedResponse([], 0, page, limit);
-        }
-        const userId = user?.id;
-        if (!userId) throw new ApiError(401, "Unauthorized");
+export async function getSearchPagePins(_: any, { search, limit = 20, page = 1 }: { search: string; limit: number; page: number }, { user }: { user: UserType }) {
 
-        const skip = (page - 1) * limit;
+    if (!user?.id) throw new ApiError(401, "Unauthorized");
 
-        const totalPins = await prisma.pin.count({
-            where: {
-                OR: [
-                    {
-                        title: {
-                            contains: search,
-                            mode: "insensitive"
-                        }
-                    },
-                    {
-                        description: {
-                            contains: search,
-                            mode: "insensitive"
-                        }
-                    }
-                ]
-            }
-        });
+    const trimmed = search.trim();
+    if (!trimmed) return buildFeedResponse([], 0, page, limit);
 
+    const userId = user.id;
+    const skip = (page - 1) * limit;
 
-        const pins = await prisma.pin.findMany({
+    // Split search into words (better matching)
+    const words = trimmed.split(/\s+/);
 
-            where: {
-                title: {
-                    contains: search,
-                    mode: "insensitive"
-                }
-            },
+    // Resolve tag IDs once (based on full search)
+    const matchingTags = await prisma.tag.findMany({
+        where: {
+            OR: words.map((word) => ({
+                name: { contains: word, mode: "insensitive" as const },
+            })),
+        },
+        select: { id: true },
+    });
+
+    const tagIds = matchingTags.map((t) => t.id);
+
+    // Build unified search condition
+    const where = {
+        OR: [
+            // title matches
+            ...words.map((word) => ({
+                title: { contains: word, mode: "insensitive" as const },
+            })),
+
+            // description matches
+            ...words.map((word) => ({
+                description: { contains: word, mode: "insensitive" as const },
+            })),
+
+            // tag matches (only if found)
+            ...(tagIds.length
+                ? [{ tagIds: { hasSome: tagIds } }]
+                : []),
+        ],
+    };
+
+    const [totalPins, pins] = await Promise.all([
+        prisma.pin.count({ where }),
+        prisma.pin.findMany({
+            where,
             skip,
             take: limit,
-            orderBy: { createdAt: "desc" },
-
+            orderBy: { createdAt: "desc" }, // can upgrade later to relevance
             include: {
                 user: {
                     select: { id: true, name: true, avatar: true },
+                },
+                likes: {
+                    select: { userId: true },
                 },
                 saves: {
                     where: { userId },
                     select: { id: true },
                 },
             },
-        });
-        const mappedPins = pins.map(p => ({
-            ...p,
-            isSaved: p.saves.length > 0,
-        }));
+        }),
+    ]);
 
-        return buildFeedResponse(mappedPins, totalPins, page, limit);
+    const mappedPins = pins.map((p) => ({
+        ...p,
+        likesCount: p.likes.length,
+        isLiked: p.likes.some((l) => l.userId === userId),
+        isSaved: p.saves.length > 0,
+    }));
 
-    } catch (error: any) {
-        console.error("Error fetching feed:", error);
-        throw new ApiError(500, `Failed to fetch search results ${error?.message}`);
-        // return buildFeedResponse([], 0, page, limit);
-    }
+    return buildFeedResponse(mappedPins, totalPins, page, limit);
 }
 
 
@@ -533,7 +573,7 @@ export async function getPinsByTag(_: any, { tagId, limit = 20, page = 1 }: any,
         }));
 
         return buildFeedResponse(mappedPins, totalPins, page, limit);
-    } catch (error:any) {
+    } catch (error: any) {
         throw new ApiError(500, `Failed to fetch ${error?.message}`);
     }
 }

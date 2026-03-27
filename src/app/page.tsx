@@ -1,7 +1,7 @@
 import Footer from "@/src/components/commons/Footer";
-import { PinIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { context } from "../helper/context";
 
 
 const categories = [
@@ -13,24 +13,31 @@ const categories = [
   { label: "ARCHITECTURE", span: "", pos: "bottom-4 left-4", src: "/image10.jpeg" },
 ];
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  const user = await context();
+
+  // console.log(user.user);
+
   return (
     <main className="min-h-screen bg-[#f5f0ea] font-sans overflow-x-hidden">
-{/* <SeedButton/> */}
+      {/* <SeedButton/> */}
       <header className="sticky top-0 z-50 bg-[#f5f0ea]/90 backdrop-blur-md border-b-2 border-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 sm:h-20">
-          
+
           <div className="flex items-center gap-2.5">
             {/* <div className=" *:size-7 p-1 *:rotate-45 rounded-full bg-black flex items-center justify-center text-white shrink-0 transition-all duration-500">
               <PinIcon/>
               
             </div> */}
             <span className="text-xl md:text-5xl font-black tracking-[0.2em] uppercase">
-             PinPop
+              PinPop
             </span>
           </div>
 
           <nav className="flex items-center gap-2 sm:gap-3">
+            {user.user && <Link href="/main" className="btn-rect truncate px-2! py-2! sm:px-5! sm:py-2.5! text-xs! sm:text-sm! font-bold! tracking-wide! uppercase!">
+              Feed
+            </Link>}
             <Link href="/signin" className="btn-rect truncate px-2! py-2! sm:px-5! sm:py-2.5! text-xs! sm:text-sm! font-bold! tracking-wide! uppercase!">
               Sign In
             </Link>
@@ -131,7 +138,7 @@ export default function LandingPage() {
                   alt={label}
                   fill
                   className="object-cover"
-              
+
                 />
 
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300" />

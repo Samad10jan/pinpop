@@ -166,10 +166,13 @@ export default function CommentArea({
                         </button>
                     </form>
 
-                    <div className="mt-4">
+                    <div className="mt-4 ">
 
                         {comments.length === 0 && (
                             <p className="text-sm text-gray-500 ">No comments yet</p>
+                        )}
+                        {comments.length > 0 && (
+                            <p className="text-sm text-gray-500 font-bold ">Comments</p>
                         )}
 
                         <div className="space-y-4 mt-3">

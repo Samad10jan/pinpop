@@ -52,7 +52,7 @@ export default function UserPage() {
             <main className="page">
                 <div className="container">
                     <div className="card max-w-md mx-auto mt-20 text-center bg-cyan-600 text-white">
-                        <p className="text-xl font-bold">Loading your dashboard...</p>
+                        <p className="text-xl font-bold">Loading...</p>
                     </div>
                 </div>
             </main>
@@ -208,7 +208,7 @@ export default function UserPage() {
                                 </div>
 
 
-                                <div className="grid grid-cols-3 gap-2 mb-4">
+                                <div className="grid grid-cols-4 gap-2 mb-4">
                                     {lastSavedPins.map((s) => (
                                         <div key={s.id} className="relative max-w-50 h-20 mb-4 group rounded-2xl overflow-hidden hover:shadow-xl transition-all">
 

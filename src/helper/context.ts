@@ -1,11 +1,13 @@
+// "use server";
 import jwt from "jsonwebtoken";
 import prisma from "@/src/lib/services/prisma";
 import { cookies } from "next/headers";
 
-// Work is to get user info from access token in cookies, and return it in the context, so that all Resolvers can access user info without verifying token again and again.
 export async function context() {
   const cookieStore = await cookies();
   const access = cookieStore.get("access")?.value;
+  // console.log("access",access);
+  
 
   if (!access) return { user: null };
   // console.log("aaa");

@@ -169,7 +169,7 @@ type Query {
   getSearchPagePins(search: String!, limit: Int, page: Int): FeedResponse!
 
   getCurrentUserPins: CurrentUserAnalyticsResponse!
-  getUserAllPins(userId:ID!): FeedResponse!
+  getUserAllPins(userId:ID!,limit: Int, page: Int): FeedResponse!
 
   getPinsByTag(tagId: ID!, limit: Int, page: Int): FeedResponse!
 

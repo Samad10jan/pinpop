@@ -273,7 +273,7 @@ query{
 
 export const GET_A_USER_ALL_PINS_QUERY = gql`
 
-query ($userId: ID!) {
+query ($userId: ID!,$limit: Int, $page: Int) {
   getUserAllPins(userId: $userId, limit: $limit, page: $page) {
     pins {
       createdAt

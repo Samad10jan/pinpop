@@ -72,7 +72,7 @@ export default function UserPage() {
       <main className="page">
         <div className="container">
           <div className="card max-w-md mx-auto mt-20 text-center bg-cyan-600 text-white">
-            <p className="text-xl font-bold">Loading profile...</p>
+            <p className="text-xl font-bold">Loading...</p>
           </div>
         </div>
       </main>

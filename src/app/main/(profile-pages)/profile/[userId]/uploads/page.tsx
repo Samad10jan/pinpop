@@ -11,59 +11,31 @@ import PinCard from "@/src/components/cards/PinCard";
 import { PinType } from "@/src/types/types";
 
 import { Masonry } from "masonic";
+import Loading from "@/src/components/commons/Loading";
+import useInfinitePins from "@/src/components/commons/useInfinitePins";
 
 
 export default function UserUploadsPage() {
     const { userId } = useParams();
 
-    const [pins, setPins] = useState<PinType[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState("");
+    // const [pins, setPins] = useState<PinType[]>([]);
+    // const [loading, setLoading] = useState(true);
+    // const [error, setError] = useState("");
+    const { pins, loading, observerRef, hasNextPage, } = useInfinitePins(
 
-    useEffect(() => {
-        if (!userId) return;
+        GET_A_USER_ALL_PINS_QUERY,
+        { userId },
+        "getUserAllPins"
+    )
 
-        async function fetchPins() {
-            try {
-                const res = await gqlClient.request(
-                    GET_A_USER_ALL_PINS_QUERY,
-                    {
-                        userId,
-                    }
-                );
+    if (loading && pins.length === 0) return <Loading />;
 
-                setPins(res.getUserAllPins.pins || []);
-            } catch (e) {
-                setError(getGraphQLError(e));
-            } finally {
-                setLoading(false);
-            }
-        }
-
-        fetchPins();
-    }, [userId]);
-
-    if (loading) {
-        return (
-            <main className="min-h-screen flex items-center justify-center">
-                <p className="text-lg font-semibold">Loading pins...</p>
-            </main>
-        );
-    }
-
-    if (error) {
-        return (
-            <main className="min-h-screen flex items-center justify-center">
-                <p className="text-red-500">{error}</p>
-            </main>
-        );
-    }
 
     return (
         <main className="">
             <div className="flex flex-col items-center mb-5">
-                <h1 className="text-2xl md:text-5xl font-black ">
-                    {pins[1].user.name.split(" ")[0]}'s Uploads
+                <h1 className="text-2xl md:text-5xl font-black">
+                    {pins[0]?.user?.name?.split(" ")[0] ?? "User"}'s Uploads
                 </h1>
                 <div className="mt-3 flex gap-2">
                     <div className="h-1 w-12 bg-black rounded-full" />
@@ -87,6 +59,7 @@ export default function UserUploadsPage() {
                 render={({ data }: { data: PinType }) => <PinCard data={data} />}
             />
 
+            {hasNextPage && <div ref={observerRef} className="h-1" />}
         </main>
     );
 }
