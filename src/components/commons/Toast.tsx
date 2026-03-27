@@ -37,7 +37,7 @@ export function useToast() {
     // returned functions
     return {
         toasts,
-        remove: (id: number) => setToasts(prev => prev.filter(t => t.id !== id)),
+        remove: (id: number) => setToasts(prev => prev.filter(t => t.id !== id)), // remove from array by id
         success: (msg: string) => add(msg, "success"),
         error: (msg: string) => add(msg, "error"),
         info: (msg: string) => add(msg, "info"),
@@ -48,6 +48,7 @@ export function ToastContainer({ toasts, onClose }: { toasts: ToastItem[]; onClo
     return (
         <div className="fixed top-5 right-5 z-50 flex flex-col gap-2">
 
+            {/*always rendered,shows which are in array and it get removed after 3 sec  */}
             {toasts.map(({ id, message, type }) => {
                 const { icon: Icon, bg } = config[type];
                 return (

@@ -35,16 +35,16 @@ export default function LoginPage() {
         } catch (e: any) {
             //trigger an error toast with the error message
             console.log(e.message);
-            
+
             toast.error(getGraphQLError(e));
         } finally {
             setLoading(false);
         }
     }
-    
+
 
     return (
-        <main className="page flex">
+        <main className="page flex bg-black">
 
             {/* Render the ToastContainer at first 
 
@@ -97,14 +97,27 @@ export default function LoginPage() {
 
             </div>
 
+            <div className="hidden relative md:flex w-1/2 items-center justify-center overflow-hidden rounded-2xl bg-[#0a0a0a]">
 
-            <div className="hidden md:flex w-1/2 bg-[#FE7F2D] relative">
+
                 <Image
-                    src="/login-illustration.png"
-                    alt="Login"
+                    src="/signin.jpg"
+                    alt="Signin"
                     fill
-                    className="object-cover"
+                    className="object-cover z-0 opacity-40 scale-105"
                 />
+
+                <div className="relative z-30 flex flex-col items-center gap-4 px-10 text-center select-none">
+
+
+                    <h1 className="text-6xl font-black tracking-tighter text-white leading-none">
+                        PIN<span className="text-[#FE7F2D]">POP</span>
+                    </h1>
+
+                    <p className="text-sm text-white/80 font-light max-w-50 leading-relaxed">
+                        Collect, curate, and share what inspires you.
+                    </p>
+                </div>
             </div>
 
         </main>

@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { refreshTokens } from "./helper/refersh";
+import { verifyAccess } from "./helper/auth";
 
 
 export async function proxy(req: NextRequest) {
@@ -21,10 +22,10 @@ export async function proxy(req: NextRequest) {
 
   // access valid -> continue
   if (access) {
-    try {
-      jwt.verify(access, process.env.JWT_SECRET!);
+    const decoded = verifyAccess(access);
+    if (decoded) {
       return NextResponse.next();
-    } catch { }
+    }
   }
 
   // no refresh -> logout

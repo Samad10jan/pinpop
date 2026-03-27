@@ -77,19 +77,33 @@ export default function SignupPage() {
     }
 
     return (
-        <main className="page flex">
+        <main className="page flex bg-black">
+            {/* passing toasts from useToast which is an array, we add messages and remove after 3 sec auto or using functions */}
             <ToastContainer toasts={toast.toasts} onClose={toast.remove} />
 
 
-            <div className="hidden md:flex w-1/2 bg-[#FE7F2D] items-center justify-center">
+            <div className="hidden relative md:flex w-1/2 items-center justify-center overflow-hidden rounded-2xl bg-[#0a0a0a]">
+
+              
                 <Image
-                    src="/signup-illustration.png"
+                    src="/signup.jpg"
                     alt="Sign up"
                     fill
-                    className="object-cover"
+                    className="object-cover z-0 opacity-40 scale-105"
                 />
-            </div>
 
+                <div className="relative z-30 flex flex-col items-center gap-4 px-10 text-center select-none">
+
+
+                    <h1 className="text-6xl font-black tracking-tighter text-white leading-none">
+                        PIN<span className="text-[#FE7F2D]">POP</span>
+                    </h1>
+
+                    <p className="text-sm text-white/80 font-light max-w-50 leading-relaxed">
+                        Collect, curate, and share what inspires you.
+                    </p>
+                </div>
+            </div>
 
             <div className="flex flex-col justify-center w-full md:w-1/2 px-16 py-12 bg-[#f5f0ea] min-h-screen">
 
@@ -141,7 +155,7 @@ export default function SignupPage() {
                                 onChange={e => setAvatar(e.target.files?.[0] || null)}
 
                             />
-                            <UploadIcon/>
+                            <UploadIcon />
                         </label>
 
                         <button

@@ -162,8 +162,8 @@ export async function login(_: any, args: any) {
         });
 
         // keep only latest 5 sessions
-        if (sessions.length > 5) {
-            const toDelete = sessions.slice(0, sessions.length - 5);
+        if (sessions.length > 2) {
+            const toDelete = sessions.slice(0, sessions.length - 2);
 
             await tn.refreshToken.deleteMany({
                 where: {
