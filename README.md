@@ -22,19 +22,19 @@ A Pinterest-style social image pinboard — built with Next.js 16, React 19, Typ
 
 | Explore Page | Pin Page |
 |---|---|
-| <img width="1283" height="824" alt="image" src="https://github.com/user-attachments/assets/ea054feb-4f7f-4edf-bcc4-c28e0abb94a1" /> | <img width="1283" height="824" alt="image" src="https://github.com/user-attachments/assets/ea054feb-4f7f-4edf-bcc4-c28e0abb94a1" /> |
+| <img width="1283" height="824" alt="image" src="https://github.com/user-attachments/assets/e26c6af5-7c15-4435-a9ca-37d5fbacdd37" />| <img width="1283" height="824" alt="image" src="https://github.com/user-attachments/assets/90d511fe-5418-4ea8-bcef-f75af27b8bd3" />|
 
 | Tags Pins Page | Search Page |
 |---|---|
-| <img width="1283" height="824" alt="image" src="https://github.com/user-attachments/assets/ea054feb-4f7f-4edf-bcc4-c28e0abb94a1" /> | <img width="1283" height="824" alt="image" src="https://github.com/user-attachments/assets/ea054feb-4f7f-4edf-bcc4-c28e0abb94a1" /> |
+| <img width="1283" height="824" alt="image" src="https://github.com/user-attachments/assets/7828a39c-3691-4644-894c-7521f1cb004b" />|<img width="1283" height="824" alt="image" src="https://github.com/user-attachments/assets/ca10b7d0-212f-42ce-ab9d-89a0797a03c0" />|
 
-| Create Pin Page | Current User Profile Page |
+| Create Pin Page | Saved Pins Page |
 |---|---|
-| <img width="1283" height="824" alt="image" src="https://github.com/user-attachments/assets/ea054feb-4f7f-4edf-bcc4-c28e0abb94a1" /> | <img width="1283" height="824" alt="image" src="https://github.com/user-attachments/assets/ea054feb-4f7f-4edf-bcc4-c28e0abb94a1" /> |
+| <img width="1283" height="824" alt="image" src="https://github.com/user-attachments/assets/29f8153f-7a86-4213-b738-08b9ef2bb80a" />|  <img width="1283" height="824" alt="image" src="https://github.com/user-attachments/assets/1b6a16bd-900a-4764-aa55-6a4a6b642dda" />|
 
-| Saved Pins Page | Dashboard Page  |
+| Current User Profile Page  | Dashboard Page  |
 |---|---|
-| <img width="1283" height="824" alt="image" src="https://github.com/user-attachments/assets/ea054feb-4f7f-4edf-bcc4-c28e0abb94a1" /> | <img width="1283" height="824" alt="image" src="https://github.com/user-attachments/assets/ea054feb-4f7f-4edf-bcc4-c28e0abb94a1" /> |
+|<img  width="1283" height="824" alt="image" src="https://github.com/user-attachments/assets/f709f4b9-e324-4357-9c4c-b600d1ddc06e" />| <img width="1283" height="824" alt="image" src="https://github.com/user-attachments/assets/7d3d5f93-e46b-4002-bb54-5918c432b6c4" />|
 
 
 
