@@ -56,14 +56,14 @@ A Pinterest-style social image pinboard — built with Next.js 16, React 19, Typ
 | Layer | Tech |
 |---|---|
 | Frontend | Next.js 16 (App Router), React 19, TypeScript 5 |
-| Styling | Tailwind CSS 4, Radix UI, Lucide React, tw-animate-css |
+| Styling | Tailwind CSS 4, Lucide React |
 | Backend | Apollo Server 5 + `@as-integrations/next` |
 | Database | MongoDB Atlas via Prisma 6 ORM |
 | Auth | `jsonwebtoken`, `bcrypt` |
 | Media | Cloudinary (upload + CDN) |
 | Email | Nodemailer (Gmail) |
 | Grid | `masonic` 4 (responsive masonry) |
-| GQL Client | `graphql-request`, `graphql-tag` |
+| GQL Client | `graphql-request` |
 
 ---
 
@@ -71,9 +71,10 @@ A Pinterest-style social image pinboard — built with Next.js 16, React 19, Typ
 
 **Auth**
 - Email OTP signup — 6-digit code, bcrypt-hashed, 5-minute expiry
+- Hashed password for security using `bcrypt`
 - JWT access tokens (15m) + refresh tokens (7d, stored in DB)
 - Automatic token rotation via Next.js middleware (no extra HTTP call)
-- Max 5 active sessions per user; oldest deleted on overflow
+- Max 2 active sessions per user; oldest deleted on overflow
 - httpOnly + secure + sameSite cookies throughout
 
 **Pins**
@@ -87,68 +88,11 @@ A Pinterest-style social image pinboard — built with Next.js 16, React 19, Typ
 
 **Discovery**
 - Infinite scroll masonry feed (20 pins/page, Intersection Observer)
-- Full-text search
-- Tag browsing + tag-filtered feeds
 - Related pins by tag
 
 ---
 
-## Setup
 
-### Prerequisites
-- Node.js `>=20`
-- MongoDB Atlas account
-- Cloudinary account
-- Gmail account (for OTP emails)
-
-### Install
-
-```bash
-git clone https://github.com/Samad10jan/pinpop.git
-cd pinpop
-npm install
-```
-
-### Environment Variables
-
-Create `.env.local`:
-
-```env
-# Database
-DATABASE_URL="mongodb+srv://username:password@cluster.mongodb.net/pinpop?retryWrites=true&w=majority"
-
-# JWT (must be different secrets)
-JWT_SECRET="your-access-secret-min-32-chars"
-REFRESH_SECRET="your-refresh-secret-min-32-chars"
-
-# Cloudinary
-CLOUDINARY_CLOUD_NAME="your-cloud-name"
-CLOUDINARY_API_KEY="your-api-key"
-CLOUDINARY_API_SECRET="your-api-secret"
-
-# Gmail (use App Password, not account password)
-GMAIL_USER="your-email@gmail.com"
-GMAIL_APP_PASS="your-16-char-app-password"
-```
-
-### Database
-
-```bash
-npx prisma generate    # generate Prisma client
-npx prisma db push     # push schema to MongoDB
-npx prisma studio      # optional: open DB GUI
-```
-
-### Run
-
-```bash
-npm run dev      # http://localhost:3000
-npm run build
-npm start
-npm run lint
-```
-
----
 
 ## Project Structure
 
@@ -333,5 +277,61 @@ All relations use `onDelete: Cascade`. Full schema in `prisma/schema.prisma`.
 - Refresh tokens: DB-stored, rotated on every use, invalidated on logout
 - OTP: bcrypt-hashed before storage, deleted after use
 - Sessions: max 2 per user
+
+---
+## Setup
+
+### Prerequisites
+- Node.js `>=20`
+- MongoDB Atlas account
+- Cloudinary account
+- Gmail account (for OTP emails)
+
+### Install
+
+```bash
+git clone https://github.com/Samad10jan/pinpop.git
+cd pinpop
+npm install
+```
+
+### Environment Variables
+
+Create `.env.local`:
+
+```env
+# Database
+DATABASE_URL="mongodb+srv://username:password@cluster.mongodb.net/pinpop?retryWrites=true&w=majority"
+
+# JWT (must be different secrets)
+JWT_SECRET="your-access-secret-min-32-chars"
+REFRESH_SECRET="your-refresh-secret-min-32-chars"
+
+# Cloudinary
+CLOUDINARY_CLOUD_NAME="your-cloud-name"
+CLOUDINARY_API_KEY="your-api-key"
+CLOUDINARY_API_SECRET="your-api-secret"
+
+# Gmail (use App Password, not account password)
+GMAIL_USER="your-email@gmail.com"
+GMAIL_APP_PASS="your-16-char-app-password"
+```
+
+### Database
+
+```bash
+npx prisma generate    # generate Prisma client
+npx prisma db push     # push schema to MongoDB
+npx prisma studio      # optional: open DB GUI
+```
+
+### Run
+
+```bash
+npm run dev      # http://localhost:3000
+npm run build
+npm start
+npm run lint
+```
 
 ---
