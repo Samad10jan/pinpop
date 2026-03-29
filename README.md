@@ -75,7 +75,17 @@ A Pinterest-style social image pinboard — built with Next.js 16, React 19, Typ
 - JWT access tokens (15m) + refresh tokens (7d, stored in DB)
 - Automatic token rotation via Next.js middleware (no extra HTTP call)
 - Max 2 active sessions per user; oldest deleted on overflow
-- httpOnly + secure + sameSite cookies throughout
+- httpOnly + secure + sameSite cookies throughout.
+
+**Security**
+
+- Passwords: bcrypt, 10 rounds
+- JWTs: signed with separate secrets, short-lived access tokens
+- Cookies: httpOnly, secure, sameSite=lax
+- Refresh tokens: DB-stored, rotated on every use, invalidated on logout
+- OTP: bcrypt-hashed before storage, deleted after use
+- Sessions: max 2 per user
+
 
 **Pins**
 - Upload images/GIFs to Cloudinary with title, description, tags
@@ -269,16 +279,6 @@ All relations use `onDelete: Cascade`. Full schema in `prisma/schema.prisma`.
 
 ---
 
-## Security
-
-- Passwords: bcrypt, 10 rounds
-- JWTs: signed with separate secrets, short-lived access tokens
-- Cookies: httpOnly, secure, sameSite=lax
-- Refresh tokens: DB-stored, rotated on every use, invalidated on logout
-- OTP: bcrypt-hashed before storage, deleted after use
-- Sessions: max 2 per user
-
----
 ## Setup
 
 ### Prerequisites
