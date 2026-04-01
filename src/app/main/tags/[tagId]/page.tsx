@@ -5,6 +5,7 @@ import Loading from "@/src/components/commons/Loading";
 import useInfinitePins from "@/src/components/commons/useInfinitePins";
 import { tags } from "@/src/lib/constants";
 import { GET_PINS_BY_TAG_QUERY } from "@/src/lib/gql/queries/queries";
+import { PinType } from "@/src/types/types";
 import { PlusCircleIcon } from "lucide-react";
 import { Masonry } from "masonic";
 import Link from "next/link";
@@ -16,12 +17,12 @@ export default function Home() {
 
     const [tagName, setTagName] = useState("Tag");
 
-    const { pins, loading,hasNextPage, observerRef } = useInfinitePins(
+    const { pins, loading, hasNextPage, observerRef } = useInfinitePins(
         GET_PINS_BY_TAG_QUERY,
         { tagId },
         "getPinsByTag"
     );
-console.log(hasNextPage);
+    console.log(hasNextPage);
 
     useEffect(() => {
         function getTagName(id: string) {
@@ -65,19 +66,32 @@ console.log(hasNextPage);
             </div>
 
 
-            <Masonry
-                items={pins}
-                columnGutter={16}
-                columnWidth={236}
-                 overscanBy={1} 
-                itemKey={(item) => item.id}
-                render={({ data }) => <PinCard data={data} />}
-            />
+            <div className="hidden sm:flex md:flex w-full">
+                <Masonry
+                    items={pins}
+                    columnGutter={16}
+                    columnWidth={236}        // min width per column, masonic auto-calculates count   
+                    itemKey={(item: PinType) => item.id}
+                    render={({ data }: { data: PinType }) => <PinCard data={data} />}
+                />
+
+            </div>
+
+            <div className="flex sm:hidden md:hidden w-full">
+                <Masonry
+                    items={pins}
+                    columnGutter={16}
+                    columnWidth={110}        // min width per column, masonic auto-calculates count 
+                    itemKey={(item: PinType) => item.id}
+                    render={({ data }: { data: PinType }) => <PinCard data={data} />}
+                />
+
+            </div>
 
 
-           {hasNextPage && <div ref={observerRef} className="h-1" />}
+            {hasNextPage && <div ref={observerRef} className="h-1" />}
 
-            
+
 
         </main>
     );

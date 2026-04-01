@@ -39,14 +39,28 @@ export default function SavedPage() {
 
 
 
-            <Masonry
-                items={pins}
-                columnGutter={16}
-                columnWidth={236}
-                 overscanBy={1} // this overSc
-                itemKey={(item:PinType) => item.id}
-                render={({ data }:{data:PinType}) => <PinCard data={data} />}
-            />
+         <div className="hidden sm:flex md:flex w-full">
+                 <Masonry
+                   items={pins}
+                   columnGutter={16}
+                   columnWidth={236}        // min width per column, masonic auto-calculates count
+                     
+                   itemKey={(item: PinType) => item.id}
+                   render={({ data }: { data: PinType }) => <PinCard data={data} />}
+                 />
+         
+               </div>
+         
+               <div className="flex sm:hidden md:hidden w-full">
+                 <Masonry
+                   items={pins}
+                   columnGutter={16}
+                   columnWidth={110}        // min width per column, masonic auto-calculates count 
+                   itemKey={(item: PinType) => item.id}
+                   render={({ data }: { data: PinType }) => <PinCard data={data} />}
+                 />
+         
+               </div>
 
 
             {
