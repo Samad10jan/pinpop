@@ -68,7 +68,6 @@ mutation ($name: String, $avatar: String) {
   updateProfile(name: $name, avatar: $avatar) {
     name
     uploadCount
-    createdAt
     avatar
     email
     id

@@ -6,42 +6,47 @@ import { verifyAccess } from "./helper/auth";
 
 
 export async function proxy(req: NextRequest) {
-
-  // access tokens from cookies
   const access = req.cookies.get("access")?.value;
   const refresh = req.cookies.get("refresh")?.value;
   const pathname = req.nextUrl.pathname;
 
-  // nothing exists -> logout
+  const isAuthPage = pathname === "/";
+
+  // No tokens at all
   if (!access && !refresh) {
-    if (pathname !== "/") {
+    if (!isAuthPage) {
       return NextResponse.redirect(new URL("/", req.url));
     }
     return NextResponse.next();
   }
 
-  // access valid -> continue
-  if (access) {
-    const decoded = verifyAccess(access);
-    if (decoded) {
-      return NextResponse.next();
+  // Try access token first
+  if (access && verifyAccess(access)) {
+    // Logged in user should not see login page
+    if (isAuthPage) {
+      return NextResponse.redirect(new URL("/main", req.url));
     }
+    return NextResponse.next();
   }
 
-  // no refresh -> logout
+  // No refresh token → logout
   if (!refresh) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
-  // refresh directly (NO HTTP)
+  // token rotaion: if access token is invalid but refresh token exists, try to refresh
   const tokens = await refreshTokens(refresh);
 
   if (!tokens) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
-  const response = NextResponse.next();
+  // Decide response based on route
+  const response = isAuthPage
+    ? NextResponse.redirect(new URL("/main", req.url))
+    : NextResponse.next();
 
+  // Set new cookies
   response.cookies.set("access", tokens.newAccess, {
     httpOnly: true,
     secure: true,
@@ -61,5 +66,5 @@ export async function proxy(req: NextRequest) {
 
 // protecting main routes
 export const config = {
-  matcher: ["/main/:path*"],
+  matcher: ["/", "/main/:path*"],
 };

@@ -29,8 +29,9 @@ export const getCurrentProfile = async (_: any, __: any, { user }: { user: UserT
         take: 4,
         include: { pin: true }
     })
-
-    // console.log("mera user:", user);
+    const uploadCount = await prisma.pin.count({
+        where: { userId: user.id },
+    })
 
     return {
         user: {
@@ -38,7 +39,7 @@ export const getCurrentProfile = async (_: any, __: any, { user }: { user: UserT
             email: user.email,
             name: user.name,
             avatar: user.avatar,
-            uploadCount: user.uploadCount,
+            uploadCount: uploadCount,
             // createdAt: user.createdAt
         },
         lastSavedPins: savedPins.map(s => s.pin),
@@ -83,7 +84,7 @@ export const isFollowing = async (parent: any, _: any, { user }: { user: UserTyp
 
     if (!user) return false;
     // console.log("aaaa");
-    
+
 
     const follow = await prisma.follow.findUnique({
         where: {
@@ -133,8 +134,8 @@ export const getProfile = async (_: any, { userId }: any) => {
 
 // Mutations
 
-export const updateProfile = async (_: any, { name, avatar }: { name:string, avatar:string }, { user }: { user: UserType }) => {
-   
+export const updateProfile = async (_: any, { name, avatar }: { name: string, avatar: string }, { user }: { user: UserType }) => {
+
     if (!user) throw new ApiError(401, "Unauthorized");
 
     if (!name && !avatar) throw new ApiError(400, "At least one field (name or avatar) is required");

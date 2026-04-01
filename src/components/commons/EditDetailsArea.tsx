@@ -5,18 +5,18 @@ import { UPDATE_PROFILE } from "@/src/lib/gql/mutations/mutations";
 import gqlClient from "@/src/lib/services/graphql";
 import { UserType } from "@/src/types/types";
 import { XIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { ToastContainer, useToast } from "./Toast";
 
 export default function EditDetailsArea({ userData, onClose }: { userData: UserType; onClose: () => void }) {
-    const router = useRouter();
+    // const router = useRouter();
 
     const [name, setName] = useState("");
     const [avatar, setAvatar] = useState<File | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-
+    const toast = useToast()
     useEffect(() => {
         if (userData) {
             setName(userData.name || "");
@@ -72,7 +72,8 @@ export default function EditDetailsArea({ userData, onClose }: { userData: UserT
             location.reload();
             onClose();
         } catch (e: any) {
-            setError(getGraphQLError(e));
+            // setError(getGraphQLError(e));
+            toast.error(getGraphQLError(e));
         } finally {
             setLoading(false);
         }
@@ -82,7 +83,9 @@ export default function EditDetailsArea({ userData, onClose }: { userData: UserT
         <div
             className="fixed inset-0 bg-black/60 flex items-center justify-center z-9999"
             onClick={onClose}
+
         >
+             <ToastContainer toasts={toast.toasts} onClose={toast.remove} />
             {/* Stop bubbling so modal doesn't close when clicking inside, if clicked here without stoping event delegation it will send event to upper parent that will think as event occured on me so onClick will be triggerd */}
             <div
                 className="card relative w-[90vw] max-w-md p-6 bg-white"

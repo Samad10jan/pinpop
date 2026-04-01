@@ -65,13 +65,13 @@ export const getAllTags = async (_: any, __: any, { user }: { user: UserType }) 
     })
     if (!user) throw new ApiError(401, "Unauthorized");
 
-    const uploadCount = await prisma.user.findUnique({
-        where: { id: user.id },
-        select: { uploadCount: true }
+    const uploadCount = await prisma.pin.count({
+        where: { userId: user.id },
+        
     });
     return {
         tags: tags.map(t => ({ id: t.id, name: t.name })),
-        uploadCount: uploadCount?.uploadCount && uploadCount?.uploadCount > 15 ? false : true
+        uploadCount: uploadCount && uploadCount > 15 ? false : true
     }
 
 }
