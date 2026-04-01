@@ -26,8 +26,7 @@ export default function PinPage() {
   const { pinId } = useParams();
 
   // split states
-  const [pin, setPin] = useState<PinType
-    | null>(null);
+  const [pin, setPin] = useState<PinType | null>(null);
   const [relatedPins, setRelatedPins] = useState<PinType[]>([]);
   const [followersCount, setFollowersCount] = useState(0);
   const [likesCount, setLikesCount] = useState(0);
@@ -106,11 +105,6 @@ export default function PinPage() {
   if (!pin) return null;
 
 
-  // const handleFollowChange = (val: boolean) => {
-  //   setIsFollowing(val);
-  //   setFollowersCount(prev => (val ? prev + 1 : Math.max(0, prev - 1)));
-  // };
-
   return (
     <div className="flex flex-col md:flex-row gap-8 ">
 
@@ -119,7 +113,7 @@ export default function PinPage() {
         <Image
           src={pin.mediaUrl}
           alt={pin.title}
-          width={700}
+          width={400}
           height={1000}
           className="rounded-2xl shadow w-full h-auto"
           priority
@@ -130,11 +124,11 @@ export default function PinPage() {
           <div className="flex flex-col md:flex-row md:justify-between gap-4">
 
             <div>
-              <p className="font-semibold text-xl line-clamp-2">
+              <p className="font-semibold text-md md:text-xl line-clamp-2">
                 {pin.title}
               </p>
 
-              <p className="font-semibold text-sm text-gray-500 line-clamp-2">
+              <p className="font-semibold text-xs text-gray-500 line-clamp-2">
                 {pin.description}
               </p>
 
@@ -142,7 +136,7 @@ export default function PinPage() {
                 {tags.map((t) => (
                   <div
                     key={t.id}
-                    className="outline text-gray-500 text-sm rounded-2xl px-3 py-1"
+                    className="outline text-gray-500 text-[8px] md:text-xs rounded-2xl px-3 py-1"
                   >
                     {t.name}
                   </div>
@@ -158,7 +152,7 @@ export default function PinPage() {
               <button
                 title="comments"
                 onClick={() => setShowComments((prev) => !prev)}
-                className={`btn-circle relative overflow-hidden! group ${showComments ? "bg-orange-400" : "bg-white"} active:bg-orange-400 active:text-white `}
+                className={`btn-circle size-10! relative overflow-hidden! group ${showComments ? "bg-orange-400" : "bg-white"} active:bg-orange-400 active:text-white `}
               >
                 <MessageCircleIcon />
                 <div className="absolute inset-0 w-2 h-full  bg-amber-300 transform -translate-x-30 group-hover:translate-x-30 skew-x-12 transition-transform duration-2500" />
@@ -175,22 +169,24 @@ export default function PinPage() {
               <div className="flex gap-4 items-center">
                 <Link
                   href={`/main/profile/${pin.user.id}`}
-                  className="btn-circle relative overflow-hidden"
+                  className="btn-circle relative overflow-hidden flex justify-center items-center size-10! bg-green-300"
                 >
-                  <Image
-                    src={
-                      pin.user.avatar ||
-                      "https://tse1.mm.bing.net/th/id/OIP.2ZC6eH3utWfNn6yZaCEstgHaFf?w=5263&h=3903&rs=1&pid=ImgDetMain&o=7&rm=3"
-                    }
-                    alt={pin.user.name}
-                   fill
-                    className="rounded-full object-cover"
-                  />
+                  {pin.user.avatar ?
+                    <Image
+                      src={pin.user.avatar}
+                      alt={pin.user.name}
+                      fill
+                      className="rounded-full object-cover"
+                    />
+                    :
+                    <div className=" capitalize p-5">{pin.user.name[0]}</div>
+
+                  }
                 </Link>
 
                 <div>
                   <h3 className="font-semibold">{pin.user.name}</h3>
-                  <p className="text-sm text-gray-500">
+                  <p className="md:text-sm text-xs text-gray-500">
                     {followersCount} followers
                   </p>
                 </div>
@@ -214,8 +210,8 @@ export default function PinPage() {
               pinId={pin.id}
               showComments={showComments}
               setShowComments={setShowComments}
-            />          
-            </div>
+            />
+          </div>
 
         </div>
       </div>

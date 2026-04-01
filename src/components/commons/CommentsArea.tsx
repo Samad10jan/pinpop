@@ -140,9 +140,9 @@ export default function CommentArea({
                         onSubmit={handleCommentSend}
                         className="flex gap-3 mb-5"
                     >
-                        <div className="flex-1 flex items-center bg-orange-200 rounded-2xl px-2 sm:px-3 py-2 shadow-sm focus-within:ring-2 focus-within:ring-black transition-all">
+                        <div className="flex-1 flex items-center bg-orange-200 rounded-2xl px-2 sm:px-3 py-2 shadow-sm focus-within:ring-2 focus-within:ring-gray-600 transition-all">
 
-                            <div className="flex items-center justify-center text-gray-600 pr-2">
+                            <div className="md:flex hidden size-10!  items-center justify-center text-gray-600 pr-2">
                                 <Send />
                             </div>
 
@@ -160,7 +160,7 @@ export default function CommentArea({
                             title="comment"
                             type="submit"
                             disabled={alreadyCommented || loading}
-                            className="btn-rect flex items-center justify-center! px-3 py-1 transition-all disabled:opacity-50! disabled:cursor-not-allowed!"
+                            className="btn-rect size-11! md:size-13! flex items-center justify-center! px-3! py-1! transition-all disabled:opacity-50! disabled:cursor-not-allowed!"
                         >
                             <Send />
                         </button>
@@ -169,7 +169,7 @@ export default function CommentArea({
                     <div className="mt-4 ">
 
                         {comments.length === 0 && (
-                            <p className="text-sm text-gray-500 ">No comments yet</p>
+                            <p className="text-sm text-gray-500 text-center">No comments yet</p>
                         )}
                         {comments.length > 0 && (
                             <p className="text-sm text-gray-500 font-bold ">Comments</p>
@@ -197,7 +197,7 @@ export default function CommentArea({
                             {hasPrevPage && <button
                                 disabled={page === 1 || loading}
                                 onClick={() => loadComments(page - 1)}
-                                className="w-full sm:w-auto px-4 py-2 rounded-xl border border-black hover:bg-black hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="w-full sm:w-auto  rounded-xl border border-black hover:bg-black hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 Prev
                             </button>}

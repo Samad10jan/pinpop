@@ -22,7 +22,7 @@ export default function ShareButton() {
         <button
             title="share"
             onClick={handleShare}
-            className="btn-circle  relative overflow-hidden! group"
+            className="btn-circle size-10!   relative overflow-hidden! group"
         >
             {typeof navigator.share === "function" && (
                 <>

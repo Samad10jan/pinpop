@@ -93,10 +93,7 @@ export default function UserPage() {
 
   const name = user?.name || "Anonymous";
   const email = user?.email || "No email";
-  const avatar =
-    user?.avatar ||
-    "https://tse1.mm.bing.net/th/id/OIP.2ZC6eH3utWfNn6yZaCEstgHaFf?w=5263&h=3903&rs=1&pid=ImgDetMain&o=7&rm=3";
-
+  const avatar = user?.avatar
   const totalPins = user?.uploadCount || 0;
 
   // optimistic update
@@ -125,13 +122,18 @@ export default function UserPage() {
           <div className="card sticky top-8 bg-white">
             <div className="flex justify-center mb-6 ">
               <div className=" relative w-32! h-32! btn-circle overflow-hidden! ">
-                <div className=" absolute w-full h-full ">
-                  <Image
-                    src={avatar}
-                    alt={`${name}'s avatar`}
-                    fill
-                    className="w-full h-full object-cover"
-                  />
+                <div className=" absolute w-full h-full flex justify-center items-center bg-green-300 rounded-full">
+                  {
+                    avatar ?
+                      <Image
+                        src={avatar}
+                        alt={`${name}'s avatar`}
+                        fill
+                        className="w-full h-full object-cover"
+                      /> :
+                      <div className=" capitalize text-4xl">{name[0]}</div>
+
+                  }
                 </div>
               </div>
             </div>

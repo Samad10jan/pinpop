@@ -137,65 +137,158 @@ export async function getPinPageResponse(_: any, { id }: { id: string }, { user 
     }
 }
 
+// export async function getUserFeed(_: any, { limit = 20, page = 1 }: any, { user }: { user: UserType }) {
+
+//     /*
+//     Steps:
+//     1. Validate user
+//     2. Get tags from liked pins
+//     3. Exclude user's own pins
+//     4. Fetch personalized pins
+//     5. If not enough, fetch popular pins
+//     6. Return formatted feed
+//     */
+
+//     try {
+//         const userId = user?.id;
+//         if (!userId) throw new ApiError(401, "Unauthorized");
+
+//         const skip = (page - 1) * limit;
+
+//         // get tags from pins the user liked
+//         const likedPins = await prisma.like.findMany({
+//             where: { userId },
+//             include: {
+//                 pin: {
+//                     select: { tagIds: true },
+//                 },
+//             },
+//         });
+
+//         // flatten tags and remove duplicates
+//         const likedTagIds = [...new Set(likedPins.flatMap(l => l.pin.tagIds))];
+
+//         // get user's own pin ids to exclude
+//         const userPins = await prisma.pin.findMany({
+//             where: { userId },
+//             select: { id: true },
+//         });
+
+//         const excludeIds = userPins.map(p => p.id);
+
+//         const whereClause: any = {};
+
+//         // exclude user's pins
+//         if (excludeIds.length) {
+//             whereClause.id = { notIn: excludeIds };
+//         }
+
+//         // prioritize pins with similar tags
+//         if (likedTagIds.length) {
+//             whereClause.tagIds = { hasSome: likedTagIds };
+//         }
+
+//         const totalPins = await prisma.pin.count({ where: whereClause });
+
+//         // fetch personalized feed
+//         let pins = await prisma.pin.findMany({
+//             where: whereClause,
+//             skip,
+//             take: limit,
+//             orderBy: { createdAt: "desc" },
+//             include: {
+//                 user: {
+//                     select: { id: true, name: true, avatar: true },
+//                 },
+//                 saves: {
+//                     where: { userId },
+//                     select: { id: true },
+//                 },
+//                 _count: {
+//                     select: { likes: true, saves: true, comments: true },
+//                 },
+//             },
+//         });
+
+//         // fallback if personalized pins are not enough mix of personalized + popular
+//         if (pins.length < limit) {
+
+//             const remaining = limit - pins.length;
+
+//             // exclude user's pins and already fetched pins
+//             const excludeForFallback = [
+//                 ...excludeIds,
+//                 ...pins.map(p => p.id),
+//             ];
+
+//             const fallbackPins = await prisma.pin.findMany({
+//                 where: {
+//                     id: { notIn: excludeForFallback },
+//                 },
+//                 take: remaining,
+//                 orderBy: {
+//                     likes: { _count: "desc" }, // most liked pins
+//                 },
+//                 include: {
+//                     user: {
+//                         select: { id: true, name: true, avatar: true },
+//                     },
+//                     saves: {
+//                         where: { userId },
+//                         select: { id: true },
+//                     },
+//                     _count: {
+//                         select: { likes: true, saves: true, comments: true },
+//                     },
+//                 },
+//             });
+
+//             // merge personalized + fallback pins
+//             pins = [...pins, ...fallbackPins];
+//         }
+
+//         // convert saves relation to boolean
+//         const mappedPins = pins.map(p => ({
+//             ...p,
+//             isSaved: p.saves.length > 0,
+//         }));
+
+//         return buildFeedResponse(mappedPins, totalPins, page, limit);
+
+//     } catch (error: any) {
+//         console.error("Error fetching feed:", error);
+//         throw new ApiError(500, `Failed to fetch search results ${error?.message}`);
+//     }
+// }
 export async function getUserFeed(_: any, { limit = 20, page = 1 }: any, { user }: { user: UserType }) {
-
-    /*
-    Steps:
-    1. Validate user
-    2. Get tags from liked pins
-    3. Exclude user's own pins
-    4. Fetch personalized pins
-    5. If not enough, fetch popular pins
-    6. Return formatted feed
-    */
-
     try {
         const userId = user?.id;
         if (!userId) throw new ApiError(401, "Unauthorized");
 
         const skip = (page - 1) * limit;
 
-        // get tags from pins the user liked
-        const likedPins = await prisma.like.findMany({
-            where: { userId },
-            include: {
-                pin: {
-                    select: { tagIds: true },
-                },
+        // count total (excluding user's pins)
+        const totalPins = await prisma.pin.count({
+            where: {
+                userId: { not: userId },
             },
         });
 
-        // flatten tags and remove duplicates
-        const likedTagIds = [...new Set(likedPins.flatMap(l => l.pin.tagIds))];
-
-        // get user's own pin ids to exclude
-        const userPins = await prisma.pin.findMany({
-            where: { userId },
-            select: { id: true },
-        });
-
-        const excludeIds = userPins.map(p => p.id);
-
-        const whereClause: any = {};
-
-        // exclude user's pins
-        if (excludeIds.length) {
-            whereClause.id = { notIn: excludeIds };
-        }
-
-        // prioritize pins with similar tags
-        if (likedTagIds.length) {
-            whereClause.tagIds = { hasSome: likedTagIds };
-        }
-
-        const totalPins = await prisma.pin.count({ where: whereClause });
-
-        // fetch personalized feed
-        let pins = await prisma.pin.findMany({
-            where: whereClause,
+        // fetch feed
+        const pins = await prisma.pin.findMany({
+            where: {
+                userId: { not: userId }, // exclude user's pins
+            },
             skip,
             take: limit,
-            orderBy: { createdAt: "desc" },
+            orderBy: [
+                {
+                    likes: { _count: "desc" }, // most liked first
+                },
+                {
+                    createdAt: "desc", // tie-breaker: latest
+                },
+            ],
             include: {
                 user: {
                     select: { id: true, name: true, avatar: true },
@@ -210,105 +303,70 @@ export async function getUserFeed(_: any, { limit = 20, page = 1 }: any, { user 
             },
         });
 
-        // fallback if personalized pins are not enough mix of personalized + popular
-        if (pins.length < limit) {
-
-            const remaining = limit - pins.length;
-
-            // exclude user's pins and already fetched pins
-            const excludeForFallback = [
-                ...excludeIds,
-                ...pins.map(p => p.id),
-            ];
-
-            const fallbackPins = await prisma.pin.findMany({
-                where: {
-                    id: { notIn: excludeForFallback },
-                },
-                take: remaining,
-                orderBy: {
-                    likes: { _count: "desc" }, // most liked pins
-                },
-                include: {
-                    user: {
-                        select: { id: true, name: true, avatar: true },
-                    },
-                    saves: {
-                        where: { userId },
-                        select: { id: true },
-                    },
-                    _count: {
-                        select: { likes: true, saves: true, comments: true },
-                    },
-                },
-            });
-
-            // merge personalized + fallback pins
-            pins = [...pins, ...fallbackPins];
-        }
-
-        // convert saves relation to boolean
-        const mappedPins = pins.map(p => ({
+        // map isSaved
+        const mappedPins = pins.map((p) => ({
             ...p,
             isSaved: p.saves.length > 0,
         }));
 
         return buildFeedResponse(mappedPins, totalPins, page, limit);
-
     } catch (error: any) {
         console.error("Error fetching feed:", error);
-        throw new ApiError(500, `Failed to fetch search results ${error?.message}`);
+        throw new ApiError(
+            500,
+            `Failed to fetch feed ${error?.message}`
+        );
     }
 }
 
 export async function getSugg(_: any, { search }: { search: string }) {
-  try {
-    const trimmed = search.trim();
-    if (!trimmed) return [];
+    try {
+        const trimmed = search.trim();
+        if (!trimmed) return [];
 
-    const words = trimmed.split(/\s+/);
+        const words = trimmed.split(/\s+/);
 
-    // Fetch pins + tags in parallel
-    const [pins, tags] = await Promise.all([
-      prisma.pin.findMany({
-        where: {
-          OR: [
-            ...words.map((word) => ({
-              title: { contains: word, mode: "insensitive" as const },
-            })),
-            ...words.map((word) => ({
-              description: { contains: word, mode: "insensitive" as const },
-            })),
-          ],
-        },
-        select: { title: true },
-        take: 5,
-      }),
+        // Fetch pins + tags in parallel
+        const [pins, tags] = await Promise.all([
+            prisma.pin.findMany({
+                where: {
+                    OR: [
+                        ...words.map((word) => ({
+                            title: { contains: word, mode: "insensitive" as const },
+                        })),
+                        ...words.map((word) => ({
+                            description: { contains: word, mode: "insensitive" as const },
+                        })),
+                    ],
+                },
+                select: { title: true },
+                take: 5,
+            }),
 
-      prisma.tag.findMany({
-        where: {
-          OR: words.map((word) => ({
-            name: { contains: word, mode: "insensitive" as const },
-          })),
-        },
-        select: { name: true },
-        take: 5,
-      }),
-    ]);
+            prisma.tag.findMany({
+                where: {
+                    OR: words.map((word) => ({
+                        name: { contains: word, mode: "insensitive" as const },
+                    })),
+                },
+                select: { name: true },
+                take: 5,
+            }),
+        ]);
 
-    // Combine + dedupe
-    const suggestions = [
-      ...pins.map((p) => p.title),
-      ...tags.map((t) => t.name),
-    ];
+        // Combine + dedupe
+        const suggestions = [
+            ...pins.map((p) => p.title),
+            ...tags.map((t) => t.name),
+        ];
 
-    const unique = [...new Set(suggestions)];
+        const unique = [...new Set(suggestions)];
 
-    return unique.slice(0, 8); // limit final output
-  } catch (error) {
-    console.error("Suggestion error:", error);
-    throw error;
-  }
+        return unique.slice(0, 8); // limit final output
+    } catch (error) {
+        console.error("Suggestion error:", error);
+        throw error;
+    }
 }
 
 export async function getSearchPagePins(_: any, { search, limit = 20, page = 1 }: { search: string; limit: number; page: number }, { user }: { user: UserType }) {
@@ -338,6 +396,7 @@ export async function getSearchPagePins(_: any, { search, limit = 20, page = 1 }
 
     // Build unified search condition
     const where = {
+        userId: { not: userId },
         OR: [
             // title matches
             ...words.map((word) => ({
@@ -401,7 +460,6 @@ export async function getTagsForPin(parent: PinPageResponseType,) {
     return tags
 }
 
-// Analytics Query
 export async function getCurrentUserPins(_: any, __: any, { user }: { user: UserType }) {
 
     if (!user?.id) throw new Error("Unauthorized");

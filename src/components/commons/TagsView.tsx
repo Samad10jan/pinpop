@@ -18,8 +18,8 @@ export default function Tags() {
   const sliced = tags.slice(0, 20);
 
   return (
-    <div className="my-4">
-      <div className="flex justify-between items-center mb-3">
+    <div className="my-4 bg-neutral-100 px-2 py-4 rounded-lg">
+      <div className="flex justify-between mb-3">
         <h2 className="text-sm font-semibold tracking-widest uppercase text-neutral-500">
           Tags
         </h2>

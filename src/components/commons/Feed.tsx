@@ -26,19 +26,31 @@ export default function Feed() {
 
   return (
     <>
-      <h2 className="text-3xl font-bold my-3">Feed</h2>
+      <h2 className="text-3xl font-bold my-3">Top Pins</h2>
 
+      <div className="hidden sm:flex md:flex w-full">
+        <Masonry
+          items={pins}
+          columnGutter={16}
+          columnWidth={236}        // min width per column, masonic auto-calculates count
+          //  overscanBy={Infinity}    
+          itemKey={(item: PinType) => item.id}
+          render={({ data }: { data: PinType }) => <PinCard data={data} />}
+        />
 
+      </div>
 
+      <div className="flex sm:hidden md:hidden w-full">
+        <Masonry
+          items={pins}
+          columnGutter={16}
+          columnWidth={110}        // min width per column, masonic auto-calculates count 
+          itemKey={(item: PinType) => item.id}
+          render={({ data }: { data: PinType }) => <PinCard data={data} />}
+        />
 
-      <Masonry
-        items={pins}
-        columnGutter={16}
-        columnWidth={236}        // min width per column, masonic auto-calculates count
-      //  overscanBy={Infinity}    
-          itemKey={(item: PinType) => item.id}     
-        render={({ data }:{data:PinType}) => <PinCard data={data} />}
-      />
+      </div>
+
 
 
 

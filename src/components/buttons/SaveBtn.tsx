@@ -49,7 +49,7 @@ export default function SaveBtn({
         <button
             disabled={loading}
             onClick={handleToggle}
-            className="btn-circle relative overflow-hidden! group disabled:opacity-50"
+            className="btn-circle size-10!  relative overflow-hidden! group disabled:opacity-50"
             title={isSaved ? "saved " : "save"}
         >
 

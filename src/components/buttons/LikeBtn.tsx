@@ -49,7 +49,7 @@ export default function LikeBtn({
         <button
             disabled={loading}
             onClick={handleToggle}
-            className="btn-circle relative overflow-hidden! group bg-white! disabled:opacity-50"
+            className="btn-circle size-10! relative overflow-hidden! group bg-white! disabled:opacity-50"
                title={isLiked ? "liked " : "like"}>
 
              <ThumbsUp fill={isLiked ? "yellow" : "white"} size={25} />

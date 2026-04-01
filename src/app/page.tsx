@@ -14,7 +14,7 @@ const categories = [
 ];
 
 export default async function LandingPage() {
-  const user = await context();
+  // const user = await context();
 
   // console.log(user.user);
 
@@ -35,9 +35,9 @@ export default async function LandingPage() {
           </div>
 
           <nav className="flex items-center gap-2 sm:gap-3">
-            {user.user && <Link href="/main" className="btn-rect truncate px-2! py-2! sm:px-5! sm:py-2.5! text-xs! sm:text-sm! font-bold! tracking-wide! uppercase!">
+            {/* {user.user && <Link href="/main" className="btn-rect truncate px-2! py-2! sm:px-5! sm:py-2.5! text-xs! sm:text-sm! font-bold! tracking-wide! uppercase!">
               Feed
-            </Link>}
+            </Link>} */}
             <Link href="/signin" className="btn-rect truncate px-2! py-2! sm:px-5! sm:py-2.5! text-xs! sm:text-sm! font-bold! tracking-wide! uppercase!">
               Sign In
             </Link>
