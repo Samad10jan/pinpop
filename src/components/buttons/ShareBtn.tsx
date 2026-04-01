@@ -1,6 +1,8 @@
 import { Share2Icon } from "lucide-react";
+import { useToast } from "@/src/components/commons/Toast";
 
 export default function ShareButton() {
+    const toast = useToast();
     const shareData = {
         title: "PinPop",
         text: "Check out this Pix!",
@@ -11,9 +13,12 @@ export default function ShareButton() {
 
         try {
             await navigator.share(shareData);
-            // console.log("Shared successfully!");
-        } catch (err) {
-            console.error("Error sharing:", err);
+            toast.success("Shared successfully!");
+        } catch (err: any) {
+            // User dismissed share dialog or other error
+            if (err.name !== "AbortError") {
+                toast.error("Failed to share");
+            }
         }
 
     };

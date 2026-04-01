@@ -3,6 +3,8 @@
 import { useState } from "react";
 import gqlClient from "@/src/lib/services/graphql";
 import { ThumbsUp, ThumbsUpIcon } from "lucide-react";
+import { useToast } from "@/src/components/commons/Toast";
+import { getGraphQLError } from "@/src/helper/ApiError";
 
 const TOGGLE_LIKE = `
 mutation ($pinId: ID!) {
@@ -21,6 +23,7 @@ export default function LikeBtn({
 }) {
     const [isLiked, setIsLiked] = useState(initialLiked);
     const [loading, setLoading] = useState(false);
+    const toast = useToast();
 
     async function handleToggle() {
         if (loading) return;
@@ -35,9 +38,8 @@ export default function LikeBtn({
 
 
             setIsLiked(res.toggleLike.like);
-        } catch (e) {
-            console.error(e);
-
+        } catch (e: any) {
+            toast.error(getGraphQLError(e) || "Failed to like pin");
             // Rollback 
             setIsLiked(prev => !prev);
         } finally {

@@ -3,6 +3,8 @@
 import { useState } from "react";
 import gqlClient from "@/src/lib/services/graphql";
 import { Heart } from "lucide-react";
+import { useToast } from "@/src/components/commons/Toast";
+import { getGraphQLError } from "@/src/helper/ApiError";
 
 const TOGGLE_SAVE = `
 mutation ($pinId: ID!) {
@@ -21,6 +23,7 @@ export default function SaveBtn({
 }) {
     const [isSaved, setIsSaved] = useState(initialSaved);
     const [loading, setLoading] = useState(false);
+    const toast = useToast();
 
     async function handleToggle() {
         if (loading) return;
@@ -35,9 +38,8 @@ export default function SaveBtn({
 
             // Sync with backend truth
             setIsSaved(res.toggleSave.saved);
-        } catch (e) {
-            console.error(e);
-
+        } catch (e: any) {
+            toast.error(getGraphQLError(e) || "Failed to save pin");
             // Rollback optimistic update
             setIsSaved(initialSaved);
         } finally {

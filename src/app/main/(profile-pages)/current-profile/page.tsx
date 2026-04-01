@@ -9,12 +9,15 @@ import { Pin, PlusCircleIcon, Search, SearchIcon, ThumbsUpIcon } from "lucide-re
 import Image from "next/image";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
+import { ToastContainer, useToast } from "@/src/components/commons/Toast";
+import { getGraphQLError } from "@/src/helper/ApiError";
 
 export default function UserPage() {
     const [profile, setProfile] = useState<CurrentProfileType | null>(null);
     const [loading, setLoading] = useState(true);
     const context = useContext(UserContext);
     const currentUser = context?.currentUser; const [showEdit, setShowEdit] = useState(false);
+    const toast = useToast();
 
 
     useEffect(() => {
@@ -23,7 +26,7 @@ export default function UserPage() {
                 const data = await gqlClient.request(CURRENT_PROFILE_QUERY);
                 setProfile(data?.getCurrentProfile || null);
             } catch (err: any) {
-                console.error("GraphQL error:", err.message);
+                toast.error(getGraphQLError(err));
                 setProfile(null);
             } finally {
                 setLoading(false);
@@ -73,6 +76,7 @@ export default function UserPage() {
     return (
         <main className="">
 
+            <ToastContainer toasts={toast.toasts} onClose={toast.remove} />
 
             <div className="mb-8 relative">
 

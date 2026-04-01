@@ -9,6 +9,7 @@ import { CommentType } from "@/src/types/types";
 import { Send } from "lucide-react";
 import { use, useContext, useEffect, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
+import { useToast } from "./Toast";
 
 // const LIMIT = 5;
 
@@ -24,6 +25,7 @@ export default function CommentArea({
 
     const context = useContext(UserContext);
     const currentUser = context?.currentUser;
+    const toast = useToast();
 
     const [comments, setComments] = useState<CommentType[]>([]);
     const [page, setPage] = useState(1);
@@ -66,7 +68,8 @@ export default function CommentArea({
             setPage(p);
             // if (!showComments) setShowComments(true);
         } catch (e) {
-            setError(getGraphQLError(e));
+            const message = getGraphQLError(e);
+            toast.error(message);
         } finally {
             setLoading(false);
         }
@@ -87,7 +90,8 @@ export default function CommentArea({
 
             setComments(prev => prev.filter(c => c.id !== id));
         } catch (e) {
-            setError(getGraphQLError(e));
+            const message = getGraphQLError(e);
+            toast.error(message);
         } finally {
             setLoading(false);
         }
@@ -98,9 +102,8 @@ export default function CommentArea({
 
         if (!postComment.trim()) return;
         if (postComment.length > 30) {
-
-            setError("Comment should not be this long")
-            return
+            toast.error("Comment should not be this long");
+            return;
         }
 
         try {
@@ -116,9 +119,8 @@ export default function CommentArea({
             setPostComment("");
             // setShowComments(true);
         } catch (e) {
-            // console.log(e);
-
-            setError(getGraphQLError(e));
+            const message = getGraphQLError(e);
+            toast.error(message);
         } finally {
             setLoading(false);
         }

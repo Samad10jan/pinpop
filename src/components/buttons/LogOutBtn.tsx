@@ -5,18 +5,22 @@ import { gql } from "graphql-request";
 import gqlClient from "@/src/lib/services/graphql";
 import { LOGOUT } from "@/src/lib/gql/mutations/mutations";
 import { LogOutIcon } from "lucide-react";
+import { useToast } from "@/src/components/commons/Toast";
+import { getGraphQLError } from "@/src/helper/ApiError";
 
 
 export default function LogoutButton() {
     const router = useRouter();
+    const toast = useToast();
 
     const handleLogout = async () => {
         try {
             await gqlClient.request(LOGOUT);
+            toast.success("Logged out successfully!");
             router.replace("/");
             router.refresh();
-        } catch (err) {
-            console.error("Logout failed:", err);
+        } catch (err: any) {
+            toast.error(getGraphQLError(err) || "Logout failed");
         }
     };
 

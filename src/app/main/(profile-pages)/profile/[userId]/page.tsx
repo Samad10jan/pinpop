@@ -10,6 +10,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { redirect, useParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
+import { ToastContainer, useToast } from "@/src/components/commons/Toast";
 
 export default function UserPage() {
 
@@ -26,6 +27,7 @@ export default function UserPage() {
   const [loading, setLoading] = useState(true);
   const context = useContext(UserContext);
   const currentUser = context?.currentUser;
+  const toast = useToast();
   // const [error, setError] = useState("")
 
   if (userId === currentUser?.id) redirect("/main/current-profile")
@@ -53,9 +55,8 @@ export default function UserPage() {
         setLastUploadedPins(p.lastUploadedPins || []);
 
       } catch (err: any) {
-        console.error("GraphQL error:", getGraphQLError(err));
+        toast.error(getGraphQLError(err));
 
-        // setError(getGraphQLError(err))
       } finally {
         setLoading(false);
       }
@@ -104,6 +105,8 @@ export default function UserPage() {
 
   return (
     <main className="page">
+
+      <ToastContainer toasts={toast.toasts} onClose={toast.remove} />
 
       <div className="mb-8 relative">
 

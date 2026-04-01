@@ -5,10 +5,12 @@ import gqlClient from "@/src/lib/services/graphql";
 import { getGraphQLError } from "@/src/helper/ApiError";
 import { UserMinus, UserPlus } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useToast } from "@/src/components/commons/Toast";
 
 export default function FollowBtn({ targetUserId, initiallyFollowing = false, onFollowChange }: { targetUserId: string; initiallyFollowing?: boolean; onFollowChange?: (v: boolean) => void }) {
     const [loading, setLoading] = useState(false);
     const [isFollowing, setIsFollowing] = useState(initiallyFollowing);
+    const toast = useToast();
 
     // sync if parent changes
     useEffect(() => {
@@ -35,8 +37,7 @@ export default function FollowBtn({ targetUserId, initiallyFollowing = false, on
         }
         catch (e: any) {
             const msg = getGraphQLError(e);
-            console.log("Follow Error:", msg);
-
+            toast.error(msg);
         } finally {
             setLoading(false);
         }

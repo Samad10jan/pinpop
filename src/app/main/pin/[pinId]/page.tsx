@@ -21,6 +21,7 @@ import { DownloadIcon, MessageCircleIcon } from "lucide-react";
 import { UserContext } from "@/src/components/contexts/UserContext";
 import ShareButton from "@/src/components/buttons/ShareBtn";
 import { Tag } from "@/generated/prisma/client";
+import { ToastContainer, useToast } from "@/src/components/commons/Toast";
 
 export default function PinPage() {
   const { pinId } = useParams();
@@ -40,6 +41,7 @@ export default function PinPage() {
 
   const context = useContext(UserContext)
   const user = context?.currentUser
+  const toast = useToast();
 
 
   // The useCallback hook in React is used to memoize (cache) a function so that it isn’t recreated on every render.
@@ -72,8 +74,10 @@ export default function PinPage() {
         setTags(d.tags || []);
         setIsFollowing(d.isFollowing);
 
-      } catch (e) {
-        setError(getGraphQLError(e));
+      } catch (e: any) {
+        const errorMsg = getGraphQLError(e);
+        setError(errorMsg);
+        toast.error(getGraphQLError(e));
       } finally {
         setLoading(false);
       }
@@ -106,7 +110,9 @@ export default function PinPage() {
 
 
   return (
-    <div className="flex flex-col md:flex-row gap-8 ">
+    <>
+      <ToastContainer toasts={toast.toasts} onClose={toast.remove} />
+      <div className="flex flex-col md:flex-row gap-8 ">
 
       <div className="w-full md:w-[45%]">
 
@@ -229,5 +235,6 @@ export default function PinPage() {
       </div>
 
     </div>
+    </>
   );
 }
