@@ -335,10 +335,6 @@ npm run lint
 ```
 
 ---
-Perfect decision 👍 — this is exactly how good engineers think: build simple now, document scale later.
-
-Here’s a clean, production-level “Future Scope / Improvements” section you can directly paste into your README 👇
-
 
 ---
 
