@@ -11,16 +11,19 @@ import { Masonry } from "masonic";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { ToastContainer, useToast } from "@/src/components/commons/Toast";
 
 export default function Home() {
     const { tagId } = useParams();
+    const toast = useToast();
 
     const [tagName, setTagName] = useState("Tag");
 
     const { pins, loading, hasNextPage, observerRef } = useInfinitePins(
         GET_PINS_BY_TAG_QUERY,
         { tagId },
-        "getPinsByTag"
+        "getPinsByTag",
+        (err) => toast.error("Failed to load tag pins")
     );
     console.log(hasNextPage);
 
@@ -57,6 +60,7 @@ export default function Home() {
 
     return (
         <main className="relative min-h-screen">
+            <ToastContainer toasts={toast.toasts} onClose={toast.remove} />
 
             <div className="text-center mx-auto mb-14">
                 <div className="text-4xl md:text-6xl capitalize font-black tracking-tighter">

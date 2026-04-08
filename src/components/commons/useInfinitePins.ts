@@ -9,7 +9,8 @@ const LIMIT = 20;
 export default function useInfinitePins(
   query: any,
   variables: Record<string, any> = {},
-  responseKey: string
+  responseKey: string,
+  onError?: (error: any) => void
 ) {
   const [pins, setPins] = useState<PinType[]>([]);
   const [loading, setLoading] = useState(true);
@@ -57,6 +58,7 @@ export default function useInfinitePins(
       if (nextPage) pageRef.current += 1;
     } catch (err) {
       console.error(err);
+      onError?.(err);
     } finally {
       fetchingRef.current = false;
       setLoading(false);

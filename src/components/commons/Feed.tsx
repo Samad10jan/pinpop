@@ -6,12 +6,15 @@ import { FEED_QUERY } from "@/src/lib/gql/queries/queries";
 import { PinType } from "@/src/types/types";
 import { Masonry } from "masonic";
 import useInfinitePins from "./useInfinitePins";
+import { useToast } from "./Toast";
 
 export default function Feed() {
+  const toast = useToast();
   const { pins, loading, observerRef, hasNextPage, } = useInfinitePins(
     FEED_QUERY,
     {},
-    "getUserFeed"
+    "getUserFeed",
+    (err) => toast.error("Failed to load feed")
   );
 
   if (loading && pins.length === 0) return <Loading />;
@@ -50,9 +53,6 @@ export default function Feed() {
         />
 
       </div>
-
-
-
 
 
       {/* Invisible trigger */}

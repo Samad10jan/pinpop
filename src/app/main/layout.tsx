@@ -1,17 +1,17 @@
+import GotoTopBtn from "@/src/components/buttons/GotoTopBtn";
 import Header from "@/src/components/commons/Header";
+import SideBar from "@/src/components/commons/SideBar";
 import { UserProvider } from "@/src/components/contexts/UserContext";
 import { context } from "@/src/helper/context";
-import { redirect } from "next/navigation";
-import "../globals.css";
 import { UserType } from "@/src/types/types";
-import SideBar from "@/src/components/commons/SideBar";
-import GotoTopBtn from "@/src/components/buttons/GotoTopBtn";
+import "../globals.css";
 export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const { user } = await context()
+
   return (
     <div>
       <UserProvider user={user as UserType}>
@@ -24,7 +24,7 @@ export default async function RootLayout({
             <div className="mx-auto md:p-10 p-5 ">
 
               {children}
-              <GotoTopBtn/>
+              <GotoTopBtn />
             </div>
           </div>
         </div>

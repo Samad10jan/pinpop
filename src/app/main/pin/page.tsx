@@ -10,6 +10,7 @@ import { useContext, useEffect, useState } from "react";
 import { ImagePlus, Sparkles } from "lucide-react";
 import { ToastContainer, useToast } from "@/src/components/commons/Toast";
 import { Tag } from "@/generated/prisma/client";
+import { uploadLimit } from "@/src/lib/constants";
 
 const MAX_SIZE = 10 * 1024 * 1024;
 
@@ -22,21 +23,30 @@ export default function CreatePin() {
     const [file, setFile] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [availableTags, setAvailableTags] = useState<Tag[]>([]);
+    const [isUpload, setIsUpload] = useState<boolean>(false);
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
 
     const context = useContext(UserContext);
 
+
+
     useEffect(() => {
         gqlClient.request(GET_TAGS_QUERY)
-            .then(data => setAvailableTags(data.getAllTags.tags))
+            .then((data) => {
+                setAvailableTags(data.getAllTags.tags)
+                // console.log(data);
+                setIsUpload(data.getAllTags.uploadCount);
+
+
+            })
             .catch(() => toast.error("Failed to load tags. Please refresh the page."));
     }, []);
 
     const toggleTag = (id: string) => {
         setSelectedTags(prev => prev.includes(id) ? prev.filter(t => t !== id) : [...prev, id]);
     };
-    
+
     //
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = e.target.files?.[0] || null;
@@ -109,6 +119,26 @@ export default function CreatePin() {
     };
 
     const inputClass = "w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-400 focus:border-transparent outline-none transition-all duration-200 bg-gray-50 text-sm";
+    console.log(isUpload);
+
+    if (context?.currentUser) {
+        if (context?.currentUser?.uploadCount >= uploadLimit && !isUpload) {
+            return (
+                <div className="min-h-screen flex items-center justify-center">
+                    <div className="bg-white p-8 rounded-xl shadow-md text-center">
+                        <h2 className="text-2xl font-bold mb-4">Upload Limit Reached</h2>
+                        <p className="text-gray-600 mb-6">You have reached the maximum upload limit of {uploadLimit} pins. Please delete some existing pins to upload new ones.</p>
+                        <button
+                            onClick={() => router.push("/main")}
+                            className="btn-rect from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:translate-y-0 text-white"
+                        >
+                            Go Back Home
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+    }
 
     return (
         <main className="min-h-screen bg-[#f7f5f2] py-8 px-4">

@@ -1,15 +1,8 @@
 "use client";
 
-import { X, CheckCircle, AlertCircle, Info } from "lucide-react";
-import { useEffect, useState } from "react";
-
-type ToastType = "success" | "error" | "info";
-
-interface ToastItem {
-    id: number;
-    message: string;
-    type: ToastType;
-}
+import { ToastItem, ToastType } from "@/src/types/types";
+import { AlertCircle, CheckCircle, Info, X } from "lucide-react";
+import { useState } from "react";
 
 const config = {
     success: { icon: CheckCircle, bg: "bg-green-500" },

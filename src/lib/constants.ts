@@ -61,3 +61,4 @@ export const featuredCategories = [
     ],
   },
 ];
+export const uploadLimit = 15;

@@ -7,15 +7,18 @@ import { SEARCH_PAGE_PINS_QUERY } from "@/src/lib/gql/queries/queries";
 import { PinType } from "@/src/types/types";
 import { Masonry } from "masonic";
 import { useSearchParams } from "next/navigation";
+import { ToastContainer, useToast } from "@/src/components/commons/Toast";
 
 export default function SearchPage() {
     const searchParams = useSearchParams();
     const q = searchParams.get("q");
+    const toast = useToast();
 
     const { pins, loading, hasNextPage, observerRef } = useInfinitePins(
         SEARCH_PAGE_PINS_QUERY,
         { search: q },
-        "getSearchPagePins"
+        "getSearchPagePins",
+        (err) => toast.error("Failed to load search results")
     );
 
     if (!q) {
@@ -36,6 +39,7 @@ export default function SearchPage() {
 
     return (
         <div className="">
+            <ToastContainer toasts={toast.toasts} onClose={toast.remove} />
             <h2 className="text-xl font-bold mb-4">
                 Results for "{q}"
             </h2>

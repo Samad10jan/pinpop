@@ -12,7 +12,7 @@ export default function CommentCard({
     commentData: CommentType,
     handleDelete: (id: string) => void,
     loading: boolean,
-    currentUserId: string
+    currentUserId: string | undefined
 }) {
 
     // console.log(commentData.id);
@@ -26,7 +26,7 @@ export default function CommentCard({
                         {commentData.user.avatar
                             ?
                             <Image
-                                src={commentData?.user?.avatar }
+                                src={commentData?.user?.avatar}
                                 alt={commentData.user.name}
                                 fill
                                 className="object-cover"

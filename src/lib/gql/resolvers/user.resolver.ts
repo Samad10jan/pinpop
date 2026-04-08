@@ -115,7 +115,9 @@ export const getProfile = async (_: any, { userId }: any) => {
         take: 3,
         // include: { pin: true }
     })
-
+    const uploadCount = await prisma.pin.count({
+        where: { userId: user.id },
+    })
 
     return {
         user: {
@@ -123,7 +125,7 @@ export const getProfile = async (_: any, { userId }: any) => {
             email: user.email,
             name: user.name,
             avatar: user.avatar,
-            uploadCount: user.uploadCount,
+            uploadCount: uploadCount,
             // createdAt: user.createdAt
         },
         lastUploadedPins,

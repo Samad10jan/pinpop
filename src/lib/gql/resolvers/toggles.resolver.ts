@@ -4,6 +4,7 @@ import { ApiError } from "@/src/helper/ApiError";
 import { buildFeedResponse } from "@/src/helper/pagination";
 import { tags } from "../../constants";
 
+const uploadLimit = 15; // max pins a user can upload
 // Queries
 export async function getSavedPins(
     _: any,
@@ -71,57 +72,13 @@ export const getAllTags = async (_: any, __: any, { user }: { user: UserType }) 
     });
     return {
         tags: tags.map(t => ({ id: t.id, name: t.name })),
-        uploadCount: uploadCount && uploadCount > 15 ? false : true
+        uploadCount: uploadCount && uploadCount > uploadLimit ? false : true
     }
 
 }
 
 // Mutations Toggles
-// export async function addTags(_: any, __: any, { user }: { user: UserType | null }) {
-//     // console.log(user);
-    
-//   if (!user) throw new ApiError(401, "Unauthorized");
 
-//   const tagNames = [
-//     "art",
-//     "design",
-//     "abstract",
-//     "anime",
-//     "photography",
-//     "nature",
-//     "travel",
-//     "food",
-//     "fashion",
-//     "fitness",
-//     "technology",
-//     "web-development",
-//     "business",
-//     "education",
-//     "gaming",
-//     "music",
-//     "cars",
-//     "pets",
-//     "interior",
-//     "wallpapers"
-//   ];
-
-//   try {
-//     // ✅ delete tags NOT in list
-//     await prisma.tag.deleteMany({
-//       where: {
-//         name: {
-//           notIn: tagNames,
-//         },
-//       },
-//     });
-
-//     return true;
-
-//   } catch (err) {
-//     console.error(err);
-//     throw new ApiError(500, "Failed to sync tags");
-//   }
-// }
 // Save and Like and Follow
 export async function toggleSave(_: any, { pinId }: any, { user }: { user: UserType }) {
     if (!user) throw new ApiError(401, "Unauthorized");

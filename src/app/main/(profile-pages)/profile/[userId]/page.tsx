@@ -11,6 +11,7 @@ import Link from "next/link";
 import { redirect, useParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { ToastContainer, useToast } from "@/src/components/commons/Toast";
+import { ArrowRightIcon } from "lucide-react";
 
 export default function UserPage() {
 
@@ -104,115 +105,163 @@ export default function UserPage() {
   };
 
   return (
-    <main className="page">
+    <main className="px-4 sm:px-6 md:px-8 py-6 max-w-7xl mx-auto">
 
-      <ToastContainer toasts={toast.toasts} onClose={toast.remove} />
+  <ToastContainer toasts={toast.toasts} onClose={toast.remove} />
 
-      <div className="mb-8 relative">
+  {/* Header */}
+  <div className="mb-10 text-center">
+    <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold">Profile</h1>
 
-        <div className="text-4xl md:text-5xl font-bold mb-1 text-center">Profile</div>
-        <div className="text-lg opacity-70 flex justify-center ">Welcome back, <div className="font-black text-(--orange)]">{name.split(' ')[0]}</div>!</div>
+    <p className="text-sm sm:text-base md:text-lg opacity-70 mt-2 flex justify-center flex-wrap gap-1">
+      Welcome back,
+      <span className="font-black text-(--orange)">
+        {name.split(" ")[0]}
+      </span>!
+    </p>
 
-        <div className="mt-3 flex items-center justify-center gap-2">
-          <div className="h-1 w-12 bg-black rounded-full" />
-          <div className="h-1 w-4 bg-(--orange) rounded-full" />
-          <div className="h-1 w-2 bg-(--teal) rounded-full" />
-        </div>
-      </div>
+    {/* Decorative line */}
+    <div className="mt-4 flex items-center justify-center gap-2">
+      <div className="h-1 w-10 sm:w-12 bg-black rounded-full" />
+      <div className="h-1 w-3 sm:w-4 bg-(--orange) rounded-full" />
+      <div className="h-1 w-2 bg-(--teal) rounded-full" />
+    </div>
+  </div>
 
-      <div className="grid lg:grid-cols-12 gap-6">
-        <div className="lg:col-span-4">
-          <div className="card sticky top-8 bg-white">
-            <div className="flex justify-center mb-6 ">
-              <div className=" relative w-32! h-32! btn-circle overflow-hidden! ">
-                <div className=" absolute w-full h-full flex justify-center items-center bg-green-300 rounded-full">
-                  {
-                    avatar ?
-                      <Image
-                        src={avatar}
-                        alt={`${name}'s avatar`}
-                        fill
-                        className="w-full h-full object-cover"
-                      /> :
-                      <div className=" capitalize text-4xl">{name[0]}</div>
+  {/* Layout */}
+  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-                  }
-                </div>
-              </div>
-            </div>
+    {/* LEFT SIDEBAR */}
+    <div className="lg:col-span-4">
+      <div className="card bg-white p-5 sm:p-6 sticky top-6">
 
-            <div className="text-center mb-6">
-              <h2 className="text-2xl font-bold mb-1">{name}</h2>
-              <p className="text-sm opacity-70 mb-4">{email}</p>
-
+        {/* Avatar */}
+        <div className="flex justify-center mb-6">
+          <div className="relative w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full overflow-hidden">
+            <div className="absolute inset-0 flex items-center justify-center bg-green-300 rounded-full">
               {
-                currentUser?.id !== user?.id &&
-                <FollowBtn targetUserId={user.id} initiallyFollowing={isFollowing} onFollowChange={handleFollowChange} />
+                avatar ? (
+                  <Image
+                    src={avatar}
+                    alt={`${name}'s avatar`}
+                    fill
+                    className="object-cover"
+                  />
+                ) : (
+                  <div className="text-2xl sm:text-3xl md:text-4xl capitalize">
+                    {name[0]}
+                  </div>
+                )
               }
             </div>
-
-            <div className="grid grid-cols-2 gap-3 p-4 rounded-lg mb-4 bg-[#F0E7D6] border-2 border-black">
-              <div className="text-center">
-                <div className="text-2xl font-bold">{followersCount}</div>
-                <div className="text-xs opacity-70">Followers</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold">{followingCount}</div>
-                <div className="text-xs opacity-70">Following</div>
-              </div>
-            </div>
           </div>
         </div>
 
-        <div className="lg:col-span-8">
-          <div className="grid md:grid-cols-2 gap-4 mb-6">
-            <div className="card text-center btn-rect bg-orange-500! text-white">
-              <div className="text-3xl font-bold">{totalPins}</div>
-              <div className="text-sm mt-1">Total Pins</div>
-            </div>
+        {/* User Info */}
+        <div className="text-center mb-6">
+          <h2 className="text-lg sm:text-xl md:text-2xl font-bold">
+            {name}
+          </h2>
 
-            <div className="card text-center btn-rect bg-purple-600! text-white">
-              <div className="text-3xl font-bold">{totalLikes}</div>
-              <div className="text-sm mt-1">Likes</div>
+          <p className="text-xs sm:text-sm opacity-70 mb-4 break-all">
+            {email}
+          </p>
+
+          {
+            currentUser?.id !== user?.id && (
+              <FollowBtn
+                targetUserId={user.id}
+                initiallyFollowing={isFollowing}
+                onFollowChange={handleFollowChange}
+              />
+            )
+          }
+        </div>
+
+        {/* Followers */}
+        <div className="grid grid-cols-2 gap-3 p-4 rounded-xl bg-[#F0E7D6] border-2 border-black">
+          <div className="text-center">
+            <div className="text-lg sm:text-xl md:text-2xl font-bold">
+              {followersCount}
             </div>
+            <div className="text-xs opacity-70">Followers</div>
           </div>
 
-          <div className="card mb-6 bg-white">
-            <h3 className="text-xl font-bold mb-4 capitalize">{name}'s Pins</h3>
-
-            <div className="grid grid-cols-3 gap-2 mb-4">
-              {lastUploadedPins.map(u => (
-                <div key={u.id} className="relative max-w-50 h-20 mb-4 group rounded-2xl overflow-hidden hover:shadow-xl transition-all">
-                  <div className=" absolute w-full h-full">
-                    <Image
-                      src={u.mediaUrl}
-                      alt={u.title}
-                      fill
-                      className="w-full h-auto object-cover"
-                      loading="lazy"
-                    />
-
-                    <Link href={`/main/pin/${u.id}`}>
-                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-black/40">
-                        <div className="absolute bottom-0 p-3 w-full">
-                          <p className="font-semibold text-sm text-white line-clamp-2">
-                            {u.title}
-                          </p>
-                        </div>
-                      </div>
-                    </Link>
-                  </div>
-                </div>
-              ))}
+          <div className="text-center">
+            <div className="text-lg sm:text-xl md:text-2xl font-bold">
+              {followingCount}
             </div>
-
-            <Link href={`/main/profile/${user.id}/uploads`} className="btn-rect w-full text-center block capitalize">
-              View All {name.split(" ")[0]}'s Pins
-            </Link>
+            <div className="text-xs opacity-70">Following</div>
           </div>
+        </div>
+
+      </div>
+    </div>
+
+    {/* RIGHT CONTENT */}
+    <div className="lg:col-span-8">
+
+      {/* Stats */}
+      <div className="grid grid-cols-2 gap-4 mb-6">
+        <div className="card text-center btn-rect bg-orange-500 text-white p-4">
+          <div className="text-xl sm:text-2xl md:text-3xl font-bold">
+            {totalPins}
+          </div>
+          <div className="text-xs sm:text-sm mt-1">Total Pins</div>
+        </div>
+
+        <div className="card text-center btn-rect bg-purple-600 text-white p-4">
+          <div className="text-xl sm:text-2xl md:text-3xl font-bold">
+            {totalLikes}
+          </div>
+          <div className="text-xs sm:text-sm mt-1">Likes</div>
         </div>
       </div>
 
-    </main>
+      {/* Pins Section */}
+      <div className="card bg-white p-4 sm:p-6 mb-6">
+        <h3 className="text-base sm:text-lg md:text-xl font-bold mb-4 capitalize">
+          {name}'s Pins
+        </h3>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
+          {lastUploadedPins.map((u) => (
+            <div
+              key={u.id}
+              className="relative h-24 sm:h-28 md:h-32 group rounded-xl overflow-hidden hover:shadow-xl transition"
+            >
+              <Image
+                src={u.mediaUrl}
+                alt={u.title}
+                fill
+                className="object-cover"
+                loading="lazy"
+              />
+
+              <Link href={`/main/pin/${u.id}`}>
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-black/40">
+                  <div className="absolute bottom-0 p-2 w-full">
+                    <p className="text-xs sm:text-sm font-semibold text-white line-clamp-2">
+                      {u.title}
+                    </p>
+                  </div>
+                </div>
+              </Link>
+            </div>
+          ))}
+        </div>
+
+        <Link
+          href={`/main/profile/${user.id}/uploads`}
+          className="btn-rect capitalize w-full flex justify-center items-center text-sm! sm:text-base line-clamp-1"
+        >
+          {name.split(" ")[0]}'s Pins <ArrowRightIcon size={15}/>
+        </Link>
+      </div>
+
+    </div>
+  </div>
+
+</main>
   );
 }

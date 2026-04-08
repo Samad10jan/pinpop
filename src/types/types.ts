@@ -1,145 +1,3 @@
-// type FileType = "PHOTO" | "GIF";
-
-
-// type UserType = {
-//   id: string;
-//   email: string;
-//   name: string;
-//   avatar: string | null;
-//   uploadCount: number;
-//   createdAt: Date;
-// } | null;
-
-
-// type CurrentProfileType = {
-//   user: UserType;
-//   followersCount?: number;
-//   followingCount?: number;
-//   totalLikes?: number;
-//   lastSavedPins?: PinType[];
-// };
-
-// type ProfileType = {
-//   user: UserType;
-//   followersCount: number;
-//   followingCount: number;
-//   totalLikes: number;
-//   isFollowing: boolean;
-//   lastUploadedPins: PinType[];
-// };
-
-
-
-
-
-// type PinType
-//   = {
-//     id: string;
-//     title: string;
-//     description: string,
-//     mediaUrl: string;
-//     fileType: FileType;
-//     tagIds: string[];
-//     createdAt: string;
-//     publicId: string;
-
-
-//     user: {
-//       id: string;
-//       name: string;
-//       avatar: string | null;
-//     };
-
-//     isSaved: boolean;
-//     isLiked: boolean;
-//   };
-
-
-// type CommentType = {
-//   id: string;
-//   content: string;
-//   createdAt: string;
-//   user: {
-//     id: string;
-//     name: string;
-//     avatar: string | null;
-//   };
-// };
-
-
-// type FeedResponseType = {
-//   items: PinType[];
-// };
-
-
-
-// type PinPageResponseType = {
-//   pin: PinType
-//   ;
-//   relatedPins: PinType[];
-//   followersCount?: number;
-//   likesCount: number;
-//   savesCount: number;
-//   tags: TagType[],
-//   isFollowing: boolean;
-// };
-
-// type ProfileStatsType = {
-//   followersCount: number;
-//   followingCount: number;
-//   totalLikes: number;
-//   topPins: PinType[];
-// };
-
-
-// type TagType = {
-//   id: string;
-//   name: string;
-// };
-
-// type GetTagsResponseType = {
-//   tags: TagType[];
-//   uploadCount: boolean;
-// };
-
-
-
-// type ToggleSaveResponseType = {
-//   saved: boolean;
-// };
-
-// type ToggleLikeResponseType = {
-//   like: boolean;
-// };
-
-
-
-
-// type AuthPayloadType = {
-//   user: UserType;
-// };
-
-
-
-// type SuggestionType = string;
-
-
-// export type {
-//   UserType,
-//   ProfileType,
-//   CurrentProfileType,
-//   PinType,
-//   CommentType,
-//   ProfileStatsType,
-//   FeedResponseType,
-//   PinPageResponseType,
-//   TagType,
-//   GetTagsResponseType,
-//   ToggleSaveResponseType,
-//   ToggleLikeResponseType,
-//   AuthPayloadType,
-//   SuggestionType
-// };
 
 
 /* ---------------- ENUMS ---------------- */
@@ -160,6 +18,10 @@ export type UserType = {
   // createdAt: string;
 } | null;
 
+export type AuthPayloadType = {
+  user: UserType;
+  uploadCount: boolean;
+};
 
 /* ---------------- PIN ---------------- */
 
@@ -298,11 +160,7 @@ export type MessageResponseType = {
 };
 
 
-/* ---------------- AUTH ---------------- */
 
-export type AuthPayloadType = {
-  user: UserType;
-};
 
 
 /* ---------------- SUGGESTIONS ---------------- */
@@ -348,3 +206,12 @@ export type CurrentUserAnalyticsResponseType = {
 
   topPins: UserPinAnalyticsType[];
 };
+
+//
+export type ToastType = "success" | "error" | "info";
+
+export interface ToastItem {
+    id: number;
+    message: string;
+    type: ToastType;
+}

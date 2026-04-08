@@ -7,11 +7,11 @@ export async function context() {
   const cookieStore = await cookies();
   const access = cookieStore.get("access")?.value;
   // console.log("access",access);
-  
+
 
   if (!access) return { user: null };
   // console.log("aaa");
-  
+
 
 
   try {
@@ -23,20 +23,22 @@ export async function context() {
     });
 
     if (!user) return { user: null };
-// console.log(user);
-
+    // console.log(user);
+    const uploadCount = await prisma.pin.count({
+      where: { userId: user.id },
+    });
     return {
       user: {
         id: user.id,
         name: user.name,
         email: user.email,
         avatar: user.avatar,
-        uploadCount: user.uploadCount,
+        uploadCount: uploadCount,
         // createdAt: user.createdAt,
       },
     };
 
-  } catch(err: any) {
+  } catch (err: any) {
     //  console.log("aaa",err.message);
     return { user: null };
   }

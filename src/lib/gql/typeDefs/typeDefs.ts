@@ -58,6 +58,7 @@ type CommentResponse {
 
 type AuthPayload {
   user: User!
+  uplaodCount: Boolean!
 }
 
 type ProfileResponse {

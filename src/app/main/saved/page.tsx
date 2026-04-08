@@ -6,13 +6,16 @@ import useInfinitePins from "@/src/components/commons/useInfinitePins";
 import { GET_SAVED_PINS_QUERY } from "@/src/lib/gql/queries/queries";
 import { PinType } from "@/src/types/types";
 import { Masonry } from "masonic";
+import { ToastContainer, useToast } from "@/src/components/commons/Toast";
 
 
 export default function SavedPage() {
+    const toast = useToast();
     const { pins, loading,hasNextPage ,observerRef } = useInfinitePins(
         GET_SAVED_PINS_QUERY,
         {},
-        "getSavedPins"
+        "getSavedPins",
+        (err) => toast.error("Failed to load saved pins")
     );
 
     // if (!loading && pins.length === 0)
@@ -23,6 +26,7 @@ export default function SavedPage() {
 
     return (
         <main className="relative min-h-screen">
+            <ToastContainer toasts={toast.toasts} onClose={toast.remove} />
 
 
             <div className="flex flex-col items-center mb-5">

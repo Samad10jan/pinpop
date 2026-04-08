@@ -13,10 +13,12 @@ import { PinType } from "@/src/types/types";
 import { Masonry } from "masonic";
 import Loading from "@/src/components/commons/Loading";
 import useInfinitePins from "@/src/components/commons/useInfinitePins";
+import { ToastContainer, useToast } from "@/src/components/commons/Toast";
 
 
 export default function UserUploadsPage() {
     const { userId } = useParams();
+    const toast = useToast();
 
     // const [pins, setPins] = useState<PinType[]>([]);
     // const [loading, setLoading] = useState(true);
@@ -25,14 +27,17 @@ export default function UserUploadsPage() {
 
         GET_A_USER_ALL_PINS_QUERY,
         { userId },
-        "getUserAllPins"
+        "getUserAllPins",
+        (err) => toast.error("Failed to load user uploads")
     )
 
     if (loading && pins.length === 0) return <Loading />;
+console.log(pins);
 
 
     return (
         <main className="">
+            <ToastContainer toasts={toast.toasts} onClose={toast.remove} />
             <div className="flex flex-col items-center mb-5">
                 <h1 className="text-2xl md:text-5xl font-black">
                     {pins[0]?.user?.name?.split(" ")[0] ?? "User"}'s Uploads

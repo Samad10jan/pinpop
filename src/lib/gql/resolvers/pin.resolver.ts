@@ -4,6 +4,7 @@ import { buildFeedResponse } from "@/src/helper/pagination";
 import prisma from "@/src/lib/services/prisma";
 import { PinPageResponseType, UserType } from "@/src/types/types";
 import cloudinary from "@/src/lib/services/cloudinary";
+import { uploadLimit } from "../../constants";
 
 // Queries
 export async function getPinPageResponse(_: any, { id }: { id: string }, { user }: { user: UserType }) {
@@ -137,129 +138,6 @@ export async function getPinPageResponse(_: any, { id }: { id: string }, { user 
     }
 }
 
-// export async function getUserFeed(_: any, { limit = 20, page = 1 }: any, { user }: { user: UserType }) {
-
-//     /*
-//     Steps:
-//     1. Validate user
-//     2. Get tags from liked pins
-//     3. Exclude user's own pins
-//     4. Fetch personalized pins
-//     5. If not enough, fetch popular pins
-//     6. Return formatted feed
-//     */
-
-//     try {
-//         const userId = user?.id;
-//         if (!userId) throw new ApiError(401, "Unauthorized");
-
-//         const skip = (page - 1) * limit;
-
-//         // get tags from pins the user liked
-//         const likedPins = await prisma.like.findMany({
-//             where: { userId },
-//             include: {
-//                 pin: {
-//                     select: { tagIds: true },
-//                 },
-//             },
-//         });
-
-//         // flatten tags and remove duplicates
-//         const likedTagIds = [...new Set(likedPins.flatMap(l => l.pin.tagIds))];
-
-//         // get user's own pin ids to exclude
-//         const userPins = await prisma.pin.findMany({
-//             where: { userId },
-//             select: { id: true },
-//         });
-
-//         const excludeIds = userPins.map(p => p.id);
-
-//         const whereClause: any = {};
-
-//         // exclude user's pins
-//         if (excludeIds.length) {
-//             whereClause.id = { notIn: excludeIds };
-//         }
-
-//         // prioritize pins with similar tags
-//         if (likedTagIds.length) {
-//             whereClause.tagIds = { hasSome: likedTagIds };
-//         }
-
-//         const totalPins = await prisma.pin.count({ where: whereClause });
-
-//         // fetch personalized feed
-//         let pins = await prisma.pin.findMany({
-//             where: whereClause,
-//             skip,
-//             take: limit,
-//             orderBy: { createdAt: "desc" },
-//             include: {
-//                 user: {
-//                     select: { id: true, name: true, avatar: true },
-//                 },
-//                 saves: {
-//                     where: { userId },
-//                     select: { id: true },
-//                 },
-//                 _count: {
-//                     select: { likes: true, saves: true, comments: true },
-//                 },
-//             },
-//         });
-
-//         // fallback if personalized pins are not enough mix of personalized + popular
-//         if (pins.length < limit) {
-
-//             const remaining = limit - pins.length;
-
-//             // exclude user's pins and already fetched pins
-//             const excludeForFallback = [
-//                 ...excludeIds,
-//                 ...pins.map(p => p.id),
-//             ];
-
-//             const fallbackPins = await prisma.pin.findMany({
-//                 where: {
-//                     id: { notIn: excludeForFallback },
-//                 },
-//                 take: remaining,
-//                 orderBy: {
-//                     likes: { _count: "desc" }, // most liked pins
-//                 },
-//                 include: {
-//                     user: {
-//                         select: { id: true, name: true, avatar: true },
-//                     },
-//                     saves: {
-//                         where: { userId },
-//                         select: { id: true },
-//                     },
-//                     _count: {
-//                         select: { likes: true, saves: true, comments: true },
-//                     },
-//                 },
-//             });
-
-//             // merge personalized + fallback pins
-//             pins = [...pins, ...fallbackPins];
-//         }
-
-//         // convert saves relation to boolean
-//         const mappedPins = pins.map(p => ({
-//             ...p,
-//             isSaved: p.saves.length > 0,
-//         }));
-
-//         return buildFeedResponse(mappedPins, totalPins, page, limit);
-
-//     } catch (error: any) {
-//         console.error("Error fetching feed:", error);
-//         throw new ApiError(500, `Failed to fetch search results ${error?.message}`);
-//     }
-// }
 export async function getUserFeed(_: any, { limit = 20, page = 1 }: any, { user }: { user: UserType }) {
     try {
         const userId = user?.id;
@@ -658,9 +536,11 @@ export async function createPin(
         throw new ApiError(400, "Title, mediaUrl, fileType and tags are required");
     }
 
-    const uploadCount = user.uploadCount + 1;
+    const uploadCount = await prisma.pin.count({
+        where: { userId: user.id },
+    })
 
-    if (uploadCount > 100) {
+    if (uploadCount >= uploadLimit) {
         throw new ApiError(403, "Upload limit reached.");
     }
 
@@ -685,14 +565,6 @@ export async function createPin(
             }
         });
 
-        await prisma.user.update({
-            where: { id: user.id },
-            data: {
-                uploadCount: {
-                    increment: 1
-                }
-            }
-        });
 
     } catch (err) {
 

@@ -5,18 +5,20 @@ import { UserContext } from "@/src/components/contexts/UserContext";
 import { CURRENT_PROFILE_QUERY } from "@/src/lib/gql/queries/queries";
 import gqlClient from "@/src/lib/services/graphql";
 import { CurrentProfileType, UserType } from "@/src/types/types";
-import { Pin, PlusCircleIcon, Search, SearchIcon, ThumbsUpIcon } from "lucide-react";
+import { ArrowRightIcon, PencilIcon, Pin, PlusCircleIcon, Search, SearchIcon, ThumbsUpIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import { ToastContainer, useToast } from "@/src/components/commons/Toast";
 import { getGraphQLError } from "@/src/helper/ApiError";
+import { Arrow } from "radix-ui/internal";
 
 export default function UserPage() {
     const [profile, setProfile] = useState<CurrentProfileType | null>(null);
     const [loading, setLoading] = useState(true);
     const context = useContext(UserContext);
-    const currentUser = context?.currentUser; const [showEdit, setShowEdit] = useState(false);
+    const currentUser = context?.currentUser;
+     const [showEdit, setShowEdit] = useState(false);
     const toast = useToast();
 
 
@@ -73,6 +75,18 @@ export default function UserPage() {
     const likes = profile?.totalLikes || 0;
     const lastSavedPins = profile?.lastSavedPins || [];
 
+    if (!user) {
+        return (
+            <main className="page">
+                <div className="container">
+                    <div className="card max-w-md mx-auto mt-20 text-center bg-red-500 text-white">
+                        <h2 className="text-2xl font-bold mb-2">User not found</h2>
+                    </div>
+                </div>
+            </main>
+        );
+    }
+
     return (
         <main className="">
 
@@ -119,8 +133,8 @@ export default function UserPage() {
                             <div className="text-2xl font-bold mb-1">{name}</div>
                             <div className="text-sm opacity-70 mb-4">{email}</div>
 
-                            <button className="btn-rect w-full mb-3" onClick={() => setShowEdit(true)} >
-                                Edit Profile
+                            <button title="edit" className="btn-circle bg-teal-500! absolute top-3 right-3" onClick={() => setShowEdit(true)} >
+                                <PencilIcon size={20} />
                             </button>
 
                             {showEdit && (
@@ -150,25 +164,25 @@ export default function UserPage() {
                 <div className="lg:col-span-8">
 
 
-                    <div className=" card flex flex-col gap-4 mb-6 ">
-                        <div className="flex *:flex-1 md:flex-row flex-col gap-4">
-                            <div className="card text-center btn-rect bg-orange-400! text-white relative overflow-hidden! group ">
-                                <div className="text-3xl font-bold">{totalPins}</div>
-                                <div className="text-sm mt-1">Total Pins</div>
-                                <div className="card absolute inset-0 h-full rounded-4xl w-[30%]  bg-purple-600 transform -translate-x-15 group-hover:-translate-x-10  transition-all duration-900 flex justify-end items-center pr-5! group-hover:pr-8!" ><Pin /></div>
+                    <div className=" relative card flex flex-col gap-4 mb-6 ">
+                        <h3 className="text-sm md:text-xl font-bold mb-4">Qucik Stats</h3>
+                        <div className="flex *:flex-1 flex-row gap-4 ">
+                            <div className="card text-center btn-rect bg-orange-400! text-white relative overflow-hidden! group  p-2! ">
+                                <div className="text-xl md:text-3xl font-bold">{totalPins}</div>
+                                <div className="text-xs md:text-sm mt-1">Total Pins</div>
+                                <div className="hidden card absolute inset-0 h-full rounded-4xl w-[30%]  bg-purple-600 transform -translate-x-15 group-hover:-translate-x-10  transition-all duration-900 md:flex justify-end items-center pr-5! group-hover:pr-8!" ><Pin /></div>
 
                             </div>
 
 
-                            <div className="card text-center btn-rect bg-purple-600! text-white relative overflow-hidden! group">
-                                <div className="text-3xl font-bold">{likes}</div>
-                                <div className="text-sm mt-1">Pins Liked</div>
-                                <div className="card absolute inset-0 h-full rounded-4xl w-[30%]  bg-orange-400 transform -translate-x-15 group-hover:-translate-x-10  transition-all duration-900 flex justify-end items-center pr-5! group-hover:pr-8!" ><ThumbsUpIcon /></div>
+                            <div className="card text-center btn-rect bg-purple-600! text-white relative overflow-hidden! group p-2!">
+                                <div className="text-xl md:text-3xl font-bold">{likes}</div>
+                                <div className="text-xs md:text-sm mt-1">Pins Liked</div>
+                                <div className="hidden md:flex card absolute inset-0 h-full rounded-4xl w-[30%] bg-orange-400 transform -translate-x-15 group-hover:-translate-x-10  transition-all duration-900 justify-end items-center pr-5! group-hover:pr-8!" ><ThumbsUpIcon /></div>
                             </div>
                         </div>
-                        <Link href={"/main/current-profile/uploads"} className="btn-rect text-center! bg-teal-500! ">
-                            View Details
-
+                        <Link href={"/main/current-profile/uploads"} className=" absolute top-2 right-2 rounded-full! btn-rect p-2!  bg-teal-500! ">
+                            <ArrowRightIcon size={15} />
                         </Link>
 
                     </div>
@@ -176,23 +190,23 @@ export default function UserPage() {
 
 
                     <div className="card mb-6 bg-white">
-                        <h3 className="text-xl font-bold mb-4">Actions</h3>
-                        <div className="grid md:grid-cols-2 gap-3">
-                            <Link href={"/main/pin"} className="btn-rect flex flex-col justify-center items-center py-6 ">
+                        <h3 className=" text-sm md:text-xl font-bold mb-4">Actions</h3>
+                        <div className="grid grid-cols-2 gap-3">
+                            <Link href={"/main/pin"} className="btn-rect flex flex-col justify-center items-center ">
 
                                 <div className=" mb-3">
 
                                     <PlusCircleIcon color="white" />                                                                            </div>
 
-                                <div className="text-sm text-white">Create Pin</div>
+                                <div className=" text-xs md:text-sm text-white">Create</div>
 
                             </Link>
-                            <Link href={"/main/tags"} className="btn-rect flex flex-col justify-center items-center py-6 bg-purple-600 text-white">
+                            <Link href={"/main/tags"} className="btn-rect flex flex-col justify-center items-center bg-purple-600 text-white">
 
                                 <div className=" mb-3">
                                     <SearchIcon color="white" />
                                 </div>
-                                <div className="text-sm">Explore</div>
+                                <div className="text-xs md:text-sm">Explore</div>
                             </Link>
                         </div>
                     </div>
