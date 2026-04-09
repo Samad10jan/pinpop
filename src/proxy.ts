@@ -11,7 +11,7 @@ export async function proxy(req: NextRequest) {
   const isAuthPage = pathname === "/";
   const isProtectedRoute = pathname.startsWith("/main");
 
-  // ✅ Skip Next.js internals & API routes
+  // Skip Next.js internals & API routes
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/api") ||
@@ -21,7 +21,7 @@ export async function proxy(req: NextRequest) {
   }
 
   // =========================================================
-  // ❌ CASE 1: No tokens at all
+  // CASE 1: No tokens at all
   // =========================================================
   if (!access && !refresh) {
     if (isProtectedRoute) {
@@ -31,7 +31,7 @@ export async function proxy(req: NextRequest) {
   }
 
   // =========================================================
-  // ✅ CASE 2: Valid access token
+  // CASE 2: Valid access token
   // =========================================================
   if (access && verifyAccess(access)) {
     // Logged-in user should not visit login page
@@ -42,7 +42,7 @@ export async function proxy(req: NextRequest) {
   }
 
   // =========================================================
-  // ❌ CASE 3: No refresh token (logout situation)
+  // CASE 3: No refresh token (logout situation)
   // =========================================================
   if (!refresh) {
     if (isProtectedRoute) {
@@ -52,12 +52,12 @@ export async function proxy(req: NextRequest) {
   }
 
   // =========================================================
-  // 🔁 CASE 4: Try refresh token
+  // CASE 4: Try refresh token
   // =========================================================
   const tokens = await refreshTokens(refresh);
 
   if (!tokens) {
-    // ❌ Refresh failed → treat as logged out
+    // Refresh failed → treat as logged out
     if (isProtectedRoute) {
       return NextResponse.redirect(new URL("/", req.url));
     }
@@ -65,13 +65,13 @@ export async function proxy(req: NextRequest) {
   }
 
   // =========================================================
-  // ✅ CASE 5: Refresh success
+  // CASE 5: Refresh success
   // =========================================================
   const response = isAuthPage
     ? NextResponse.redirect(new URL("/main", req.url))
     : NextResponse.next();
 
-  // 🔥 IMPORTANT: Add path "/" to avoid cookie issues on Vercel
+  //  Add path "/" to avoid cookie issues on Vercel
   response.cookies.set("access", tokens.newAccess, {
     httpOnly: true,
     secure: true,
@@ -91,9 +91,7 @@ export async function proxy(req: NextRequest) {
   return response;
 }
 
-// =========================================================
-// ✅ MATCHER (IMPORTANT)
-// =========================================================
+
 export const config = {
   matcher: ["/", "/main/:path*"],
 };
