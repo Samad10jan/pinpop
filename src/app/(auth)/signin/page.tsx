@@ -10,6 +10,8 @@ import { useState } from "react";
 import { ToastContainer, useToast } from "@/src/components/commons/Toast";
 import Image from "next/image";
 
+export const dynamic = 'force-dynamic';
+
 export default function LoginPage() {
 
     const router = useRouter();

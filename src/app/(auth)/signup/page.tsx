@@ -10,7 +10,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { UploadIcon } from "lucide-react";
 
-
+export const dynamic = 'force-dynamic';
 const MAX_SIZE = 10 * 1024 * 1024;
 
 export default function SignupPage() {
