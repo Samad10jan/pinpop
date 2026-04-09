@@ -1,9 +1,7 @@
-import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { refreshTokens } from "./helper/refersh";
 import { verifyAccess } from "./helper/auth";
-
 
 export async function proxy(req: NextRequest) {
   const access = req.cookies.get("access")?.value;
@@ -11,60 +9,91 @@ export async function proxy(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
 
   const isAuthPage = pathname === "/";
+  const isProtectedRoute = pathname.startsWith("/main");
 
-  // No tokens at all
+  // ✅ Skip Next.js internals & API routes
+  if (
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/api") ||
+    pathname === "/favicon.ico"
+  ) {
+    return NextResponse.next();
+  }
+
+  // =========================================================
+  // ❌ CASE 1: No tokens at all
+  // =========================================================
   if (!access && !refresh) {
-    if (!isAuthPage) {
+    if (isProtectedRoute) {
       return NextResponse.redirect(new URL("/", req.url));
     }
     return NextResponse.next();
   }
 
-  // Try access token first
+  // =========================================================
+  // ✅ CASE 2: Valid access token
+  // =========================================================
   if (access && verifyAccess(access)) {
-    // Logged in user should not see login page
+    // Logged-in user should not visit login page
     if (isAuthPage) {
       return NextResponse.redirect(new URL("/main", req.url));
     }
     return NextResponse.next();
   }
 
-  // No refresh token → logout
+  // =========================================================
+  // ❌ CASE 3: No refresh token (logout situation)
+  // =========================================================
   if (!refresh) {
-    return NextResponse.redirect(new URL("/", req.url));
+    if (isProtectedRoute) {
+      return NextResponse.redirect(new URL("/", req.url));
+    }
+    return NextResponse.next();
   }
 
-  // token rotaion: if access token is invalid but refresh token exists, try to refresh
+  // =========================================================
+  // 🔁 CASE 4: Try refresh token
+  // =========================================================
   const tokens = await refreshTokens(refresh);
 
   if (!tokens) {
-    return NextResponse.redirect(new URL("/", req.url));
+    // ❌ Refresh failed → treat as logged out
+    if (isProtectedRoute) {
+      return NextResponse.redirect(new URL("/", req.url));
+    }
+    return NextResponse.next();
   }
 
-  // Decide response based on route
+  // =========================================================
+  // ✅ CASE 5: Refresh success
+  // =========================================================
   const response = isAuthPage
     ? NextResponse.redirect(new URL("/main", req.url))
     : NextResponse.next();
 
-  // Set new cookies
+  // 🔥 IMPORTANT: Add path "/" to avoid cookie issues on Vercel
   response.cookies.set("access", tokens.newAccess, {
     httpOnly: true,
     secure: true,
     sameSite: "lax",
-    maxAge: 60 * 15,
+    path: "/",
+    maxAge: 60 * 15, // 15 min
   });
 
   response.cookies.set("refresh", tokens.newRefresh, {
     httpOnly: true,
     secure: true,
     sameSite: "lax",
-    maxAge: 60 * 60 * 24 * 7,
+    path: "/",
+    maxAge: 60 * 60 * 24 * 7, // 7 days
   });
 
   return response;
 }
 
-// protecting main routes
+// =========================================================
+// ✅ MATCHER (IMPORTANT)
+// =========================================================
 export const config = {
   matcher: ["/", "/main/:path*"],
 };
