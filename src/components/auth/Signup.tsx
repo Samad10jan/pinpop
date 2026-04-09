@@ -82,7 +82,7 @@ export default function SignupPage() {
             <ToastContainer toasts={toast.toasts} onClose={toast.remove} />
 
 
-            <div className="hidden relative md:flex w-1/2 items-center justify-center overflow-hidden rounded-2xl bg-[#0a0a0a]">
+            <div className="absolute md:relative md:flex md:w-1/2 w-full p-5 items-center justify-center overflow-hidden md:rounded-2xl bg-[#0a0a0a]">
 
               
                 <Image
@@ -105,7 +105,7 @@ export default function SignupPage() {
                 </div>
             </div>
 
-            <div className="flex flex-col justify-center w-full md:w-1/2 px-16 py-12 bg-[#f5f0ea] min-h-screen">
+            <div className="flex mt-20 md:mt-0 flex-col justify-center w-full md:w-1/2 px-16 py-12 bg-[#f5f0ea] min-h-screen">
 
 
                 <div className="mb-8 fade-up">

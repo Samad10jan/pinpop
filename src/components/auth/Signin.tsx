@@ -99,7 +99,7 @@ export default function SignInPage() {
 
             </div>
 
-            <div className="hidden relative md:flex w-1/2 items-center justify-center overflow-hidden rounded-2xl bg-[#0a0a0a]">
+            <div className="absolute md:relative md:flex md:w-1/2 w-full p-5 items-center justify-center overflow-hidden md:rounded-2xl bg-[#0a0a0a]">
 
 
                 <Image
