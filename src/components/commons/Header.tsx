@@ -82,7 +82,7 @@ export default function Header() {
                 <button
                     title="search button"
                     type="submit"
-                    disabled={loading}
+                    disabled={loading||!q.trim().length}
                     className="absolute right-3! size-8! top-1/9
                         btn-circle bg-red-600! text-white! text-sm! font-semibold! 
                         disabled:opacity-80! transition-all! duration-300!"
