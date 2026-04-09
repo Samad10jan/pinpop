@@ -25,10 +25,18 @@ export default async function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 sm:h-20">
 
           <div className="flex items-center gap-2.5">
-            {/* <div className=" *:size-7 p-1 *:rotate-45 rounded-full bg-black flex items-center justify-center text-white shrink-0 transition-all duration-500">
-              <PinIcon/>
-              
-            </div> */}
+            <div className=" relative size-7 lg:size-10 rounded-full m-0.5 lg:m-1 flex items-center">
+              <div className=" absolute w-full h-full rounded-full bg-black flex items-center justify-center text-white shrink-0 transition-all duration-500">
+                <Image
+                  src={"favicon.ico"}
+                  fill
+                  alt="a"
+                  className=" object-cover"
+                />
+
+              </div>
+
+            </div>
             <span className="text-xl md:text-5xl font-black tracking-[0.2em] uppercase">
               PinPop
             </span>

@@ -4,12 +4,10 @@ import { createPin, deletePin, getCurrentUserPins, getPinPageResponse, getPinsBy
 import { getAllTags, getSavedPins, toggleFollow, toggleLike, toggleSave } from "@/src/lib/gql/resolvers/toggles.resolver";
 import { getCurrentProfile, getFollowingCount, getFollwersCount, getProfile, getTotalLikes, isFollowing, updateProfile, user } from "@/src/lib/gql/resolvers/user.resolver";
 
-import typeDefs from "@/src/lib/gql/typeDefs/typeDefs";
 import { context } from "@/src/helper/context";
+import typeDefs from "@/src/lib/gql/typeDefs/typeDefs";
 import { ApolloServer } from "@apollo/server";
 import { startServerAndCreateNextHandler } from "@as-integrations/next";
-import { log } from "node:console";
-import { get } from "node:http";
 
 
 export const resolvers = {

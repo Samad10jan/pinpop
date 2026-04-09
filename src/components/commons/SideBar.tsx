@@ -3,6 +3,7 @@ import { Compass, HeartIcon, HomeIcon, PinIcon, PlusCircleIcon, UserIcon } from 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import LogoutButton from "../buttons/LogOutBtn";
+import Image from "next/image";
 
 export default function SideBar() {
     const pathname = usePathname();
@@ -42,8 +43,19 @@ export default function SideBar() {
 
         >
 
-            <div className="hidden *:rotate-45 md:flex mb-8 w-11 h-11 rounded-full bg-black text-white items-center justify-center shadow-[3px_3px_0_rgba(0,0,0,0.3)] shrink-0">
-                <PinIcon size={20} />
+            <div className="hidden relative w-12 h-12  mb-5 md:flex bg-black  rounded-full items-center justify-center shadow-[4px_4px_0px_black] overflow-hidden ">
+
+                <Link href="/main" className=" absolute w-full h-full ">
+
+                    <Image
+                        src={"favicon.ico"}
+                        fill
+                        alt="a"
+                        className=" object-cover"
+
+                    />
+                </Link>
+
             </div>
 
 
