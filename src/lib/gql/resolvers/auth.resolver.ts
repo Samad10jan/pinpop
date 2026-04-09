@@ -84,7 +84,7 @@ export async function signup(_: any, args: any) {
         await prisma.refreshToken.deleteMany({
             where: {
                 id: {
-                    in: toDelete.map(s => s.id),
+                    in: toDelete.map((s:any) => s.id),
                 },
             },
         });
@@ -128,7 +128,7 @@ export async function signup(_: any, args: any) {
 
 export async function login(_: any, args: any) {
 
-    return await prisma.$transaction(async (tn) => {
+    return await prisma.$transaction(async (tn:any) => {
 
         // find user by email
         const user = await tn.user.findUnique({
@@ -168,7 +168,7 @@ export async function login(_: any, args: any) {
             await tn.refreshToken.deleteMany({
                 where: {
                     id: {
-                        in: toDelete.map(s => s.id),
+                        in: toDelete.map((s:any) => s.id),
                     },
                 },
             });
