@@ -518,7 +518,15 @@ export async function getPinsByTag(_: any, { tagId, limit = 20, page = 1 }: any,
 
 export async function createPin(
     _: any,
-    { title, description, mediaUrl, publicId, resourceType, fileType, tagIds }: {
+    {
+        title,
+        description,
+        mediaUrl,
+        publicId,
+        resourceType,
+        fileType,
+        tagIds
+    }: {
         title: string,
         description: string,
         mediaUrl: string,

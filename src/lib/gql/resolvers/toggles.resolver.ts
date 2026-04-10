@@ -1,8 +1,7 @@
-import prisma from "@/src/lib/services/prisma";
-import { UserType } from "@/src/types/types";
 import { ApiError } from "@/src/helper/ApiError";
 import { buildFeedResponse } from "@/src/helper/pagination";
-import { tags } from "../../constants";
+import prisma from "@/src/lib/services/prisma";
+import { UserType } from "@/src/types/types";
 
 const uploadLimit = 15; // max pins a user can upload
 // Queries

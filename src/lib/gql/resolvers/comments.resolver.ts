@@ -1,7 +1,6 @@
+import { ApiError } from "@/src/helper/ApiError";
 import prisma from "@/src/lib/services/prisma";
 import { UserType } from "@/src/types/types";
-import { ApiError } from "@/src/helper/ApiError";
-import { buildFeedResponse } from "@/src/helper/pagination";
 
 // Queries
 export async function getPinComments(_: any, { pinId, page = 1 }: any) {

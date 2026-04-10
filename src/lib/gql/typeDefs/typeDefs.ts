@@ -1,6 +1,87 @@
-import { gql } from "graphql-request";
+import { gql } from "graphql-tag";
 
 const typeDefs = gql`
+
+
+# Queries and Mutations
+
+type Query {
+  user: User
+  getCurrentProfile: ProfileResponse
+  getAllTags: GetTagsAndUploadCountResponse,
+
+  getSugg(search: String!): [String]
+
+  getPinPageResponse(id: ID!): PinPageResponse
+
+  getPinComments(pinId: ID!, page: Int): CommentResponse
+
+  getProfile(userId: ID!): ProfileResponse
+
+  getSavedPins(limit: Int, page: Int): FeedResponse!
+  
+  getUserFeed(limit: Int, page: Int): FeedResponse!
+  
+  getSearchPagePins(search: String!, limit: Int, page: Int): FeedResponse!
+
+  getCurrentUserPins: CurrentUserAnalyticsResponse!
+  getUserAllPins(userId:ID!,limit: Int, page: Int): FeedResponse!
+
+  getPinsByTag(tagId: ID!, limit: Int, page: Int): FeedResponse!
+
+ 
+}
+
+type Mutation {
+ sendSignupOtp(email: String!): MessageResponse!
+  signup(
+    name: String!
+    email: String!
+    password: String!
+    avatar: String
+    otp: String!
+  ): AuthPayload!
+
+  login(
+    email: String!
+    password: String!
+  ): AuthPayload!
+
+  logout: BooleanResponse!
+
+  createPin(
+    title: String!
+    description: String
+    mediaUrl: String!
+    fileType: FileType!
+    tagIds: [String!]!
+    publicId: String!
+  resourceType: ResourceType!
+  ): Pin!
+  
+  deletePin(pinId: ID!): BooleanResponse!
+
+  sendComment(
+  pinId: ID!
+  content: String!
+): Comment!
+
+deleteComment(
+  commentId: ID!
+): BooleanResponse!
+
+toggleSave(pinId: ID!): ToggleSaveResponse!
+
+toggleLike(pinId:ID!): ToggleLikeResponse
+
+toggleFollow(targetUserId: ID!): BooleanResponse!
+
+# addTags:Boolean!
+updateProfile(name: String, avatar: String): User!
+
+}
+
+#types
 
 scalar DateTime
 
@@ -148,83 +229,6 @@ type MessageResponse {
   message: String!
 }
 
-# Queries and Mutations
-
-type Query {
-  user: User
-  getCurrentProfile: ProfileResponse
-  getAllTags: GetTagsAndUploadCountResponse,
-
-  getSugg(search: String!): [String]
-
-  getPinPageResponse(id: ID!): PinPageResponse
-
-  getPinComments(pinId: ID!, page: Int): CommentResponse
-
-  getProfile(userId: ID!): ProfileResponse
-
-  getSavedPins(limit: Int, page: Int): FeedResponse!
-  
-  getUserFeed(limit: Int, page: Int): FeedResponse!
-  
-  getSearchPagePins(search: String!, limit: Int, page: Int): FeedResponse!
-
-  getCurrentUserPins: CurrentUserAnalyticsResponse!
-  getUserAllPins(userId:ID!,limit: Int, page: Int): FeedResponse!
-
-  getPinsByTag(tagId: ID!, limit: Int, page: Int): FeedResponse!
-
- 
-}
-
-type Mutation {
- sendSignupOtp(email: String!): MessageResponse!
-  signup(
-    name: String!
-    email: String!
-    password: String!
-    avatar: String
-    otp: String!
-  ): AuthPayload!
-
-  login(
-    email: String!
-    password: String!
-  ): AuthPayload!
-
-  logout: BooleanResponse!
-
-  createPin(
-    title: String!
-    description: String
-    mediaUrl: String!
-    fileType: FileType!
-    tagIds: [String!]!
-    publicId: String!
-  resourceType: ResourceType!
-  ): Pin!
-  
-  deletePin(pinId: ID!): BooleanResponse!
-
-  sendComment(
-  pinId: ID!
-  content: String!
-): Comment!
-
-deleteComment(
-  commentId: ID!
-): BooleanResponse!
-
-toggleSave(pinId: ID!): ToggleSaveResponse!
-
-toggleLike(pinId:ID!): ToggleLikeResponse
-
-toggleFollow(targetUserId: ID!): BooleanResponse!
-
-# addTags:Boolean!
-updateProfile(name: String, avatar: String): User!
-
-}
 
 
 `;

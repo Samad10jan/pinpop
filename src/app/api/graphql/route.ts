@@ -3,7 +3,6 @@ import { deleteComment, getPinComments, sendComment } from "@/src/lib/gql/resolv
 import { createPin, deletePin, getCurrentUserPins, getPinPageResponse, getPinsByTag, getSearchPagePins, getSugg, getTagsForPin, getUserAllPins, getUserFeed } from "@/src/lib/gql/resolvers/pin.resolver";
 import { getAllTags, getSavedPins, toggleFollow, toggleLike, toggleSave } from "@/src/lib/gql/resolvers/toggles.resolver";
 import { getCurrentProfile, getFollowingCount, getFollwersCount, getProfile, getTotalLikes, isFollowing, updateProfile, user } from "@/src/lib/gql/resolvers/user.resolver";
-
 import { context } from "@/src/helper/context";
 import typeDefs from "@/src/lib/gql/typeDefs/typeDefs";
 import { ApolloServer } from "@apollo/server";
@@ -36,7 +35,6 @@ export const resolvers = {
     getUserAllPins: getUserAllPins,
 
     getPinsByTag: getPinsByTag
-    // isFollowing:isFollowing
   },
   ProfileResponse: {
     followersCount: getFollwersCount,
@@ -61,21 +59,15 @@ export const resolvers = {
     updateProfile: updateProfile,
     toggleFollow: toggleFollow,
     deletePin: deletePin,
-    // addTags:addTags
   }
 
 };
-
 
 
 const server = new ApolloServer({
   typeDefs,
   resolvers
 });
-
-// const handler = startServerAndCreateNextHandler(server, {
-//   context
-// });
 
 const handler = startServerAndCreateNextHandler(server, {
   context,
@@ -89,4 +81,3 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   return handler(request);
 }
-// export { handler as GET, handler as POST };
