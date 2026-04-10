@@ -18,10 +18,7 @@ export type UserType = {
   // createdAt: string;
 } | null;
 
-export type AuthPayloadType = {
-  user: UserType;
-  uploadCount: boolean;
-};
+
 
 /* ---------------- PIN ---------------- */
 
@@ -86,33 +83,7 @@ export type CurrentProfileType = {
   lastSavedPins: PinType[];
 };
 
-export type ProfileType = {
-  user: UserType;
 
-  followersCount: number;
-  followingCount: number;
-  totalLikes: number;
-
-  isFollowing: boolean;
-
-  lastUploadedPins: PinType[];
-};
-
-
-/* ---------------- FEED / PAGINATION ---------------- */
-
-export type FeedResponseType = {
-  pins: PinType[];
-
-  page: number;
-  limit: number;
-
-  totalPins: number;
-  totalPages: number;
-
-  hasNextPage: boolean;
-  hasPrevPage: boolean;
-};
 
 
 /* ---------------- PIN PAGE ---------------- */
@@ -132,40 +103,6 @@ export type PinPageResponseType = {
   isFollowing: boolean;
 };
 
-
-/* TAG RESPONSE*/
-
-export type GetTagsResponseType = {
-  tags: TagType[];
-  uploadCount: boolean;
-};
-
-
-/* ---------------- TOGGLE RESPONSES ---------------- */
-
-export type ToggleSaveResponseType = {
-  saved: boolean;
-};
-
-export type ToggleLikeResponseType = {
-  like: boolean;
-};
-
-export type BooleanResponseType = {
-  success: boolean;
-};
-
-export type MessageResponseType = {
-  message: string;
-};
-
-
-
-
-
-/* ---------------- SUGGESTIONS ---------------- */
-
-export type SuggestionType = string[];
 
 
 /* ---------------- ANALYTICS ---------------- */

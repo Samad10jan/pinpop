@@ -2,8 +2,8 @@ import { ApiError } from "@/src/helper/ApiError";
 import { buildFeedResponse } from "@/src/helper/pagination";
 import prisma from "@/src/lib/services/prisma";
 import { UserType } from "@/src/types/types";
+import { uploadLimit } from "../../constants";
 
-const uploadLimit = 15; // max pins a user can upload
 // Queries
 export async function getSavedPins(
     _: any,
@@ -120,7 +120,6 @@ export async function toggleSave(_: any, { pinId }: any, { user }: { user: UserT
         saved: true,
     };
 }
-
 
 export async function toggleLike(_: any, { pinId }: any, { user }: { user: UserType }) {
     if (!user) throw new ApiError(401, "Unauthorized");
