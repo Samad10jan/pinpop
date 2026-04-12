@@ -6,13 +6,13 @@ import { cookies } from "next/headers";
 export async function context() {
   const cookieStore = await cookies();
   const access = cookieStore.get("access")?.value;
+  const refresh = cookieStore.get("refresh")?.value;
   // console.log("access",access);
 
 
-  if (!access) return { user: null };
+  if (!access ||!refresh) return { user: null };
+
   // console.log("aaa");
-
-
 
   try {
     const decoded: any = jwt.verify(access, process.env.JWT_SECRET!);
@@ -34,12 +34,10 @@ export async function context() {
         email: user.email,
         avatar: user.avatar,
         uploadCount: uploadCount,
-        // createdAt: user.createdAt,
       },
     };
 
   } catch (err: any) {
-    //  console.log("aaa",err.message);
     return { user: null };
   }
 }

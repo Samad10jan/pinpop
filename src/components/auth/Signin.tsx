@@ -37,10 +37,8 @@ export default function SignInPage() {
         } catch (e: any) {
             //trigger an error toast with the error message
             console.log(e.message);
-
-            toast.error(getGraphQLError(e));
-        } finally {
             setLoading(false);
+            toast.error(getGraphQLError(e));
         }
     }
 

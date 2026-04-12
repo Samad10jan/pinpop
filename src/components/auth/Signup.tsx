@@ -42,7 +42,6 @@ export default function SignupPage() {
             setStep("otp");
         } catch (e: any) {
             toast.error(getGraphQLError(e));
-        } finally {
             setLoading(false);
         }
     }
@@ -71,7 +70,6 @@ export default function SignupPage() {
             router.push("/main");
         } catch (e: any) {
             toast.error(getGraphQLError(e));
-        } finally {
             setLoading(false);
         }
     }
@@ -84,7 +82,7 @@ export default function SignupPage() {
 
             <div className="absolute md:relative md:flex md:w-1/2 w-full p-5 items-center justify-center overflow-hidden md:rounded-2xl bg-[#0a0a0a]">
 
-              
+
                 <Image
                     src="/signup.jpg"
                     alt="Sign up"

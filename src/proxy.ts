@@ -28,7 +28,7 @@ export async function proxy(req: NextRequest) {
 
   // 3. Valid access token
   if (access && verifyAccess(access)) {
-    // Logged-in users should not access login page
+    // Logged-in users should not access landing page
     if (isAuthPage) {
       return NextResponse.redirect(new URL("/main", req.url));
     }
