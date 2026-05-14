@@ -93,7 +93,7 @@ export async function refreshTokens(refresh: string) {
         data: {
           token: newRefresh,
           userId,
-          expiresAt: storedToken.expiresAt, // unchanged (not used for validation anymore)
+          expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // new 7-day expiry
         },
       }),
     ]);

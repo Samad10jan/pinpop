@@ -2,21 +2,26 @@
 import jwt from "jsonwebtoken";
 import prisma from "@/src/lib/services/prisma";
 import { cookies } from "next/headers";
+import { verifyAccess, verifyRefresh } from "@/src/helper/auth";
 
 export async function context() {
   const cookieStore = await cookies();
   const access = cookieStore.get("access")?.value;
   const refresh = cookieStore.get("refresh")?.value;
-  // console.log("access",access);
 
-
-  if (!access ||!refresh) return { user: null };
+  // Both tokens required for authenticated requests
+  if (!access || !refresh) return { user: null };
 
   // console.log("aaa");
 
   try {
-    const decoded: any = jwt.verify(access, process.env.JWT_SECRET!);
-    //  console.log("aaa");
+    // Verify access token validity
+    const decoded = verifyAccess(access);
+    if (!decoded) return { user: null };
+
+    // Verify refresh token exists (extra validation layer)
+    const refreshValid = verifyRefresh(refresh);
+    if (!refreshValid) return { user: null };
 
     const user = await prisma.user.findUnique({
       where: { id: decoded.id },

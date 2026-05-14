@@ -4,6 +4,7 @@ import SideBar from "@/src/components/commons/SideBar";
 import { UserProvider } from "@/src/components/contexts/UserContext";
 import { context } from "@/src/helper/context";
 import { UserType } from "@/src/types/types";
+// @ts-ignore
 import "../globals.css";
 export default async function RootLayout({
   children,

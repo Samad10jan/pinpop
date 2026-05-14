@@ -61,7 +61,7 @@ export default function SignInPage() {
             <ToastContainer toasts={toast.toasts} onClose={toast.remove} />
 
 
-            <div className="flex flex-col justify-center w-full md:w-1/2 px-16 py-12 bg-[#f5f0ea] min-h-screen">
+            <div className="flex mt-20 md:mt-0 flex-col justify-center w-full md:w-1/2 px-16 py-12 bg-[#f5f0ea] min-h-screen">
 
                 <div className="mb-8 fade-up">
                     <h1 className="text-4xl font-bold">Welcome<br />Back!</h1>
