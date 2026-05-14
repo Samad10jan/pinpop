@@ -182,7 +182,14 @@ On refresh, the middleware directly calls `refreshTokens()` — no HTTP roundtri
 3. Check `expiresAt < new Date()`
 4. Atomically delete old + create new record (`prisma.$transaction`)
 5. Return new access + refresh pair → set cookies → request continues
-
+```javascript
+If Access Token Expires:
+  ├─ Refresh token exists? → Validate JWT signature
+  │   ├─ Valid? → Check DB → Rotate tokens → Set new cookies ✅
+  │   └─ Invalid? → Clear cookies → Redirect to / ❌
+  │
+  └─ No refresh token? → Clear cookies → Redirect to / ❌
+```
 ### GraphQL Context (`context.ts`)
 
 Every resolver receives `{ user }` from the request cookie — no repeated token verification per resolver:
@@ -338,9 +345,9 @@ npm run lint
 
 ---
 
-## Future Scope & Scalability Improvements
+# Future Scope & Scalability Improvements
 
-# Performance & Scalability
+## Performance & Scalability
 
 Introduce caching layer using Redis for frequently accessed data (feeds, pin details, counts)
 
@@ -356,7 +363,7 @@ Use read replicas for scaling database read operations
 
 ---
 
-# Concurrency & Data Consistency
+## Concurrency & Data Consistency
 
 Use atomic database operations for counters (likes, saves, followers)
 
@@ -368,7 +375,7 @@ Add distributed locking (if needed) for critical operations
 
 ---
 
-# Feed & Recommendation System
+## Feed & Recommendation System
 
 Build personalized feed using user behavior (likes, saves, follows)
 
@@ -382,7 +389,7 @@ Add “For You” feed similar to Pinterest
 
 ---
 
-# Background Processing
+## Background Processing
 
 Introduce job queues using BullMQ for:
 
@@ -401,7 +408,7 @@ Offload heavy tasks from request cycle to async workers
 
 ---
 
-# Real-Time Features
+## Real-Time Features
 
 Add real-time updates (likes, comments, notifications) using WebSockets
 
@@ -413,7 +420,7 @@ Real-time feed updates for better UX
 
 ---
 
-# Advanced Security
+## Advanced Security
 
 Add rate limiting using Cloudflare or middleware
 
@@ -427,7 +434,7 @@ Enable 2FA (Two-Factor Authentication)
 
 ---
 
-# Monitoring & Observability
+## Monitoring & Observability
 
 Integrate logging & monitoring tools:
 
@@ -444,7 +451,7 @@ Add alerting for failures and anomalies
 
 ---
 
-# System Architecture
+## System Architecture
 
 Move towards microservices or modular backend architecture
 
@@ -458,7 +465,7 @@ Deploy with horizontal scaling (multiple instances + load balancer)
 
 ---
 
-# Product Enhancements
+## Product Enhancements
 
 Progressive Web App (PWA) support
 
@@ -474,7 +481,7 @@ Social sharing & deep linking
 
 ---
 
-# Global Scaling
+## Global Scaling
 
 Multi-region deployment for low latency
 
@@ -486,7 +493,7 @@ Localization & internationalization (i18n)
 
 ---
 
-# Developer Experience
+## Developer Experience
 
 Add unit & integration testing
 
