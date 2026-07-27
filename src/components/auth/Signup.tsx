@@ -40,6 +40,7 @@ export default function SignupPage() {
 
             await gqlClient.request(SEND_SIGNUP_OTP, { email });
             setStep("otp");
+             setLoading(false);
         } catch (e: any) {
             toast.error(getGraphQLError(e));
             setLoading(false);

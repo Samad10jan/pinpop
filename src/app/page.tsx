@@ -1,7 +1,6 @@
 import Footer from "@/src/components/commons/Footer";
 import Image from "next/image";
 import Link from "next/link";
-import { context } from "../helper/context";
 
 
 const categories = [
