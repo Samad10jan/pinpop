@@ -100,7 +100,7 @@ export default function useInfinitePins(
           fetchNextPage();
         }
       },
-      { rootMargin: "450px" }
+      { rootMargin: "550px" }
     );
 
     observerInstance.current.observe(sentinel);
